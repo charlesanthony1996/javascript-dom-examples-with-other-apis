@@ -11,6 +11,8 @@
 
     <script>
 
+        // create
+
         // crud operations in indexed DB
         let request = window.indexedDB.open("myDatabase",1);
 
@@ -20,6 +22,7 @@
             let db = request.result;
             let objectstore = db.createObjectStore("users", { keyPath: "id"})
             objectstore.createIndex("username", "username", {unique:true})
+
         }
 
         // add data to the object store
@@ -29,6 +32,7 @@
             let objectstore = transaction.objectStore("users")
             let user = {id: 1, username: "John doe", email: "johndoe@example.com"}
             let request = objectstore.add(user)
+            console.log("user created")
         }
 
         // read
@@ -38,8 +42,22 @@
 
         request.onsuccess = function() {
             let db = request.result;
-            let transaction = 
+            let transaction = db.transaction("users")
+            let objectStore = transaction.objectStore("users")
+            let request = objectStore.get(1)
+
+            request.onsuccess = function() {
+                let user = request.result
+                console.log(user.username)
+            }
         }
+
+        // update
+
+        
+
+        
+        
 
 
 
