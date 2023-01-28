@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+
+
+    <body>
+        
+    </body>
+
+    <script>
+
+        // crud operations in indexed DB
+        let request = window.indexedDB.open("myDatabase",1);
+
+        // create the object store when the database is stored
+        request.onupgradeneeded = function() {
+            console.log("object store")
+            let db = request.result;
+            let objectstore = db.createObjectStore("users", { keyPath: "id"})
+            objectstore.createIndex("username", "username", {unique:true})
+        }
+
+        // add data to the object store
+        request.onsuccess = function() {
+            let db = request.result
+            let transaction = db.transaction("users", "readwrite")
+            let objectstore = transaction.objectStore("users")
+            let user = {id: 1, username: "John doe", email: "johndoe@example.com"}
+            let request = objectstore.add(user)
+        }
+
+        // read
+        // to read an object store you can use the following code
+        
+        let request = window.indexedDB.open("myDatabase", 1)
+
+        request.onsuccess = function() {
+            let db = request.result;
+            let transaction = 
+        }
+
+
+
+
+    </script>
+</html>

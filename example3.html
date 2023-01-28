@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+
+    <body>
+        <div id="my-element">
+            hello
+        </div>
+        
+    </body>
+
+    <script>
+        let element = document.getElementById("my-element");
+
+        element.addEventListener("mouseover", function() {
+            console.log("mouse over")
+        })
+
+        element.addEventListener("mouseout", function() {
+            console.log("mouse out")
+        })
+
+        element.addEventListener("mousedown", function() {
+            console.log("mouse button pressed")
+        })
+
+        element.addEventListener("mouseup", function() {
+            console.log("mouse button released")
+        })
+
+        element.addEventListener("mousemove", function(event) {
+            console.log(`mouse moved to coords: (${event.clientX}, ${event.clientY})`)
+        })
+
+        element.addEventListener("click", function(event) {
+            console.log("element clicked")
+            if (event.ctrlKey) {
+                console.log("ctrl key has been pushed")
+            }
+        })
+
+
+
+
+    </script>
+</html>

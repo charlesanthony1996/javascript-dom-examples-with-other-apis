@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+
+    <body>
+        <button id="my-button">Go to google</button>
+        
+    </body>
+
+    <script>
+        let button = document.getElementById("my-button")
+
+        button.addEventListener("mouseover", function(event) {
+            if (button.innerHTML == "Go to google") {
+                window.open("https://www.google.com", "_blank")
+            }
+        })
+
+        button.addEventListener("mouseout", function(event) {
+            button.innerHTML == "Go to google"
+        })
+
+
+    </script>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+
+    <body>
+        <h2>Hello</h2>
+        
+    </body>
+
+    <script>
+        // check if session storage is supported by the browser
+        if(typeof(Storage) !== "undefined") {
+            console.log("session storage is supported by the browser")
+        } else {
+            console.log("session storage is not supported")
+        }
+
+        // set a value in session storage
+        sessionStorage.setItem("username", "John Doe")
+
+        // get a value from session storage
+        let username = sessionStorage.getItem("username")
+        console.log(username)
+
+        // remove a value from session storage
+        sessionStorage.removeItem("username")
+
+        // clear all values from session storage
+        sessionStorage.clear()
+
+        // loop through all the key value pairs in session storage
+        for(let i = 0; i < sessionStorage.length; i++) {
+            let key = sessionStorage.key(i)
+            let value = sessionStorage.getItem(key)
+            console.log(key + ":" + value)
+
+        }
+
+        // checking if the key is present or not
+        let check = sessionStorage.getItem("username")
+        if(check == null) {
+            console.log("username key is not present")
+        }
+
+
+    </script>
+</html>
