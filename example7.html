@@ -6,11 +6,34 @@
 
 
     <body>
+        <ul id="task-list">
+            <li draggable="true" id="task1">Take out the trash</li>
+            <li draggable="true" id="task2">Do the dishes</li>
+            <li draggable="true" id="task3">Walk the dog</li>
+        </ul>
         
     </body>
 
 
     <script>
+
+        var taskList = document.getElementById("task-list")
+
+        // event listener for when a task is dragged
+        taskList.addEventListener("dragstart", function(event) {
+            event.dataTransfer.setData("text", event.target.id)
+            console.log(event.target.id)
+        })
+
+        taskList.addEventListener("drop", function(event) {
+            event.preventDefault()
+            var data = event.dataTransfer.getData("text")
+            event.target.appendChild(document.getElementById(data))
+        })
+
+        taskList.addEventListener("dragover", function(event) {
+            event.preventDefault()
+        })
 
         
     </script>

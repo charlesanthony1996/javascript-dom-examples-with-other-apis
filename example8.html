@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>javascript form</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- <link rel="stylesheet" href="style.css"> -->
+    </head>
+
+    <body>
+        <div class="container">
+            <form id="subscription">
+                <h1>Subscribe</h1>
+                <div id="message"></div>
+                <div class="field">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" placeholder="enter your fullname" required>
+                    <small></small>
+                </div>
+
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input type="text" id="email" name="email" placeholder="Enter your email" required>
+                    <small></small>
+                </div>
+
+                <div class="field">
+                    <button type="submit" class="full" id="submit">Subscribe</button>
+                </div>
+
+            </form>
+        </div>
+
+
+        
+    </body>
+
+    <script>
+
+        const btn = document.querySelector("#submit")
+        const form = document.querySelector("#subscription")
+        const messageEl = document.querySelector("#message")
+
+        btn.addEventListener("click", (e) => {
+            e.preventDefault()
+            subscribe()
+        })
+
+        const subscribe = async () => {
+            try {
+                let response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+                    method: "POST",
+                    body: new FormData(form)
+                })
+
+            const result = await response.json()
+
+            showMessage(result.message, response.status == 200 ? 'success' : 'error')
+            
+            
+            } catch (error) {
+                showMessage(error.message, "error")
+                console.log("error caught")
+            }
+        }
+
+            const showMessage = (message, type="success") => {
+                message.innerHTML = `
+                <div class="alert alert - ${type}">
+                    ${message}
+                </div>
+                `;
+            }
+    </script>
+</html>
