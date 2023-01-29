@@ -6,6 +6,7 @@
 
     <body>
         <h1 id="header">Page load events example</h1>
+        <p id="header">Header here</p>
         <img src="orange.jpg" id="image">
         
     </body>
@@ -22,9 +23,15 @@
         })
 
         // listen for the image to finish loading
+        var image = document.getElementById("image")
+        image.addEventListener("load", function() {
+            console.log("image has finished loading")
+        })
 
-
-
-
+        // listen for the header to finish loading
+        // var header = document.getElementById("header")
+        window.addEventListener("load", function() {
+            console.log("header has finished loading")
+        })
     </script>
 </html>
