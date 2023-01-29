@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>page load events example</title>
+    </head>
+
+    <body>
+        <h1 id="header">Page load events example</h1>
+        <img src="orange.jpg" id="image">
+        
+    </body>
+
+    <script>
+        // listen for the window to finish the loading
+        window.addEventListener("load", function() {
+            console.log("window has finished loading")
+        })
+
+        // listen for the document to finish loading
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log("Document has finished loading")
+        })
+
+        // 
+
+
+
+
+    </script>
+</html>

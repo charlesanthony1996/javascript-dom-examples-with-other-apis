@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>file reader example</title>
+    </head>
+
+    <body>
+        <h2>file reader example</h2>
+        <input type="file" id="file-input" style="display:none">
+        <button id="select-file-btn">Select file</button>
+        <br>
+        <br>
+        <div id="file-content"></div>
+        
+    </body>
+
+    <script>
+        //create a new file reader object
+        var reader = new FileReader()
+
+        var fileInput = document.getElementById("file-input")
+        var fileContent = document.getElementById("file-content")
+        var selectFileBtn = document.getElementById("select-file-btn")
+
+        selectFileBtn.addEventListener("click", function() {
+            fileInput.click()
+        })
+
+        // listen for when the user selects a file
+        fileInput.addEventListener("change", function() {
+            // get the selected file
+            var file = fileInput.files[0]
+
+            // read the contents of the file
+            reader.readAsText(file)
+        })
+
+        // listen for when the file has been read
+        reader.addEventListener("load", function() {
+            // print the contents of the file
+            fileContent.innerHTML = reader.result
+        })
+
+    </script>
+</html>
