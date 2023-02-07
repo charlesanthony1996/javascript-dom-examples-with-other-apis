@@ -4,13 +4,53 @@
         <title>Switching from multiple input fields using the tab key</title>
     </head>
 
-    <body>
-        
+    <body onkeydown="handleTabKey(event)">
+        <div class="inputField">
+            <input type="text" placeholder="Input Field 1">
+        </div>
 
+        <div class="inputField">
+            <input type="text" placeholder="Input Field 2">
+        </div>
+
+        <div class="inputField">
+            <input type="text" placeholder="Input Field 3">
+        </div>
     </body>
 
 
     <script>
+
+        function handleTabKey(event) {
+            var inputFields = document.getElementsByClassName("inputField")
+            for (var i = 0; i < inputFields.length; i++ ) {
+                if(inputFields[i] === document.activeElement) {
+                    if(event.shiftKey) {
+                        if (i === 0) {
+                            inputFields[inputFields.length - 1].focus()
+                            console.log("its in the first one")
+                            event.preventDefault()
+                            break;
+                        } else {
+                            inputFields[i - 1].focus()
+                            event.preventDefault()
+                            break;
+                        }
+                    } else {
+                        if (i === inputFields.length - 1) {
+                            inputFields[0].focus()
+                            event.preventDefault()
+                            break
+                        } else {
+                            inputFields[i+ 1].focus()
+                            event.preventDefault()
+                            break
+                        }
+                    }
+                }
+            }
+
+        }
 
 
     </script>
