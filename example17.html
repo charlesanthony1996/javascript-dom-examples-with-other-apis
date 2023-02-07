@@ -1,0 +1,61 @@
+<html>
+<head>
+  <script>
+    class ArrowNav {
+      isSelected(input) {
+        return input.value.length > 0 &&
+              input.selectionEnd !== null &&
+              input.selectionStart !== null &&
+              (input.selectionEnd - input.selectionStart) === input.value.length;
+      }
+  
+      setInput(input) {
+        this.instance.value = input.value;
+      }
+  
+      updateLastValues(input) {
+        this.lastInput = input;
+      }
+    }
+  
+    class ArrowLeft extends ArrowNav {
+      trigger(input) {
+        this.setInput(input);
+        if (this.isSelected(input)) {
+          this.instance.selectionStart = 0;
+          this.instance.selectionEnd = 0;
+        } else if (this.instance.selectionStart === 0) {
+          this.instance.selectionStart = input.value.length;
+          this.instance.selectionEnd = input.value.length;
+        } else if (this.instance.selectionStart) {
+          this.instance.selectionStart--;
+          this.instance.selectionEnd--;
+        }
+        this.updateLastValues(input);
+      }
+    }
+  
+    class ArrowRight extends ArrowNav {
+      trigger(input) {
+        this.setInput(input);
+        if (this.isSelected(input)) {
+          this.instance.selectionStart = input.value.length;
+          this.instance.selectionEnd = input.value.length;
+        } else if (this.instance.selectionStart >= input.value.length - 1) {
+          this.instance.selectionStart = 0;
+          this.instance.selectionEnd = 0;
+        } else {
+          this.instance.selectionStart++;
+          this.instance.selectionEnd++;
+        }
+        this.updateLastValues(input);
+      }
+    }
+  </script>
+</head>
+<body>
+  <input type="text" id="input"/>
+  <button onclick="(new ArrowLeft()).trigger(document.getElementById('input'))">Left</button>
+  <button onclick="(new ArrowRight()).trigger(document.getElementById('input'))">Right</button>
+</body>
+</html>

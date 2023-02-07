@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>blur instance method - HTMLInputElement</title>
+    </head>
+
+    <body>
+        <input type="text" id="input-field">
+    </body>
+    
+    <script>
+        const inputField = document.querySelector("#input-field")
+
+        inputField.addEventListener("focus", function() {
+            console.log("focus event was triggered")
+        })
+
+        inputField.addEventListener("blur", function() {
+            console.log("blur event was triggered on the input field")
+        })
+
+        if(!inputField.value) {
+            alert("input field is empty. please enter a value")
+            inputField.focus()
+        }
+    </script>
+</html>

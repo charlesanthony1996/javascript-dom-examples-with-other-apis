@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+
+    <body>
+        <h1>Resize obeserver api in html</h1>
+
+        <div id="observed-element">
+            <p>Observed element</p>
+            <button id="resize-button">Resize element</button>
+        </div>
+    </body>
+
+
+    <script>
+        const observedElement = document.querySelector("#observed-element")
+        const resizeButton = document.querySelector("#resize-button")
+
+        const resizeObserver = new ResizeObserver(entries => {
+            for (const entry of entries) {
+                width = entry.contentRect.width
+                height = entry.contentRect.height
+                console.log(`Element size changed to ${width} ${height}`)
+                observedElement.style.backgroundColor = (width > height) ? "lightblue" : "lightgreen";
+            }
+        })
+        resizeObserver.observe(observedElement)
+
+
+        resizeButton.addEventListener("click", () => {
+            observedElement.style.width = `${Math.floor(Math.random() * 500) + 100}px`;
+            observedElement.style.height = `${Math.floor(Math.random() * 500) + 100}px`;
+        })
+
+
+
+
+    </script>
+</html>

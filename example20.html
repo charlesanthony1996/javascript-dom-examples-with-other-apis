@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+
+    <body>
+        <h2>switching between multiple input fields using buttons</h2>
+        <button onclick="showInputField(0)">Show input field 1</button>
+        <button onclick="showInputField(1)">Show input field 2</button>
+        <button onclick="showInputField(2)">Show input field 3</button>
+        <br><br>
+
+        <div class="inputField" style="display:none;">
+            <input type="text" placeholder="input field 1">
+        </div>
+
+        <div class="inputField" style="display:none">
+            <input type="text" placeholder="input field 2">
+        </div>
+
+        <div class="inputField" style="display:none">
+            <input type="text" placeholder="input field 3">
+        </div>
+        
+    </body>
+
+    <script>
+        function showInputField(fieldIndex) {
+            var inputFields = document.getElementsByClassName("inputField")
+
+            for (var i = 0; i < inputFields.length; i++) {
+                inputFields[i].style.display = "none"
+            }
+            inputFields[fieldIndex].style.display = "block"
+        }
+    </script>
+
+    <style>
+
+
+    </style>
+</html>
