@@ -1,16 +1,49 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title></title>
+        <title>tab movement using a js class</title>
     </head>
 
     <body>
-        
+        <div class="inputField">
+            <input type="text" placeholder="Input Field 1">
+        </div>
+
+        <div class="inputField" style="display:none;">
+            <input type="text" placeholder="Input Field 2">
+        </div>
+
+        <div class="inputField" style="display:none;">
+            <input type="text" placeholder="Input Field 3">
+        </div>
 
     </body>
 
     <script>
+        class InputFieldSwitcher {
+            constructor() {
+                this.inputFields = document.getElementsByClassName("inputField")
+                this.currentFieldIndex = 0;
+                document.addEventListener("keydown", this.handleKeyDown.bind(this))
+            }
 
+            handleKeyDown(event) {
+                if (event.key === "Tab") {
+                    event.preventDefault()
+                    this.currentFieldIndex = (this.currentFieldIndex + 1) % this.inputFields.length
+                    this.showInputField(this.currentFieldIndex)
+                }
+            }
+
+            showInputField(fieldIndex) {
+                for(var i = 0; i <this.inputFields.length; i++) {
+                    this.inputFields[i].style.display = "none"
+                }
+                this.inputFields[fieldIndex].style.display = "block"
+            }
+        }
+
+        var inputFieldSwitcher = new InputFieldSwitcher()
         
     </script>
 </html>
