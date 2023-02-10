@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Press and release handlers</title>
+    </head>
+
+    <body>
+        <button id="pressBtn">press me</button>
+        <button id="releaseBtn">release me</button>
+        
+    </body>
+
+    <script>
+        class PressHandler {
+            constructor(elementId) {
+                this.element = document.getElementById(elementId)
+                this.element.addEventListener("mousedown", this.handlePress.bind(this))
+            }
+
+            handlePress(event) {
+                console.log(`Button ${this.element.id} is pressed`)
+            }
+        }
+
+        class ReleaseHandler {
+            constructor(elementId) {
+                this.element = document.getElementById(elementId)
+                this.element.addEventListener("mouseup", this.handleRelease.bind(this))
+            }
+
+            handleRelease(event) {
+                console.log(`Button ${this.element.id} released`)
+            }
+        }
+
+        const pressHandler = new PressHandler("pressBtn")
+        const releaseHandler = new ReleaseHandler("releaseBtn")
+    </script>
+
+    <style>
+        button {
+            padding: 20px 40px;
+            font-size: 20px;
+            border-radius: 5px;
+            margin: 20px;
+        }
+    </style>
+</html>
