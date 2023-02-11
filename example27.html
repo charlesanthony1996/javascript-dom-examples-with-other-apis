@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<body>
+<div id="app">
+    <v-app>
+        <v-main>
+            <v-container>
+                Hello world
+                <button @click="increment">Count is: {{ value }}</button>
+            </v-container>
+            <v-container>
+                To-Do List
+                <v-list v-if="toDoList.length">
+                    <v-list-item v-for="item in toDoList" :key="item.id">
+                        {{ item.text }}
+                    </v-list-item>
+                </v-list>
+                <v-text-field v-model="newToDo" label="New To-Do" @keyup.enter="addToDo"></v-text-field>
+            </v-container>
+        </v-main>
+    </v-app>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+
+<script src="https://unpkg.com/@vue/composition-api"></script>
+<script src="https://unpkg.com/vue-demi"></script>
+<script src="https://unpkg.com/pinia"></script>
+
+<script>
+    const useCounterStore = Pinia.defineStore('counter', {
+      state() {
+        return {
+          value: 0
+        }
+      },
+      actions: {
+        increment(state) {
+          this.value++
+        }
+      }
+    })
+
+    const useToDoStore = Pinia.defineStore('toDoList', {
+      state() {
+        return {
+          toDoList: [],
+          newToDo: ''
+        }
+      },
+      actions: {
+        addToDo(state) {
+          this.toDoList.push({ id: Math.random(), text: this.newToDo })
+          this.newToDo = ''
+        }
+      }
+    })
+
+    Vue.use(Pinia.PiniaVuePlugin)
+    new Vue({
+        el: '#app',
+        vuetify: new Vuetify(),
+        pinia: Pinia.createPinia(),
+        computed: {
+          ...Pinia.mapState(useCounterStore, ['value']),
+          ...Pinia.mapState(useToDoStore, ['toDoList', 'newToDo'])
+        },
+        methods: {
+          ...Pinia.mapActions(useCounterStore, ['increment']),
+          ...Pinia.mapActions(useToDoStore, ['addToDo'])
+        },
+    })
+
+</script>
+</body>
+</html>

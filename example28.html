@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+</head>
+<body>
+<div id="app">
+    <v-app>
+        <v-main>
+            <v-container>Hello world</v-container>
+            <v-text-field v-model="username" label="Username"></v-text-field>
+            <v-text-field v-model="email" label="Email"></v-text-field>
+            <v-btn @click="updateProfile">Update profile</v-btn>
+        </v-main>
+    </v-app>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+
+<script src="https://unpkg.com/@vue/composition-api"></script>
+<script src="https://unpkg.com/vue-demi"></script>
+<script src="https://unpkg.com/pinia"></script>
+
+<script>
+    const useProfileStore = Pinia.defineStore('profile', {
+      state() {
+        return {
+          username: '',
+          email: ''
+        }
+      },
+      actions: {
+        updateProfile(state, { username, email }) {
+          this.username = username
+          this.email = email
+        }
+      }
+    })
+
+    Vue.use(Pinia.PiniaVuePlugin)
+    new Vue({
+        el: '#app',
+        vuetify: new Vuetify(),
+        pinia: Pinia.createPinia(),
+        computed: {
+          ...Pinia.mapState(useProfileStore, ['username', 'email'])
+        },
+        methods: {
+          ...Pinia.mapActions(useProfileStore, ['updateProfile'])
+        },
+    })
+</script>
+</body>
+</html>
