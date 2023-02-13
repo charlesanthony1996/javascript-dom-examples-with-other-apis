@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+
+    <body>
+        <h2>Api playground</h2>
+        <p></p>
+        
+
+    </body>
+
+    <script>
+        // a playground to understand the array class in javascript of the nuslit project
+        // nuslit communication architecture -> frontend
+
+        const ID = "id"
+
+        class ARRAY{
+            static add(array, data) {
+                array.push(data)
+                return true
+            }
+
+            static unshift(array, data) {
+                array.unshift(data)
+                return true
+            }
+
+            static insertAt(array, data, index) {
+                array.splice(index, 0, data)
+                return true
+            }
+
+            static getById(array, id) {
+                return this.getByKey(array, id)
+            }
+
+            static getByKey(array, id, key=ID) {
+                const index = this.findIndex(array, id, key)
+
+                if (index >= 0 ) {
+                    return array[index]
+                } else {
+                    return null
+                }
+            }
+
+            static removeById(array, id) {
+                const index = this.findIndex(array, id)
+
+                if(index>= 0) {
+                    array.splice(index, 1)
+                    return true
+                    
+                } else {
+                    return false
+                }
+            }
+
+            static updateById(array, data) {
+                const index = this.findIndex(array, data.id)
+
+                if (index>= 0) {
+                    array[index] = data
+                    return true
+                } else {
+                    return false
+                }
+            }
+
+            static patchById(array, data) {
+                const oldData = this.getById(array, data.id)
+
+                if(oldData !== null) {
+                    Object.assign(oldData, data)
+                    return this.updateById(array, oldData)
+                } else {
+                    return false
+                }
+            }
+
+            static upsertById(array, data) {
+                if (this.findIndex(array, data.id) >= 0) {
+                    return this.updateById(array, data)
+                } else {
+                    return this.add(array, data)
+                }
+            }
+
+            static findIndex(array, id, key = ID) {
+                const currentElement = array.find((element) => element[key] === id)
+                if (currentElement) {
+                    return array.indexOf(currentElement)
+                } else {
+                    return -1
+                }
+            }
+
+            static clear(array) {
+                while (array.length> 0) {
+                    array.splice(0, 1)
+                }
+                return array
+            }
+
+            static replace(array, newData) {
+                this.clear(array)
+                array.push(...newData)
+            }
+        }
+
+        // removing by id
+
+        var list2 = [{id:1 }, {id:2}, {id: 3}]
+
+        ARRAY.removeById(list2, 3)
+        console.log(list2)
+
+        var list = [{ id: 1 }, { id: 2 }];
+
+        ARRAY.removeById(list, 2);
+        console.log(list);
+
+        // adding 
+
+        ARRAY.add(list, {id:4})
+        console.log(list)
+
+        // unshifting
+
+        ARRAY.unshift(list, {id:5})
+        console.log(list)
+
+        
+
+
+
+        // why an api config is necessary?
+        // contains two properties -> targetarray and transforms?
+        // easy to maintain and update the api
+        // to provide a centralized configuration object for the api
+        // transforms has three properties -> those are the dto conversions
+
+        // a partial dto is used to represent only a subset of the data and not everything
+
+        // the todto mapper is used to convert a store entity into the dto that will be
+        // sent back to the system?
+
+        // log it after declaration?
+
+        // no need to rewrite just complete the api config here
+
+        const apiConfig = {
+            targetArray: [],
+            transforms:{
+                toDTO: function(data) {
+                    return {
+                        id: data.id,
+                        name: data.name,
+                        email: data.email
+                    }
+                },
+
+                toPartialDTO: function(data) {
+                    return {
+                        id: data.id,
+                        name: data.name,
+                        email: data.email
+                    }
+                },
+
+                fromDTO: function(data) {
+                    return {
+                        id: data.id,
+                        name: data.name,
+                        email: data.email
+                    }
+                }
+            }
+        }
+
+        // request config is an interface that contains two properties
+        // one is directly from axios
+        // implementing the same in simple js
+
+        const RequestConfig = {
+            pathParams: {},
+            fetchConfig: {},
+        }
+
+        // use this when a simple patch function is created -> testing
+
+
+
+        
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>
