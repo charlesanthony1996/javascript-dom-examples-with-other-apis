@@ -1,0 +1,38 @@
+<html>
+<head>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+  integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+  crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+  crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"
+  integrity="sha512-11m5Fm1lzYquvH8W2/Zjlg6zQkd88ktU9FcNpAjN6zVU6sd3U6zfUxghxFgsTZOoO3qfTcTbLsD2OQzDZdxjKQ=="
+  crossorigin=""></script>
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+  <style>
+    #map {
+      height: 400px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script>
+    var map = L.map('map').setView([53.4653, -2.2333], 13);
+    map.addLayer(new L.TileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"));
+
+    L.Routing.control({
+      waypoints: [
+        L.latLng(53.4638, -2.2338),
+        L.latLng(53.4590, -2.3265)
+      ],
+      routeWhileDragging: true,
+      show: true
+    }).addTo(map);
+  </script>
+</body>
+</html>
+
