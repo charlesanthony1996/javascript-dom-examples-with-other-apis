@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Current Weather</title>
+  </head>
+  <body>
+    <h1>Current Weather</h1>
+    <p>Loading weather data...</p>
+    <script>
+      var httpRequest = new XMLHttpRequest();
+      var url = 'https://api.openweathermap.org/data/2.5/weather?lat={20}&lon={20}&appid={c93a4705afc09f2ed4c9444a041db0d2}';
+
+      httpRequest.onreadystatechange = function() {
+        if (httpRequest.readyState === 4 && httpRequest.status === 200) {
+          var data = JSON.parse(httpRequest.responseText);
+          var temp = data.main.temp;
+          var desc = data.weather[0].description;
+          var html = '<p>The current temperature in New York is ' + temp + ' degrees Fahrenheit with ' + desc + '.</p>';
+          document.querySelector('p').innerHTML = html;
+        }
+      };
+
+      httpRequest.open('GET', url);
+      httpRequest.send();
+    </script>
+  </body>
+</html>

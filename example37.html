@@ -26,7 +26,7 @@
             <v-btn @click="counter.increment()">Increment</v-btn> &nbsp;
             <v-btn @click="counter.randomizeCounter()">Randomize</v-btn> &nbsp;
             <v-btn @click="counter.$reset()">Reset counter</v-btn> &nbsp;
-            <v-btn @click="counter.doubleCount()">Double count</v-btn> &nbsp;
+            <v-btn @click="counter.doubleCountPlusOne()">Double count</v-btn> &nbsp;
             <v-btn @click="incrementAndPrint()">Increment method</v-btn>
             <br>
             <h3>Submit a patch for the counter state</h3>
@@ -41,13 +41,25 @@
 
             <router-view>
             </router-view>
+            <br><br>
+            <v-breadcrumbs :items="items">
+                <template v-slot:title="{ item }">
+                    {{ item.title.toUpperCase() }}
+                </template>
+            </v-breadcrumbs>
+            <br>
+            <p>{{ example1 }}</p>
         </div>
     </body>
 
     <script>
-        const { createApp } = Vue
+        const { createApp, ref } = Vue
         const { defineStore , createPinia } = Pinia
         const { createVuetify } = Vuetify
+
+        // ref api
+        const example1 = ref("example 1 in ref")
+        
 
         const Home = { template: '<div>Home</div>' }
         const About = { template: '<div>About</div>' }
@@ -104,23 +116,58 @@
 
         })
 
+
         // second store
-
-
         const App = {
             setup() {
                 const counter = useCounterStore()
+                const example1 = ref("example 1 in ref")
+                const items = [
+                    {
+                        title: "title1"
+                    },
+                    {
+                        title: "title2"
+                    },
+                    {
+                        title: "title3"
+                    }
+                ]
                 return {
                     counter,
+                    items,
+                    example1
                 }
+
+
+                
             },
             methods: {
                 incrementAndPrint() {
                     this.counter.increment()
                     console.log("New count value is", this.counter.count)
                 }
+            },
+            
+        }
+
+        // writing a pinia plugin
+        // according to the docs
+        // you should be able to activate it from another file -> Vue
+        // how stores are created
+        function secretPiniaPlugin() {
+            return {
+                secret: "the cake is a lie"
             }
         }
+
+        const pinia = createPinia()
+        pinia.use(secretPiniaPlugin)
+
+        // see whats logged
+        // play around with the methods
+        // refer to api docs
+        console.log(pinia.use(secretPiniaPlugin))
 
         const app = createApp(App)
         const vuetify = createVuetify()
