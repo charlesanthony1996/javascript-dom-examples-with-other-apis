@@ -9,8 +9,11 @@
         <script src="https://unpkg.com/vue-router@4"></script>
         <!-- mande cdn for pinia docs testing -->
         <script async src="https://cdn.jsdelivr.net/npm/mande@2.0.3/dist/mande.iife.min.js"></script>
+        <!-- vuetify cdn js -->
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@3.1.3/dist/vuetify.min.css" rel="stylesheet">
     </head>
 
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.1.3/dist/vuetify.min.js"></script>
     <body>
         <div id="app">
             <p>
@@ -19,9 +22,17 @@
             </p>
             <h2>pinia example -> Main app view -> App.vue</h2>
             <h3>Counter value {{ counter.count }}</h3>
-            <button @click="counter.decrement()">Decrement</button>
-            <button @click="counter.increment()">Increment</button>
-            <button @click="counter.randomizeCounter()">Randomize</button>
+            <v-btn @click="counter.decrement()">Decrement</v-btn> &nbsp;
+            <v-btn @click="counter.increment()">Increment</v-btn> &nbsp;
+            <v-btn @click="counter.randomizeCounter()">Randomize</v-btn> &nbsp;
+            <v-btn @click="counter.$reset()">Reset counter</v-btn> &nbsp;
+            <v-btn @click="counter.doubleCount()">Double count</v-btn> &nbsp;
+            <v-btn @click="incrementAndPrint()">Increment method</v-btn>
+            <br>
+            <h3>Submit a patch for the counter state</h3>
+            <v-btn>Patch</v-btn>
+            <h3>Items: {{ counter.items }}</h3>
+            <h3>Has Changed value: {{ counter.hasChanged }}</h3>
 
             <h3>Counter name {{ counter.name }}</h3>
             <h3>Counter type {{ counter.type }}</h3>
@@ -29,20 +40,18 @@
             <h2>Routes view. changes according to the route</h2>
 
             <router-view>
-
             </router-view>
-
         </div>
-        
-
     </body>
 
     <script>
         const { createApp } = Vue
         const { defineStore , createPinia } = Pinia
+        const { createVuetify } = Vuetify
 
         const Home = { template: '<div>Home</div>' }
         const About = { template: '<div>About</div>' }
+        const Contact = { template: '<div>Contact us</div>'}
 
         const routes = [
             { path: '/', component: Home },
@@ -58,15 +67,29 @@
 
         // counter store
         const useCounterStore = defineStore("counter", {
+            // state
             state:() => {
                 return {
                     count: 0,
                     name:"counter",
-                    type:"string"
-
+                    type:"string",
+                    items:[1, 2, 3, 4, 5],
+                    hasChanged: true,
                 }
             },
 
+            // getters
+            getters: {
+                doubleCount: (state) => {
+                    return state.count * 2
+        
+                },
+                doubleCountPlusOne() {
+                    return this.doubleCount + 1
+                }
+            },
+
+            // actions
             actions: {
                 increment() {
                     this.count++
@@ -77,7 +100,8 @@
                 randomizeCounter() {
                     this.count = Math.round(100 * Math.random())
                 }
-            }
+            },
+
         })
 
         // second store
@@ -89,19 +113,27 @@
                 return {
                     counter,
                 }
+            },
+            methods: {
+                incrementAndPrint() {
+                    this.counter.increment()
+                    console.log("New count value is", this.counter.count)
+                }
             }
         }
 
         const app = createApp(App)
+        const vuetify = createVuetify()
         app.use(createPinia())
         app.use(router)
+        app.use(vuetify)
         app.mount("#app")
 
     </script>
 
     <script type="module">
-        
-    import mande from 'https://cdn.jsdelivr.net/npm/mande@2.0.3/+esm' 
+
+    import mande from 'https://cdn.jsdelivr.net/npm/mande@2.0.3/+esm'
 
     </script>
 
