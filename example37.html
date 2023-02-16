@@ -11,6 +11,8 @@
         <script async src="https://cdn.jsdelivr.net/npm/mande@2.0.3/dist/mande.iife.min.js"></script>
         <!-- vuetify cdn js -->
         <link href="https://cdn.jsdelivr.net/npm/vuetify@3.1.3/dist/vuetify.min.css" rel="stylesheet">
+        <!-- mdi cdn -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.1.96/css/materialdesignicons.min.css"/>
     </head>
 
     <script src="https://cdn.jsdelivr.net/npm/vuetify@3.1.3/dist/vuetify.min.js"></script>
@@ -18,7 +20,9 @@
         <div id="app">
             <p>
             <router-link to="/">Home</router-link> &nbsp;
-            <router-link to="/about">About</router-link>
+            <router-link to="/about">About</router-link> &nbsp;
+            <router-link to="/contact">Contact</router-link> &nbsp;
+            <router-link to="/weather">Weather</router-link> &nbsp;
             </p>
             <h2>pinia example -> Main app view -> App.vue</h2>
             <h3>Counter value {{ counter.count }}</h3>
@@ -49,11 +53,13 @@
             </v-breadcrumbs>
             <br>
             <p>{{ example1 }}</p>
+            <br><br>
+            <h2>How the actions store work with data transfer objects</h2>
         </div>
     </body>
 
     <script>
-        const { createApp, ref } = Vue
+        const { createApp, ref , reactive } = Vue
         const { defineStore , createPinia } = Pinia
         const { createVuetify } = Vuetify
 
@@ -64,10 +70,101 @@
         const Home = { template: '<div>Home</div>' }
         const About = { template: '<div>About</div>' }
         const Contact = { template: '<div>Contact us</div>'}
+        const Weather = { 
+            template: `<div>
+                        <v-card class="mx-auto" max-width="368">
+
+                            <v-card-item title="Vienna">
+                                <template v-slot:subtitle>
+                                    <v-icon
+                                    icon="mdi-alert"
+                                    size="18"
+                                    color="error"
+                                    class="me-1 pb-1"
+                                    >
+                                    </v-icon>
+                                    <div id="description"></div>
+                                </template>
+                            </v-card-item>
+
+                            <v-card-text class="py-0">
+                                <v-row align="center" no-gutters>
+                                    <v-col class="text-h2" cols="6">
+                                        <p id="temperature"></p>
+                                    </v-col>
+
+                                    <v-col cols="6" class="text-right">
+                                        <v-icon color="error" icon="mdi-weather-hurricane" size="88">
+                                        </v-icon>
+                                    </v-col>
+                                </v-row>
+                            </v-card-text>
+
+                            <div class="d-flex py-3 justify-space-between">
+                                <v-list-item
+                                    density="compact"
+                                    prepend-icon="mdi-weather-windy"
+                                >
+                                    <v-list-item-subtitle>
+                                        <div id="windspeed">
+                                        </div>
+                                    </v-list-item-subtitle>
+                                </v-list-item>
+                                <v-list-item
+                                    density="compact"
+                                    prepend-icon="mdi-weather-pouring"
+                                >
+                                    <v-list-item-subtitle>48%</v-list-item-subtitle>
+                                </v-list-item>
+                            </div>
+
+                            <v-expand-transition>
+                                <div v-if="expand">
+                                    <div class="py-2">
+                                    <v-slider
+                                        v-model="time"
+                                        :max="6"
+                                        :step="1"
+                                        :ticks="labels"
+                                        class="mx-4"
+                                        color="primary"
+                                        density="compact"
+                                        hide-details
+                                        show-ticks="always"
+                                        thumb-size="10"
+                                    ></v-slider>
+                                    </div>
+
+                                    <v-list class="bg-transparent">
+                                    <v-list-item
+                                        v-for="item in forecast"
+                                        :key="item.day"
+                                        :title="item.day"
+                                        :append-icon="item.icon"
+                                        :subtitle="item.temp"
+                                    >
+                                    </v-list-item>
+                                    </v-list>
+                                </div>
+                            </v-expand-transition>
+
+                            <v-divider></v-divider>
+
+                            <v-card-actions>
+                                <v-btn @click='expand = !expand'>
+                                    {{ !expand ? 'Full Report' : 'Hide Report' }}
+                                </v-btn>
+                            </v-card-actions>
+
+                        </v-card>
+                       </div>`
+            }
 
         const routes = [
             { path: '/', component: Home },
             { path: '/about', component: About },
+            { path: '/contact', component: Contact },
+            { path: '/weather', component: Weather },  
         ]
 
         // router init
@@ -133,10 +230,30 @@
                         title: "title3"
                     }
                 ]
+                // properties for the weather widget
+                const labels = { 0: "SU", 1: "MO", 2:"TU",3: "WED", 4:"TH", 5:"FR", 6:"SA" }
+                var expand = false
+                var time = 0
+                var forecast = [
+                { day: 'Tuesday', icon: 'mdi-white-balance-sunny', temp: '24\xB0/12\xB0' },
+                { day: 'Wednesday', icon: 'mdi-white-balance-sunny', temp: '22\xB0/14\xB0' },
+                { day: 'Thursday', icon: 'mdi-cloud', temp: '25\xB0/15\xB0' },
+                ]
+
+
                 return {
+                    // returning counter store
                     counter,
+                    // items is a list that the counter store has -> testing
                     items,
-                    example1
+                    // testing ref return 
+                    example1,
+                    // returning weather widget properties
+                    labels,
+                    expand,
+                    time,
+                    forecast
+
                 }
 
 
@@ -168,6 +285,100 @@
         // play around with the methods
         // refer to api docs
         console.log(pinia.use(secretPiniaPlugin))
+
+        // getting weather data
+        // fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")
+        // .then(response => response.json())
+        // .then( data => {
+        //     // logging all data
+        //     // console.log(data)
+        //     const weatherDiv = document.getElementById("weather")
+        //     const temperature = data.main.temp
+        //     const description = data.weather[0].description
+        //     const iconCode = data.weather[0].icon
+        //     const iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`
+        //     const html = `
+        //     <p>Temperature : ${temperature} Celsius</p>
+        //     <p>Description: ${description}</p>
+        //     <img src='${iconUrl}' alt='${description}'>
+        //     `
+
+        //     console.log(temperature)
+        //     console.log(description)
+        //     console.log(iconCode)
+
+        // })
+        // .catch(error => {
+        //     console.log(error)
+        //     const weatherDiv = document.getElementById("weather")
+        //     weatherDiv.innerHTML = `<p>Error getting weather data ${error.message}</p>`
+        // })
+
+        // getting temperature
+        fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")
+        .then(response => response.json())
+        .then( data => {
+            // logging all data
+            // console.log(data)
+            const temperatureDiv = document.getElementById("temperature")
+            const temperature = data.main.temp
+            const description = data.weather[0].description
+            const iconCode = data.weather[0].icon
+            const iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`
+            const html = `
+            <p>${temperature}C</p>
+            `
+            temperatureDiv.innerHTML = html
+        })
+        .catch(error => {
+            console.log(error)
+            const temperatureDiv = document.getElementById("temperature")
+            temperatureDiv.innerHTML = `<p>Error getting weather data ${error.message}</p>`
+        })
+
+        // getting description
+        fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")
+        .then(response => response.json())
+        .then(data => {
+            // logging all data for checking
+            // console.log(data)
+            const descriptionDiv = document.getElementById("description")
+            const description = data.weather[0].description
+            const html = `<p>${description}</p>`
+            descriptionDiv.innerHTML = html
+        })
+        .catch(error => {
+            console.log(error)
+            const descriptionDiv = document.getElementById("description")
+            descriptionDiv.innerHTML = `<p>Error getting weather description ${error.message}</p>`
+        })
+
+        // getting wind speed
+        fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")
+        .then(response => response.json())
+        .then(data => {
+            // loggin all data for checking
+            // console.log(data)
+            const windspeedDiv = document.getElementById("windspeed")
+            const windspeed = data.wind.speed
+            console.log(windspeed)
+            const html = `<p>${windspeed} ms-1</p>`
+            windspeedDiv.innerHTML = html
+        })
+        .catch(error => {
+            console.log(error)
+            const windspeedDiv = document.getElementById("windspeed")
+            windspeedDiv.innerHTML = `<p>Error getting wind speed ${error.message}</p>`
+        })
+
+        // getting humidity
+        fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")
+        .then(response => response.json())
+        .then(data => {
+            // logging all data for checking
+        })
+
+
 
         const app = createApp(App)
         const vuetify = createVuetify()

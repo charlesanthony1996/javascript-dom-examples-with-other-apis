@@ -15,7 +15,33 @@
             var script = document.createElement("script")
             script.type = "text/javascript"
             script.src = url
+
+            // attach a listener to the onload event to make sure the script
+            script.onload = function() {
+                callback()
+            }
+
+            // error handling
+            script.onerror = function() {
+                console.log("Error loading script", url)
+            }
+
+
+            // append the script to the document body to initiate the load
+            document.body.appendChild(script)
         }
+
+
+        // loading the cdn and push the body
+        loadCdn('https://code.jquery.com/jquery-3.6.0.min.js', function() {
+            $('body').append('<h1>Hello, world!</h1>')
+            console.log("cdn loaded properly")
+        })
+
+
+        loadCdn("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.9.0/dist/tf.min.js", function() {
+            console.log("tfjs loaded properly")
+        })
 
 
     </script>

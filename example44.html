@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>TensorFlow.js Example</title>
+  <!-- Load TensorFlow.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.9.0/dist/tf.min.js"></script>
+</head>
+<body>
+  <h1>TensorFlow.js Example</h1>
+  <p>Open your browser console to see output</p>
+
+  <script>
+    // Define a simple model
+    const model = tf.sequential({
+      layers: [
+        tf.layers.dense({units: 1, inputShape: [1]})
+      ]
+    });
+
+    // Compile the model
+    model.compile({optimizer: 'sgd', loss: 'meanSquaredError'});
+
+    // Generate some random data for training
+    const xs = tf.randomUniform([100, 1]);
+    const ys = xs.mul(2).add(1);
+
+    // Train the model
+    model.fit(xs, ys, {epochs: 100}).then(() => {
+      // Use the model to predict some values
+      const preds = model.predict(tf.range(0, 10, 0.1).reshape([100, 1]));
+      preds.print();
+
+      // Clean up resources
+      xs.dispose();
+      ys.dispose();
+      preds.dispose();
+    });
+  </script>
+</body>
+</html>
