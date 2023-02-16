@@ -8,6 +8,9 @@
         <div id="weather">
 
         </div>
+        <div id="weathericon">
+            
+        </div>
   
         
     </body>
@@ -34,6 +37,25 @@
             const weatherDiv = document.getElementById("weather")
             weatherDiv.innerHTML = `<p>Error getting weather data ${error.message}</p>`
         })
+
+        // getting the weather icon
+        fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")
+        .then(response => response.json())
+        .then(data => {
+            // logging all data for checking
+            const weathericonDiv = document.getElementById("weathericon")
+            const weathericon = data.weather[0].icon
+            const html = `<p>${weathericon}</p>`
+            weathericonDiv.innerHTML = html
+            console.log(weathericon)
+        })
+        .catch(error => {
+            // console.log(error)
+            const weathericonDiv = document.getElementById("weathericon")
+            weathericonDiv.innerHTML = `<p>Error getting weather icon ${error.message}</p>`
+        })
+
+        // getting the feels_like property
 
       
     

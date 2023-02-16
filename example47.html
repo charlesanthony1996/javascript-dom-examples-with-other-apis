@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <script src="https://unpkg.com/vue@next"></script>
+        <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+    </head>
+
+    <body>
+        <h2>vue3 and vuex simple template</h2>
+        <p>Add store states in vue3 using getters</p>
+
+        <div id="app">
+            <button @click="increment">Increment</button>
+            <br>
+            <p>Count: {{ count }}</p>
+
+            <button @click="doubleCount">Double Count</button>
+            <br>
+            <p>Double Count: {{ doubleCount }}</p>
+            <br>
+
+            <p>{{ }}</p>
+        </div>
+        
+
+    </body>
+
+    <script>
+
+        // creating the vuex store here
+        const store = new Vuex.Store({
+            state: {
+                count: 0,
+                todos: [
+                    { id:1, text: "drink", done: true},
+                    { id:2, text: "sleep", done: true}
+                ]
+            },
+            mutations: {
+                increment(state) {
+                    state.count++;
+                }
+            },
+            getters: {
+                increment: (state) => {
+                    return state.count+1
+
+                },
+                doubleCount: (state) => {
+                    return state.count * 2
+                }
+            }
+        })
+
+
+        const app = Vue.createApp({
+            data() {
+                return {
+                 
+                }
+            },
+            methods: {
+                increment() {
+                    this.$store.commit("increment")
+                },
+                doubleCount() {
+                    this.$store.commit("doubleCount")
+                }
+            },
+            computed: {
+                count() {
+                    return this.$store.state.count
+                }
+            },
+            computed: {
+                ...Vuex.mapGetters(["doubleCount"])
+            }
+
+        })
+        app.use(store)
+        app.mount("#app")
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>

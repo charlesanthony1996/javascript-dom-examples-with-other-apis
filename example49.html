@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Three.js TubeGeometry Example</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.rawgit.com/mrdoob/three.js/r68/examples/js/controls/TrackballControls.js"></script>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+
+<script>
+    var scene = new THREE.Scene();
+
+    var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    camera.position.z = 5;
+
+    var renderer = new THREE.WebGLRenderer({canvas: document.getElementById("canvas")});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    var controls = new THREE.TrackballControls(camera);
+
+    var path = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-2, 0, 0),
+        new THREE.Vector3(-1, 1, 0),
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(1, -1, 0),
+        new THREE.Vector3(2, 0, 0)
+    ]);
+
+    var geometry = new THREE.TubeGeometry(path, 20, 0.1, 10, false);
+    var material = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
+    var mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    var isDragging = false;
+    var previousMousePosition = {
+        x: 0,
+        y: 0
+    };
+
+    var canvas = document.getElementById('canvas');
+
+    canvas.addEventListener('mousedown', function(event) {
+        isDragging = true;
+    });
+
+    canvas.addEventListener('mousemove', function(event) {
+        var deltaMove = {
+            x: event.offsetX-previousMousePosition.x,
+            y: event.offsetY-previousMousePosition.y
+        };
+
+        if(isDragging) {
+            var deltaRotationQuaternion = new THREE.Quaternion()
+                .setFromEuler(new THREE.Euler(
+                    toRadians(deltaMove.y * 1),
+                    toRadians(deltaMove.x * 1),
+                    0,
+                    'XYZ'
+                ));
+
+            mesh.quaternion.multiplyQuaternions(deltaRotationQuaternion, mesh.quaternion);
+        }
+
+        previousMousePosition = {
+            x: event.offsetX,
+            y: event.offsetY
+        };
+    });
+
+    canvas.addEventListener('mouseup', function(event) {
+        isDragging = false;
+    });
+
+    function toRadians(angle) {
+        return angle * (Math.PI / 180);
+    }
+
+    function render() {
+        requestAnimationFrame(render);
+        controls.update();
+        renderer.render(scene, camera);
+    }
+
+    render();
+</script>
+</html>

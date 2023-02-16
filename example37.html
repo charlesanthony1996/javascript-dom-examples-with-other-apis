@@ -7,8 +7,10 @@
         <script src="https://unpkg.com/pinia"></script>
         <!-- vue router 4 -->
         <script src="https://unpkg.com/vue-router@4"></script>
+        <!-- pinia cdn -->
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pinia/2.0.30/pinia.iife.js"></script> -->
         <!-- mande cdn for pinia docs testing -->
-        <script async src="https://cdn.jsdelivr.net/npm/mande@2.0.3/dist/mande.iife.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mande@2.0.3/dist/mande.iife.min.js"></script>
         <!-- vuetify cdn js -->
         <link href="https://cdn.jsdelivr.net/npm/vuetify@3.1.3/dist/vuetify.min.css" rel="stylesheet">
         <!-- mdi cdn -->
@@ -83,19 +85,19 @@
                                     class="me-1 pb-1"
                                     >
                                     </v-icon>
-                                    <div id="description"></div>
+                                  <div id="description"></div>
                                 </template>
                             </v-card-item>
 
                             <v-card-text class="py-0">
                                 <v-row align="center" no-gutters>
                                     <v-col class="text-h2" cols="6">
-                                        <p id="temperature"></p>
+                                      <div id="temperature"></div>
                                     </v-col>
 
                                     <v-col cols="6" class="text-right">
-                                        <v-icon color="error" icon="mdi-weather-hurricane" size="88">
-                                        </v-icon>
+                                        <!-- <v-icon color="error" icon="mdi-weather-hurricane" size="88"></v-icon> -->
+                                        <div id="weathericon"></div>
                                     </v-col>
                                 </v-row>
                             </v-card-text>
@@ -106,15 +108,16 @@
                                     prepend-icon="mdi-weather-windy"
                                 >
                                     <v-list-item-subtitle>
-                                        <div id="windspeed">
-                                        </div>
+                                      <div id="windspeed"></div>
                                     </v-list-item-subtitle>
                                 </v-list-item>
                                 <v-list-item
                                     density="compact"
                                     prepend-icon="mdi-weather-pouring"
                                 >
-                                    <v-list-item-subtitle>48%</v-list-item-subtitle>
+                                    <v-list-item-subtitle>
+                                        <div id="humidity"></div>
+                                    </v-list-item-subtitle>
                                 </v-list-item>
                             </div>
 
@@ -314,12 +317,16 @@
         //     weatherDiv.innerHTML = `<p>Error getting weather data ${error.message}</p>`
         // })
 
+        // getting current geolocation
+        fetch("https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}")
+        
+
         // getting temperature
         fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")
         .then(response => response.json())
         .then( data => {
             // logging all data
-            // console.log(data)
+            console.log(data)
             const temperatureDiv = document.getElementById("temperature")
             const temperature = data.main.temp
             const description = data.weather[0].description
@@ -361,7 +368,7 @@
             // console.log(data)
             const windspeedDiv = document.getElementById("windspeed")
             const windspeed = data.wind.speed
-            console.log(windspeed)
+            // console.log(windspeed)
             const html = `<p>${windspeed} ms-1</p>`
             windspeedDiv.innerHTML = html
         })
@@ -376,7 +383,36 @@
         .then(response => response.json())
         .then(data => {
             // logging all data for checking
+            const humidityDiv = document.getElementById("humidity")
+            const humidity = data.main.humidity
+            const html = `<p>${humidity}%</p>`
+            humidityDiv.innerHTML = html
         })
+        .catch(error => {
+            // console.log(error)
+            const humidityDiv = document.getElementById("humidity")
+            humidityDiv.innerHTML = `<p>Error getting humidity ${error.message}</p>`
+        })
+
+
+        // getting the weather icon
+        fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")
+        .then(response => response.json())
+        .then(data => {
+            // logging all data for checking
+            const weathericonDiv = document.getElementById("weathericon")
+            const iconCode = data.weather[0].icon
+            const iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`
+            const html = `<img style="width:80px;height:80px;" src='${iconUrl}' alt="weather_type">`
+            weathericonDiv.innerHTML = html
+        })
+        .catch(error => {
+            // console.log(error)
+            const weathericonDiv = document.getElementById("weathericon")
+            weathericonDiv.innerHTML = `<p>Error getting weather icon ${error.message}</p>`
+        })
+
+
 
 
 
