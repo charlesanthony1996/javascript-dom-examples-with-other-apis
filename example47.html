@@ -18,13 +18,15 @@
         <button @click="increment">Increment</button>
         <p>Count: {{ count }}</p>
         <br>
-        <button @click="doubleCount">Double Count</button>
-        <p>Double Count: {{ count }}</p>
+        <!-- <button @click="doubleCount">Double Count</button>
+        <p>Double Count: {{ count }}</p> -->
         <h3>Snake Game</h3>
 
-        <canvas id="canvas" width="400" height="400"></canvas>
+        <!-- <canvas id="canvas" width="400" height="400"></canvas> -->
 
         </div>
+
+        <canvas id="canvas" width="400" height="400"></canvas>
         
 
     </body>
@@ -32,6 +34,8 @@
     <script>
 
         // setting up snake game section
+        // 2d snake game from the 1st semester
+
         var canvas = document.getElementById("canvas")
         var ctx = canvas.getContext("2d")
 
@@ -42,8 +46,7 @@
         var height = canvas.height / tileSize
         var snake = [{x:5, y:5}]
         var direction = "right"
-        var food = null
-
+        var food = createFood()
 
         // main game loop
         setInterval(function() {
@@ -68,6 +71,9 @@
                     head.y++
                     break
             }
+
+            // why does it unshift here?
+
             snake.unshift(head)
 
             // check for collision with a food block
@@ -82,22 +88,42 @@
                 gameOver()
             }
 
-            // clearing canvas at each frame
-            ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-            
-
-
-
             // check for collision with any parts of body or head
             // checking for self collisions
             for (var i = 1; i < snake.length; i++) {
                 if (head.x === snake[i].x  && head.y === snake[i].y) {
                     gameOver()
                 }
-
             }
-        })
+
+            // clearing canvas at each frame
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+            // draw snake here
+            ctx.fillStyle= "green"
+            snake.forEach(function (segment) {
+                ctx.fillRect(segment.x * tileSize, segment.y * tileSize, tileSize, tileSize)
+            })
+
+            // draw food here
+            ctx.fillStyle = "red"
+            ctx.fillRect(food.x * tileSize, food.y * tileSize, tileSize, tileSize)
+        
+        }, 100)
+
+        // create food at a random location
+		function createFood() {
+			return {
+				x: Math.floor(Math.random() * width),
+				y: Math.floor(Math.random() * height)
+			};
+		}
+
+		// end the game
+		function gameOver() {
+			alert("Game over!");
+			location.reload();
+		}
 
         // event listeners -> handling keyboard input
         document.addEventListener("keydown", function(event) {
@@ -160,7 +186,7 @@
                 const height = canvas.height / tileSize
                 var snake = [{x: 5, y: 5}]
                 var direction = "right"
-                var food = null
+                var food = createFood()
             },
 
             methods: {
@@ -198,6 +224,9 @@
     </script>
 
     <style>
+        canvas {
+            border: 1px solid black;
+        }
 
 
     </style>
