@@ -25,6 +25,7 @@
             <router-link to="/about">About</router-link> &nbsp;
             <router-link to="/contact">Contact</router-link> &nbsp;
             <router-link to="/weather">Weather</router-link> &nbsp;
+            <router-link to="/news">News</router-link> &nbsp;
             </p>
             <h2>pinia example -> Main app view -> App.vue</h2>
             <h3>Counter value {{ counter.count }}</h3>
@@ -322,26 +323,58 @@
         
 
         // getting temperature
+        // fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")
+        // .then(response => response.json())
+        // .then( data => {
+        //     // logging all data
+        //     console.log(data)
+        //     const temperatureDiv = document.getElementById("temperature")
+        //     const temperature = data.main.temp
+        //     const description = data.weather[0].description
+        //     const iconCode = data.weather[0].icon
+        //     const iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`
+        //     const html = `
+        //     <p>${temperature}C</p>
+        //     `
+        //     temperatureDiv.innerHTML = html
+        // })
+        // .catch(error => {
+        //     console.log(error)
+        //     const temperatureDiv = document.getElementById("temperature")
+        //     temperatureDiv.innerHTML = `<p>Error getting weather data ${error.message}</p>`
+        // })
+
+        // using set interval to get temperature data every 10 seconds
+        function getWeatherData() {
         fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")
-        .then(response => response.json())
-        .then( data => {
-            // logging all data
-            console.log(data)
-            const temperatureDiv = document.getElementById("temperature")
-            const temperature = data.main.temp
-            const description = data.weather[0].description
-            const iconCode = data.weather[0].icon
-            const iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`
-            const html = `
-            <p>${temperature}C</p>
-            `
-            temperatureDiv.innerHTML = html
-        })
-        .catch(error => {
-            console.log(error)
-            const temperatureDiv = document.getElementById("temperature")
-            temperatureDiv.innerHTML = `<p>Error getting weather data ${error.message}</p>`
-        })
+            .then(response => response.json())
+            .then( data => {
+                // logging all data
+                console.log(data)
+                const temperatureDiv = document.getElementById("temperature")
+                const temperature = data.main.temp
+                const description = data.weather[0].description
+                const iconCode = data.weather[0].icon
+                const iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`
+                const html = `
+                <p>${temperature}C</p>
+                `
+                temperatureDiv.innerHTML = html
+            })
+            .catch(error => {
+                console.log(error)
+                const temperatureDiv = document.getElementById("temperature")
+                temperatureDiv.innerHTML = `<p>Error getting weather data ${error.message}</p>`
+            })
+        }
+
+        // Calling the function once
+        getWeatherData();
+
+        // Call the function every 10 seconds
+        setInterval(getWeatherData, 10000);
+
+
 
         // getting description
         fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")

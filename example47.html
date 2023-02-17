@@ -1,26 +1,29 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title></title>
+        <title>Vue 3 and vuex simple app</title>
         <script src="https://unpkg.com/vue@next"></script>
         <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
     </head>
 
     <body>
-        <h2>vue3 and vuex simple template</h2>
+        <h2>vue3 and vuex template to understand a 2d snake game</h2>
         <p>Add store states in vue3 using getters</p>
 
         <div id="app">
-            <button @click="increment">Increment</button>
-            <br>
-            <p>Count: {{ count }}</p>
+        <h3>yes or no api</h3>
+        <p>{{ answer }}</p>
+        <br>
+        <h2>Vuex store example</h2>
+        <button @click="increment">Increment</button>
+        <p>Count: {{ count }}</p>
+        <br>
+        <button @click="doubleCount">Double Count</button>
+        <p>Double Count: {{ count }}</p>
+        <h3>Snake Game</h3>
 
-            <button @click="doubleCount">Double Count</button>
-            <br>
-            <p>Double Count: {{ doubleCount }}</p>
-            <br>
+        <canvas id="canvas" width="400" height="400"></canvas>
 
-            <p>{{ }}</p>
         </div>
         
 
@@ -28,58 +31,168 @@
 
     <script>
 
-        // creating the vuex store here
+        // setting up snake game section
+        var canvas = document.getElementById("canvas")
+        var ctx = canvas.getContext("2d")
+
+        //  setting up game variables
+        // setting them up in the state section
+        var tileSize = 10
+        var width = canvas.width / tileSize
+        var height = canvas.height / tileSize
+        var snake = [{x:5, y:5}]
+        var direction = "right"
+        var food = null
+
+
+        // main game loop
+        setInterval(function() {
+            
+            // move snake
+            var head = { x: snake[0].x, y:snake[0].y }
+
+            switch(direction) {
+                case "right":
+                    head.x++
+                    break;
+                
+                case "left":
+                    head.x--
+                    break
+
+                case "up":
+                    head.y--
+                    break;
+
+                case "down":
+                    head.y++
+                    break
+            }
+            snake.unshift(head)
+
+            // check for collision with a food block
+            if(head.x === food.x && head.y === food.y) {
+                food = createFood()
+            } else {
+                snake.pop()
+            }
+
+            // check for collision with walls
+            if (head.x < 0 || head.x >= width || head.y < 0 || head.y >= height) {
+                gameOver()
+            }
+
+            // clearing canvas at each frame
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+            
+
+
+
+            // check for collision with any parts of body or head
+            // checking for self collisions
+            for (var i = 1; i < snake.length; i++) {
+                if (head.x === snake[i].x  && head.y === snake[i].y) {
+                    gameOver()
+                }
+
+            }
+        })
+
+        // event listeners -> handling keyboard input
+        document.addEventListener("keydown", function(event) {
+            switch(event.keyCode) {
+                case 37:
+                    if(direction !== "right") {
+                        direction == "left"
+                    }
+                    break;
+                case 38:
+                    if(direction !== "down") {
+                        direction = "up"
+                    }
+                    break;
+                case 39:
+                    if(direction !== "left") {
+                        direction = "right"
+                    }
+                    break
+                case 40:
+                    if (direction !== "right") {
+                        direction = "left"
+                    }
+                    break
+            }
+        })
+        
+
         const store = new Vuex.Store({
             state: {
+                answer:"",
                 count: 0,
-                todos: [
-                    { id:1, text: "drink", done: true},
-                    { id:2, text: "sleep", done: true}
-                ]
             },
             mutations: {
                 increment(state) {
                     state.count++;
+                },
+                setAnswer(state, answer) {
+                    state.answer = answer
                 }
             },
             getters: {
-                increment: (state) => {
-                    return state.count+1
-
-                },
                 doubleCount: (state) => {
                     return state.count * 2
+                }
+            },
+            actions: {
+                async getAnswer(context) {
+                    const res = await fetch("https://yesno.wtf/api")
+                    const answer = await res.json()
+                    context.commit("setAnswer", answer)
                 }
             }
         })
 
-
         const app = Vue.createApp({
-            data() {
-                return {
-                 
-                }
+            setup() {
+                const tileSize = 10
+                const width = canvas.width/ tileSize
+                const height = canvas.height / tileSize
+                var snake = [{x: 5, y: 5}]
+                var direction = "right"
+                var food = null
             },
+
             methods: {
                 increment() {
                     this.$store.commit("increment")
                 },
-                doubleCount() {
-                    this.$store.commit("doubleCount")
+                createFood() {
+                    return {
+                        x: Math.floor(Math.random() * width),
+                        y: Math.floor(Math.random() * height)
+                    }
+                },
+                gameOver() {
+                    alert("Game over!")
+                    location.reload()
                 }
             },
+            mounted() {
+                this.$store.dispatch("getAnswer")
+            },
             computed: {
+                answer() {
+                    return this.$store.state.answer
+                },
                 count() {
                     return this.$store.state.count
                 }
-            },
-            computed: {
-                ...Vuex.mapGetters(["doubleCount"])
             }
-
         })
         app.use(store)
         app.mount("#app")
+
 
 
     </script>
