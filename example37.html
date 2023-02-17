@@ -483,24 +483,29 @@
 
 
         // getting the weather icon
-        fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")
-        .then(response => response.json())
-        .then(data => {
-            // logging all data for checking
-            const weathericonDiv = document.getElementById("weathericon")
-            const iconCode = data.weather[0].icon
-            const iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`
-            const html = `<img style="width:80px;height:80px;" src='${iconUrl}' alt="weather_type">`
-            weathericonDiv.innerHTML = html
-        })
-        .catch(error => {
-            // console.log(error)
-            const weathericonDiv = document.getElementById("weathericon")
-            weathericonDiv.innerHTML = `<p>Error getting weather icon ${error.message}</p>`
-        })
+        function getWeatherIconData() {
+            fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")
+            .then(response => response.json())
+            .then(data => {
+                // logging all data for checking
+                const weathericonDiv = document.getElementById("weathericon")
+                const iconCode = data.weather[0].icon
+                const iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`
+                const html = `<img style="width:80px;height:80px;" src='${iconUrl}' alt="weather_type">`
+                weathericonDiv.innerHTML = html
+            })
+            .catch(error => {
+                // console.log(error)
+                const weathericonDiv = document.getElementById("weathericon")
+                weathericonDiv.innerHTML = `<p>Error getting weather icon ${error.message}</p>`
+            })
+        }
+
+        getWeatherIconData()
 
 
-
+        // call every 60 secs
+        setInterval(getWeatherIconData, 60000);
 
 
         const app = createApp(App)
