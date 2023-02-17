@@ -329,7 +329,7 @@
         // see whats logged
         // play around with the methods
         // refer to api docs
-        console.log(pinia.use(secretPiniaPlugin))
+        // console.log(pinia.use(secretPiniaPlugin))
 
         // getting weather data
         // fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")
@@ -361,25 +361,34 @@
 
         // getting current geolocation using the inbuilt geolocation api
         // a users current geo location
+
+        const global_api_key = "c606d2ba7ecbb0bd3f61222557d391d7"
         async function getUserLocation() {
             const myLocation = document.getElementById('location');
 
             if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(position => {
+                navigator.geolocation.getCurrentPosition(position => {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
                 const api_key = "c606d2ba7ecbb0bd3f61222557d391d7"
                 const limit = 1
+                window.latitude = latitude;
+                window.longitude = longitude;
                 myLocation.textContent = `Latitude: ${latitude}, Longitude: ${longitude}`;
                 fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=${limit}&appid=${api_key}`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log("geolocation based data recovered")
+                    // console.log("geolocation based data recovered")
                     const locationDiv = document.getElementById("inject-location")
                     const location = data[0].name
                     // console.log(data[0].name)
                     const html = `<p>${location}</p>`
                     locationDiv.innerHTML = html
+
+                    // getting lat and long for the user here
+                    // function is async so better to get them from here
+                    // than waiting for it for 2 secs after
+                    useLocation(latitude, longitude);
                 })
                 .catch(error => {
                     // console.log(error)
@@ -398,42 +407,33 @@
 
         setInterval(getUserLocation, 60000)
 
+        async function useLocation(latitude, longitude) {
+            return latitude, longitude
+        }
+
+        setTimeout(() => {
+         console.log(window.latitude)
+         console.log(window.longitude)
+        }, 1800); 
+
+
+
         
 
-        // getting temperature
-        // fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")
-        // .then(response => response.json())
-        // .then( data => {
-        //     // logging all data
-        //     console.log(data)
-        //     const temperatureDiv = document.getElementById("temperature")
-        //     const temperature = data.main.temp
-        //     const description = data.weather[0].description
-        //     const iconCode = data.weather[0].icon
-        //     const iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`
-        //     const html = `
-        //     <p>${temperature}C</p>
-        //     `
-        //     temperatureDiv.innerHTML = html
-        // })
-        // .catch(error => {
-        //     console.log(error)
-        //     const temperatureDiv = document.getElementById("temperature")
-        //     temperatureDiv.innerHTML = `<p>Error getting weather data ${error.message}</p>`
-        // })
-
         // using set interval to get temperature data every 10 seconds
-        function getWeatherData() {
-        fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")
+        async function getWeatherData() {
+            setTimeout(() => {
+                return window.latitude , window.longitude
+        }, 2000); 
+        const limit = 1
+        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${window.latitude}&lon=${window.longitude}&appid=${global_api_key}`)
             .then(response => response.json())
             .then( data => {
                 // logging all data
                 // console.log(data)
                 const temperatureDiv = document.getElementById("temperature")
-                const temperature = data.main.temp
-                const description = data.weather[0].description
-                const iconCode = data.weather[0].icon
-                const iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`
+                const temperature = parseFloat((data.main.temp - 273).toFixed(2))
+                // console.log(temperature)
                 const html = `
                 <p style="width:200px;">${temperature}C</p>
                 `
@@ -455,8 +455,11 @@
 
 
         // getting description
-        function getDescriptionData() {
-            fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")
+        async function getDescriptionData() {
+            setTimeout(() => {
+                return window.latitude , window.longitude
+            }, 2000);
+            fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${window.latitude}&lon=${window.longitude}&appid=${global_api_key}`)
             .then(response => response.json())
             .then(data => {
                 // logging all data for checking
@@ -481,8 +484,11 @@
         
 
         // getting wind speed
-        function getWindspeedData() {
-            fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")
+        async function getWindspeedData() {
+            setTimeout(() => {
+                return window.latitude , window.longitude
+            }, 2000);
+            fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${window.latitude}&lon=${window.longitude}&appid=${global_api_key}`)
             .then(response => response.json())
             .then(data => {
                 // loggin all data for checking
@@ -506,8 +512,11 @@
         setInterval(getWindspeedData, 60000)
 
         // getting humidity
-        function getHumidityData() {
-            fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")
+        async function getHumidityData() {
+            setTimeout(() => {
+                return window.latitude , window.longitude
+            }, 2000);
+            fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${window.latitude}&lon=${window.longitude}&appid=${global_api_key}`)
             .then(response => response.json())
             .then(data => {
                 // logging all data for checking
@@ -532,8 +541,11 @@
 
 
         // getting the weather icon
-        function getWeatherIconData() {
-            fetch("https://api.openweathermap.org/data/2.5/weather?q=Vienna&appid=c606d2ba7ecbb0bd3f61222557d391d7&units=metric")
+        async function getWeatherIconData() {
+            setTimeout(() => {
+                return window.latitude , window.longitude
+            }, 2000);
+            fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${window.latitude}&lon=${window.longitude}&appid=${global_api_key}`)
             .then(response => response.json())
             .then(data => {
                 // logging all data for checking
