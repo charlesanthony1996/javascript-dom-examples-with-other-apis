@@ -175,12 +175,41 @@
                         </v-card>
                        </div>`
             }
+        
+        const News = {
+            template: 
+            `<div>
+                <h2>News api here</h2>
+                
+                
+            </div>`
+        }
+
+        const Artemis = {
+            template:
+            `<div>
+                <p>Nothing here</p>
+            
+            </div>`
+        }
+
+        const NuslitNumpad = {
+            template: 
+            `<div>
+                <p>Protoype</p>
+
+
+            </div>`
+        }
 
         const routes = [
             { path: '/', component: Home },
             { path: '/about', component: About },
             { path: '/contact', component: Contact },
-            { path: '/weather', component: Weather },  
+            { path: '/weather', component: Weather },
+            { path: '/news', component: News},
+            { path: '/artemis', component: Artemis},
+            { path: '/nuslitnumpad', component: NuslitNumpad},
         ]
 
         // router init
@@ -348,7 +377,7 @@
                     console.log("geolocation based data recovered")
                     const locationDiv = document.getElementById("inject-location")
                     const location = data[0].name
-                    console.log(data[0].name)
+                    // console.log(data[0].name)
                     const html = `<p>${location}</p>`
                     locationDiv.innerHTML = html
                 })
