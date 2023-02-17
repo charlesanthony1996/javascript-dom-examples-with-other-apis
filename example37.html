@@ -26,6 +26,8 @@
             <router-link to="/contact">Contact</router-link> &nbsp;
             <router-link to="/weather">Weather</router-link> &nbsp;
             <router-link to="/news">News</router-link> &nbsp;
+            <router-link to="/artemis">Project artemis</router-link> &nbsp;
+            <router-link to="/nuslitnumpad">Nuslit numpad prototype</router-link> &nbsp;
             </p>
             <h2>pinia example -> Main app view -> App.vue</h2>
             <h3>Counter value {{ counter.count }}</h3>
@@ -58,6 +60,10 @@
             <p>{{ example1 }}</p>
             <br><br>
             <h2>How the actions store work with data transfer objects</h2>
+            <h2>A user's current geolocation</h2>
+            <div id="location">
+
+            </div>
         </div>
     </body>
 
@@ -318,8 +324,23 @@
         //     weatherDiv.innerHTML = `<p>Error getting weather data ${error.message}</p>`
         // })
 
-        // getting current geolocation
-        fetch("https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}")
+        // getting current geolocation using the inbuilt geolocation api
+        // a users current geo location
+        const myLocation = document.getElementsById("location")
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const latitude = position.coords.latitude
+                const longitude = position.coords.longitude
+
+                myLocation.textContent = `Latitude: ${latitude}, Longitude: ${longitude}`
+            }, error => {
+                myLocation.textContent = `Error: ${error.message}`
+            })
+        } else {
+            myLocation.textContent = "Geolocation is not supported here for the user"
+        }
+
         
 
         // getting temperature
