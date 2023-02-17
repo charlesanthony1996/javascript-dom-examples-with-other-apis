@@ -46,6 +46,9 @@
             <h3>Counter name {{ counter.name }}</h3>
             <h3>Counter type {{ counter.type }}</h3>
 
+            <h2>A user's current geolocation</h2>
+            <p id="location"></p>
+
             <h2>Routes view. changes according to the route</h2>
 
             <router-view>
@@ -60,10 +63,7 @@
             <p>{{ example1 }}</p>
             <br><br>
             <h2>How the actions store work with data transfer objects</h2>
-            <h2>A user's current geolocation</h2>
-            <div id="location">
-
-            </div>
+            
         </div>
     </body>
 
@@ -241,8 +241,8 @@
                     }
                 ]
                 // properties for the weather widget
-                const labels = { 0: "SU", 1: "MO", 2:"TU",3: "WED", 4:"TH", 5:"FR", 6:"SA" }
-                var expand = false
+                const labels = ref({ 0: "SU", 1: "MO", 2:"TU",3: "WED", 4:"TH", 5:"FR", 6:"SA" })
+                var expand = ref(false)
                 var time = 0
                 var forecast = [
                 { day: 'Tuesday', icon: 'mdi-white-balance-sunny', temp: '24\xB0/12\xB0' },
@@ -262,7 +262,7 @@
                     labels,
                     expand,
                     time,
-                    forecast
+                    forecast,
 
                 }
 
@@ -326,19 +326,18 @@
 
         // getting current geolocation using the inbuilt geolocation api
         // a users current geo location
-        const myLocation = document.getElementsById("location")
+        const myLocation = document.getElementById('location');
 
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(position => {
-                const latitude = position.coords.latitude
-                const longitude = position.coords.longitude
-
-                myLocation.textContent = `Latitude: ${latitude}, Longitude: ${longitude}`
-            }, error => {
-                myLocation.textContent = `Error: ${error.message}`
-            })
+        navigator.geolocation.getCurrentPosition(position => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            myLocation.textContent = `Latitude: ${latitude}, Longitude: ${longitude}`;
+        }, error => {
+            myLocation.textContent = `Error: ${error.message}`;
+        });
         } else {
-            myLocation.textContent = "Geolocation is not supported here for the user"
+        myLocation.textContent = 'Geolocation is not supported by this browser.';
         }
 
         
@@ -393,7 +392,7 @@
         getWeatherData();
 
         // Call the function every 10 seconds
-        setInterval(getWeatherData, 10000);
+        setInterval(getWeatherData, 60000);
 
 
 
