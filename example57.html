@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>object manipulation in js</title>
+    </head>
+
+    <body>
+        
+
+    </body>
+
+    <script>
+        class Person {
+            constructor(name, age) {
+                this.name = name
+                this.age = age
+            }
+
+            introduce() {
+                console.log(`Hi my name is ${this.name} and im ${this.age} years old`)
+            }
+        }
+
+        // create an instance
+        var alice = new Person("Alice", 30)
+        const bob = new Person("Bob", 35)
+
+        // copy the ref to the alice object
+        const alice2 = alice
+
+        // set the alice reference to null, removing any reference to the original
+        alice = null
+
+        // alice2 works here, since it was reference before it was null
+        alice2.introduce()
+
+        // use the new operator to create another instance of the class
+        const carol = new Person("Carol", 25)
+
+        // use the optional chaining operator to call a method on an object that may not exist
+        // this will return undefined
+        const age = carol?.getAge?.()
+        console.log(age)
+
+        // create a new symbol with a description
+        const mySymbol = Symbol("my symbol")
+
+        // add the symbol as a property to the "bob" object
+        bob[mySymbol] = 42
+
+        // use the symbol to access the value of the property
+        console.log(bob[mySymbol])
+
+        // define a custom conversion method for the person class that returns the persons name
+        Person.prototype[Symbol.toPrimitive] = function(hint) {
+            if(hint === "string") {
+                return this.name
+            }
+            else {
+                return this.age
+            }
+        }
+
+        // use the object in a context where a primitive value is expected
+        console.log(`The oldest person is ${Math.max(alice2, bob, carol)}.`);
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>

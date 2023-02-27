@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+  </head>
+
+  <body>
+    <div id="app">
+      <h1>Todo App</h1>
+      <form @submit.prevent="addTodo">
+        <input type="text" v-model="newTodo" placeholder="Add new todo" />
+        <button type="submit">Add</button>
+      </form>
+      <ul>
+        <li v-for="(todo, index) in todos" :key="index">
+          <template v-if="editingTodo === index">
+            <input type="text" v-model="editedTodo" />
+            <button @click="saveTodo">Save</button>
+          </template>
+          <template v-else>
+            {{ todo }}
+            <button @click="deleteTodo(index)">Delete</button>
+            <button @click="editTodo(index)">Edit</button>
+          </template>
+        </li>
+      </ul>
+    </div>
+  </body>
+
+  <script>
+    const store = new Vuex.Store({
+      state: {
+        todos: [],
+      },
+      mutations: {
+        addTodo: (state, todo) => {
+          state.todos.push(todo);
+        },
+        deleteTodo: (state, index) => {
+          state.todos.splice(index, 1);
+        },
+        editTodo: (state, { index, todo }) => {
+          state.todos[index] = todo;
+        },
+      },
+      getters: {
+        getTodos: (state) => {
+          return state.todos;
+        },
+      },
+      actions: {
+        addTodo: ({ commit }, todo) => {
+          commit("addTodo", todo);
+        },
+        deleteTodo: ({ commit }, index) => {
+          commit("deleteTodo", index);
+        },
+      },
+    });
+
+    const app = Vue.createApp({
+      setup() {
+        const newTodo = Vue.ref("");
+        const todos = Vue.computed(() => store.getters.getTodos);
+        const addTodo = () => {
+          if (newTodo.value) {
+            store.dispatch("addTodo", newTodo.value);
+            newTodo.value = "";
+          }
+        };
+        const deleteTodo = (index) => {
+          store.dispatch("deleteTodo", index);
+        };
+
+        // edit part
+        const editingTodo = Vue.ref(-1);
+        const editedTodo = Vue.ref("");
+        const editTodo = (index) => {
+          editingTodo.value = index;
+          editedTodo.value = todos.value[index];
+        };
+        // save function
+        const saveTodo = () => {
+          store.commit("editTodo", {
+            index: editingTodo.value,
+            todo: editedTodo.value,
+          });
+          editingTodo.value = -1;
+        };
+
+        return { newTodo, todos, addTodo, deleteTodo, editTodo, editedTodo, editingTodo }
+    }
+})
+
+    app.use(store)
+    app.mount("#app")
+
+    </script>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <script src="https://unpkg.com/vue@next"></script>
+        <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+        <script src="https://unpkg.com/vuex@next"></script>
+    </head>
+
+    <body>
+        <div id="app">
+            <div class="game-area">
+                <div v-for="(row, rowIndex) in gameGrid" :key="rowIndex" class="game-row">
+                    <div v-for="(cell colIndex) in row" :key="colIndex" class="game-cell" :class="getCellStyle(cell)">
+                        {{ cell }}
+                    </div>
+                </div>
+            </div>
+            <div class="game-info">
+                <p>Score {{ score }}</p>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        const store = new Vuex.Store({
+            state: {
+                gameGrid: [],
+                snake: [],
+                direction: "right",
+                food: {},
+                score: 0,
+                gameOver: false,
+            },
+            mutations: {
+                initGame(state) {
+                    state.gameGrid = Array.from({length: 20}, () => Array.from({length: 20}, () => 0))
+                    state.snake = [
+                        [10, 10],
+                        [10, 9],
+                        [10, 8],
+                    ]
+                    state.direction = "right"
+                    state.food = {}
+                    state.gameOver = false
+                    state.gameGrid = state.gameGrid.map((row, rowIndex) => 
+                    row.map((cell, colIndex) => {
+                        if(state.snake.some((part) => part[0] === rowIndex && part[1] === colIndex)) {
+                            return "snake"
+                        }
+                        if (state.food.x === rowIndex && state.food.y === colIndex) {
+                            return "food"
+                        }
+                        return 0;
+                    }))
+                    state.food = generateFood(state.gameGrid)
+                },
+                // direction
+                setDirection(state, direction) {
+                    state.direction = direction
+                },
+                // moving snake
+                moveSnake(state) {
+                    const headX = snake.state[0]
+                    const headY = snake.state[0]
+                    let newHead = []
+                    if (state.direction === "up") {
+                        newHead = [headX - 1, headY]
+                    }
+
+                    if (state.direction === "down") {
+                        newHead = [headX + 1, headY]
+                    }
+
+                    if (state.direction === "left") {
+                        newHead = [headX, headY - 1]
+                    }
+
+                    if (state.direction === "right") {
+                        newHead = [headX, headY + 1]
+                    }
+
+                    if (newHead[0] < 0 || newHead[0] >= state.gameGrid.length || newHead[1] < 0 || newHead[1] >= state.gameGrid[0].length) {
+                        state.gameOver = true
+                        return
+                    }
+
+                    if (state.gameGrid[newHead[0]][newHead[1]] === "snake") {
+                        state.gameOver = true
+                        return 
+                    }
+                    state.snake.unshift(newHead)
+
+                    
+
+
+
+                }
+
+            }
+        })
+
+
+
+    </script>
+
+    <style>
+        .game-area {
+            display:flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .game-row {
+            display:flex;
+        }
+
+        .game-cell {
+            width: 20px;
+            height: 20px;
+            border: 1px solid black;
+            background-color: white;
+            margin: 1px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .snake-cell {
+            background-color: green;
+        }
+
+        .food-cell {
+            background-color: red;
+        }
+
+        .game-info {
+            margin-top: 20px;
+        }
+    </style>
+</html>

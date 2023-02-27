@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <script src="https:unpkg.com/vue@next"></script>
+        <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+    </head>
+
+    <body>
+        <div id="app">
+            <h1>Random quote generator</h1>
+            <p>{{ currentQuote }}</p>
+            <button @click="getRandomQuote">Get Quote</button>
+        </div>
+    </body>
+
+    <script>
+        const store = new Vuex.Store({
+            state: {
+                quotes: [
+                "The only way to do great work is to love what you do. - Steve Jobs",
+                "If you want to live a happy life, tie it to a goal, not to people or things. - Albert Einstein",
+                "Success is not final, failure is not fatal: It is the courage to continue that counts. - Winston Churchill",
+                "Believe you can and you're halfway there. - Theodore Roosevelt",
+                "The best way to predict the future is to invent it. - Alan Kay",
+                "It does not matter how slowly you go as long as you do not stop. - Confucius",
+                "Don't watch the clock; do what it does. Keep going. - Sam Levenson",
+                "You miss 100% of the shots you don't take. - Wayne Gretzky"
+                ],
+                currentQuote: ""
+            },
+            mutations: {
+                setCurrentQuote(state, quote) {
+                    state.currentQuote = quote
+                }
+            },
+            getters: {
+                getRandomQuote: state => {
+                    return state.quotes[Math.floor(Math.random() * state.quotes.length)]
+                }
+            },
+            actions: {
+                setCurrentQuote({ commit, getters }) {
+                    const quote = getters.getRandomQuote
+                    commit("setCurrentQuote", quote)
+                }
+            }
+        })
+
+        const app = Vue.createApp({
+            setup() {
+                const store = Vuex.useStore()
+                const currentQuote = Vue.computed(() => store.state.currentQuote)
+
+                const getRandomQuote = () => {
+                    store.dispatch("setCurrentQuote")
+                }
+                return {
+                    currentQuote,
+                    getRandomQuote
+                }
+            }
+        })
+
+        app.use(store)
+        app.mount("#app")
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>

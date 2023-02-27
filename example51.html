@@ -1,19 +1,48 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <title>TensorFlow.js Example</title>
-  <!-- Load TensorFlow.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.9.0/dist/tf.min.js"></script>
-</head>
-<body>
-  <h1>openweather api and tensorflow js fused -> to predict the weather data</h1>
-  <div id="">
-    
-  </div>
-  <script>
-    
-     
-  </script>
-</body>
+  <head>
+    <title>TensorFlow.js + OpenWeatherMap Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.9.0"></script>
+  </head>
+  <body>
+    <h1>TensorFlow.js + OpenWeatherMap Example</h1>
+    <div id="result"></div>
+    <script>
+      async function fetchWeatherData(city) {
+        const apiKey = 'c606d2ba7ecbb0bd3f61222557d391d7';
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`);
+        const data = await response.json();
+        const temps = data.list.map(item => item.main.temp - 273.15);
+        return temps;
+      }
+
+      async function trainModel(city) {
+        console.log('Training model...');
+        const temps = await fetchWeatherData(city);
+        const input = tf.tensor(temps.slice(0, -1));
+        const output = tf.tensor(temps.slice(1));
+        const model = tf.sequential();
+        model.add(tf.layers.dense({units: 1, inputShape: [1]}));
+        model.compile({optimizer: 'sgd', loss: 'meanSquaredError'});
+        await model.fit(input, output, {epochs: 100});
+        return model;
+      }
+
+      async function predictTemperature(model, city) {
+        console.log('Making prediction...');
+        const temps = await fetchWeatherData(city);
+        const input = tf.tensor(temps.slice(-1));
+        const prediction = await model.predict(input);
+        return prediction.dataSync()[0];
+      }
+
+      (async function() {
+        const city = 'London';
+        const model = await trainModel(city);
+        const prediction = await predictTemperature(model, city);
+        const result = document.getElementById('result');
+        result.textContent = `The predicted temperature in ${city} tomorrow is ${prediction}°C.`;
+      })();
+    </script>
+  </body>
 </html>
