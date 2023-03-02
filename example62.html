@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Example</title>
+  <script src="https://unpkg.com/vue"></script>
+  <script src="https://unpkg.com/vue-directive-touch"></script>
+  <script>
+    Vue.use(VueDirectiveTouch)
+    new Vue({
+      el: '#app',
+      data: {
+        keyBindings: [
+          {
+            id: '{enter}',
+            selector: '#parentId',
+            event: 'submit-form',
+            func: () => {
+              console.error('do whatever you want to do on enter')
+            }
+          }
+        ]
+      },
+      methods: {
+        myFunction: function() {
+          // handle form submission here
+        }
+      }
+    })
+  </script>
+</head>
+<body>
+  <div id="app">
+    <parent-container id="parentId" @submit-form="myFunction">
+      <some-text-field-or-component v-touch-keyboard="{keyBindings: keyBindings}"/>
+    </parent-container>
+  </div>
+</body>
+</html>

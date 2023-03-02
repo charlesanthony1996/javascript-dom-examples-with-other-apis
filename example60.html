@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> keyboard listener example</title>
+    </head>
+
+    <body>
+        <h2>keyboard listener example</h2>
+
+        <button id="test" >Test</button>
+        
+
+    </body>
+
+    <script>
+
+        document.addEventListener("keydown", (event) => {
+            const keyName = event.key
+
+            if(keyName === "Control") {
+                // do not alert when only control key is pressed
+                alert("Ctrl key was pressed")
+                console.log("ctrl key was pressed")
+            }
+
+            if (event.shiftKey) {
+                console.log("shift key was pressed")
+            }
+
+            if(event.ctrlKey) {
+                // even though event.key is not "Control"
+                // event.ctrlKey may be true if ctrl key is pressed at the same time
+                alert(`Combination of ctrl key +  ${keyName}`)
+            }
+            else {
+                alert(`key pressed ${keyName}`)
+            }
+        }, false)
+
+
+        // keyboardEvent.initKeyEvent
+
+        const event = new KeyboardEvent("keypress", {
+            bubbles: true,
+            cancelable: true,
+            key: "Tab",
+            code: "Tab",
+            keyCode: 9
+        })
+        // dispatching the event
+
+        document.getElementById("test", function() {
+            console.log("tab was pressed")
+
+        }).dispatchEvent(event)
+
+        
+
+
+
+
+
+        
+
+
+
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>

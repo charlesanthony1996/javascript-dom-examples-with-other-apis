@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>a rough summary on classes in javascript</title>
+    </head>
+
+    <body>
+        
+
+    </body>
+
+    <script>
+        class Animal {
+            #name
+
+            constructor(name) {
+                this.#name = name
+            }
+
+            #sayHello() {
+                console.log(`Hello, my name is ${this.name}`);
+            }
+
+            // define a public method that uses the private method
+            introduce() {
+                this.#sayHello()
+            }
+
+            // define a static method that returns a new instance of the class
+            static create(name) {
+                return new Animal(name)
+            }
+        }
+
+        // define a sub class that extends the base class and adds a protected property
+        class Dog extends Animal {
+            #breed
+
+            constructor(name, breed) {
+                super(name)
+                this.#breed = breed
+            }
+
+            // define a public method that uses the protected property
+            bark() {
+                console.log(`Woof, im a ${this.#breed} named ${this.name}`)
+            }
+        }
+
+        // capitalize a mixin that adds a method to the built in string class
+        const capitalizeMixin = {
+            capitalize() {
+                return this.charAt(0).toUpperCase() + this.slice(1);
+            }
+        }
+
+        // use the mixin to extend the string class
+        Object.assign(String.prototype, capitalizeMixin)
+
+        // create an instance of the animal class and call a method
+        const animal = Animal.create("Rufus")
+        animal.introduce()
+
+        // create an instance of the dog class and call a method
+        const dog = new Dog("Buddy", "Golden retriever")
+        dog.bark()
+
+        // use the instance of operator to check if an object is an instance of a class
+        console.log(dog instanceof Animal)
+
+        // use a built in method that was extended by the mixin
+        console.log("hello world".capitalize())
+        
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>various concepts related to prototypes in js</title>
+    </head>
+
+    <body>
+        
+
+    </body>
+
+    <script>
+        // create a constructor function related to a person object
+        function Person(name, age) {
+            this.name = name
+            this.age = age
+        }
+
+        // add a method to the person prototype
+        Person.prototype.greet = function() {
+            console.log(`Hello my name is ${this.name} and i am ${this.age}`)
+        }
+
+        // create a new object based on the constructor
+        const john = new Person("john", 30);
+
+        john.greet()
+
+        const personPrototype = {
+            introduce: function() {
+                console.log(`My name is ${this.name} and i am ${this.age} years old`)
+            }
+        }
+
+        // create a new object based on the personPrototype object
+        const jane = Object.create(personPrototype)
+        jane.name = "jane"
+        jane.age = 25
+
+        jane.introduce()
+
+        console.log(Object.getPrototypeOf(jane) == personPrototype)
+
+        // check if the john object has a __proto__ property
+        console.log(john.hasOwnProperty("__proto__"))
+
+        console.log(Object.getPrototypeOf(john) === Person.prototype)
+
+
+        console.log(john.constructor === Person)
+
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>
