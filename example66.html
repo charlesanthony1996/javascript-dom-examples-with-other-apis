@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>d3 js pie chart example</title>
+        <!-- load d3.js -->
+        <script src="https://d3js.org/d3.v4.js"></script>
+
+    </head>
+    <body>
+        <!-- svg rendered here -->
+        <h2>svg rendered here</h2>
+        <div id="my_dataviz">
+        </div>
+    </body>
+
+    <script>
+        var width = 450
+        var height = 450
+        var margin = 40
+
+        // the radius of the pieplot is half the width or half the height
+        var radius = Math.min(width, height) / 2 - margin
+
+        // appending the svg object to the div
+        var svg = d3.select("#my_dataviz")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", "translate(" + width / 2 + ", " + height / 2 + ")")
+
+
+        // create dummy data
+        var data = { a: 9, b: 20, c: 30, d: 8, e:12}
+
+        // set the color scale
+        var color = d3.scaleOrdinal().domain(data).range(["red", "blue", "orange", "white", "grey"])
+
+        // compute the position of each group on the pie
+        var pie = d3.pie().value(function(d) {
+            return d.value
+        })
+        
+        var data_ready = pie(d3.entries(data))
+
+        // build the pie chart
+        // each part of the pie chart is a path that we build using the arc function
+
+        svg
+        .selectAll("whatever")
+        .data(data_ready)
+        .enter()
+        .append("path")
+        .attr("d", d3.arc()
+        .innerRadius(100)
+        .outerRadius(radius))
+        .attr("fill", function(d) {
+            return color(d.data.key)
+        })
+        .attr("stroke", "black")
+        .style("stroke-width", "1px")
+        .style("opacity", 0.3)
+
+
+    </script>
+
+    <style>
+
+        
+    </style>
+</html>

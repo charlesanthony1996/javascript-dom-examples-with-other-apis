@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>understanding the KeyboardEvent.isComposing api</title>
+    </head>
+
+    <body>
+        <h2>understanding the KeyboardEvent.isComposing api</h2>
+        <input type="text" id="my-input" placeholder="any input">
+        
+
+    </body>
+
+    <script>
+        const input = document.getElementById("my-input")
+        input.addEventListener("keydown", (event) => {
+            console.log(`key down: ${event.key} and is composing? : ${event.isComposing}`)
+        })
+
+        input.addEventListener("keyup", (event) => {
+            console.log(`key down: ${event.key} and is it composing: ${event.isComposing}`)
+        })
+
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>
