@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Bubble sort algorithm using js</title>
+    </head>
+
+    <body>
+        <h3>Bubble sort algorithm using javascript</h3>
+    </body>
+
+    <script>
+        function bubbleSort() {
+            const len = arr.length
+            for (let i = 0; i <len; i++) {
+                for (let j = 0; j < len - i - 1; j++) {
+                    if(arr[i] > arr[j + 1]) {
+                        // swap elements
+                        const temp = arr[j]
+                        arr[j] = arr[j + 1]
+                        arr[j + 1] = temp
+                    }
+                }
+            }
+            return arr
+        }
+    </script>
+
+    <style>
+
+
+    </style>
+</html>
