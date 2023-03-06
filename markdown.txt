@@ -1,0 +1,37 @@
+Charles Anthony - cc211002
+
+1. Bubble sort algorithm
+
+main.cs -> bubble sort
+
+how to run the program -> csc main.cs && mono main.exe
+
+dotnet is not used to run this project eventhough its in one
+
+
+Adjusting the program -> You have to change the array after the method to get it sorted for a
+different array of elements
+
+How the program works is mentioned in the comments of the program itself.
+
+working on time it function to check how fast it takes to sort the array
+
+
+2. Merge Sort algorithm
+
+example2.cs -> Merge sort
+
+how to run the program -> csc example2.cs && mono example2.exe
+
+dotnet is not used to run this.eventhough its in a project.
+
+Adjusting the program -> same rules apply as for the bubble sort program
+
+
+
+
+
+
+
+
+
