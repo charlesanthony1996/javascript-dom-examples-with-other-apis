@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ajax example</title>
+    </head>
+
+    <body>
+        <h3>ajax example</h3>
+        <p id="result"></p>
+    </body>
+
+
+    <script>
+        // create a new xmlhttprequest object
+        var xhr = new XMLHttpRequest()
+
+        // set up a callback function to handle the response
+        xhr.onreadystatechange = function() {
+            if(xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText)
+                console.log(response)
+                document.getElementById("result").innerHTML = response.message
+            }
+        }
+
+        // open the result with the get method and the url of the api endpoint
+        xhr.open("GET", "https://jsonplaceholder.typicode.com/todos/1")
+
+        // set the request header to accept the json data
+        xhr.setRequestHeader("Accept", "application/json")
+
+        // send the request
+        xhr.send()
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>

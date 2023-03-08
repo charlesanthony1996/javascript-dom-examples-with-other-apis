@@ -7,8 +7,7 @@ main.cs -> bubble sort
 how to run the program -> csc main.cs && mono main.exe
 
 dotnet is not used to run this project eventhough its in one
-
-
+m
 Adjusting the program -> You have to change the array after the method to get it sorted for a
 different array of elements
 

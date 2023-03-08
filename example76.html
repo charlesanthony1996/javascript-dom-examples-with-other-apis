@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title></title>
+        <title>Word cloud for d3 js -> d3js graph gallery</title>
         <script src="https:d3js.org/d3.v4.js"></script>
         <!-- load word cloud -->
         <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
@@ -13,19 +13,50 @@
     </body>
 
     <script>
-        var myWords = ["How", "Are", "You", "Doing", "Right", "Now", "Is", "This", "Good"]
+        var myWords = ["How", "Are", "You", "Doing", "Right", "Now", "Is", "This", "Good", "Charles", "Anthony", "Name"]
 
         var margin = { top: 10, right: 20, left: 30, bottom: 20};
         var width = 450 - margin.left - margin.right;
         var height = 450 - margin.top - margin.bottom
 
         // append the svg object to the body of the page
-
+        var svg = d3.select("#my_dataviz").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         
 
+        // constructs a new cloud layout instance.It runs an algorithm to find the position
+        // of words that suits your requirements
 
+        var layout = d3.layout.cloud()
+        .size([width, height])
+        .words(myWords.map(function(d) {
+            return { text: d}
+        }))
+        .padding(10)
+        .fontSize(60)
+        .on("end", draw)
+        layout.start()
 
-
+        function draw(words) {
+            svg.append("g")
+            .attr("transform", "translate("+ layout.size()[0] / 2 + "," + layout.size()[1]/ 2 + ")")
+            .selectAll("text")
+            .data(words)
+            .enter().append("text")
+            .style("font-size", function(d) {
+                return d.size + "px"
+            })
+            .attr("text-anchor", "middle")
+            .attr("transform", function(d) {
+                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")"
+            })
+            .text(function(d) {
+                return d.text 
+            })
+        }
     </script>
 
     <style>
