@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+
+    <body>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name"><br><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email"><br><br>
+        <label for="message">Message:</label><br><br>
+        <textarea id="message" name="message"></textarea><br><br>
+        <button type="submit" id="submit-btn">Submit</button>
+    </body>
+
+    <script>
+        // define the keybinding interface like object here -> vanilla js
+        const keybinding = {
+            id: "submit-form",
+            selector: "form",
+            event: "keydown",
+            keyCode: 13
+        }
+
+        // add the event listener for the submit button -> keybinding connection
+        document.addEventListener(keybinding.event, (event) => {
+            if(event.target.matches(keybinding.selector) && event.keyCode === keybinding.keyCode) {
+                event.preventDefault()
+                document.getElementById("submit-btn")
+            }
+        })
+
+        // add the event listener for the submit button
+        document.getElementById("submit-btn").addEventListener("click", (event) => {
+            // prevent default form submission behaviour
+            // that thing thats common everywhere
+            event.preventDefault()
+            // replace with your own submission logic
+            // firing backend events
+            console.log("Form submitted")
+        })
+    </script>
+</html>
