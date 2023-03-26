@@ -1,128 +1,134 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Tower of Hanoi</title>
-  </head>
-  <body>
-    <canvas id="canvas" width="600" height="400"></canvas>
-    <br>
-    <label for="discs">Number of Discs:</label>
-    <select id="discs">
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5" selected>5</option>
-      <option value="6">6</option>
-      <option value="7">7</option>
-      <option value="8">8</option>
-      <option value="9">9</option>
-      <option value="10">10</option>
-    </select>
-    <button onclick="draw()">Draw</button>
+<head>
+	<title>Micro Interaction Example</title>
+	<style>
+		body {
+			background-color: #f2f2f2;
+			font-family: Arial, sans-serif;
+			font-size: 16px;
+			line-height: 1.5;
+			margin: 0;
+			padding: 0;
+		}
 
-    <script>
-      const canvas = document.getElementById('canvas');
-      const ctx = canvas.getContext('2d');
+		h1 {
+			margin-top: 0;
+			padding: 20px;
+			text-align: center;
+		}
 
-      const poles = [
-        { x: 150, y: 350 },
-        { x: 300, y: 350 },
-        { x: 450, y: 350 },
-      ];
-      const poleWidth = 20;
-      const poleHeight = 100;
+		form {
+			background-color: #ffffff;
+			border: 1px solid #cccccc;
+			margin: 0 auto;
+			max-width: 600px;
+			padding: 20px;
+		}
 
-      const discHeight = 20;
-      const discWidthFactor = 30;
-      const discHeightFactor = 25;
+		input[type="text"] {
+			border: 1px solid #cccccc;
+			padding: 12px;
+			width: 100%;
+		}
 
-      let discs = [];
+		button {
+			background-color: #0099ff;
+			border: none;
+			color: #ffffff;
+			cursor: pointer;
+			margin-top: 12px;
+			padding: 12px 24px;
+		}
 
-      function draw() {
-        const numDiscs = parseInt(document.getElementById('discs').value);
-        discs = Array.from({ length: numDiscs }, (_, i) => numDiscs - i);
+		button:hover {
+			background-color: #0077cc;
+		}
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawPoles();
-        drawDiscs();
-        solve(numDiscs, 0, 2, 1);
-      }
+		ul {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
 
-      function drawPoles() {
-        ctx.fillStyle = 'black';
-        ctx.fillRect(poles[0].x, poles[0].y, poleWidth, poleHeight);
-        ctx.fillRect(poles[1].x, poles[1].y, poleWidth, poleHeight);
-        ctx.fillRect(poles[2].x, poles[2].y, poleWidth, poleHeight);
-      }
+		li {
+			background-color: #ffffff;
+			border: 1px solid #cccccc;
+			margin-bottom: 12px;
+			padding: 12px;
+			position: relative;
+		}
 
-      function drawDiscs() {
-        for (let i = 0; i < discs.length; i++) {
-          const poleIndex = discs[i] % 3;
-          const pole = poles[poleIndex];
-          const discWidth = discs[i] * discWidthFactor;
-          const discX = pole.x - discWidth / 2 + poleWidth / 2;
-          const discY = pole.y - (discHeight + discHeightFactor * (i + 1));
-          ctx.fillStyle = 'red';
-          ctx.fillRect(discX, discY, discWidth, discHeight);
-        }
-      }
+		li.completed {
+			background-color: #e6ffe6;
+			border-color: #00cc00;
+		}
 
-      function solve(numDiscs, from, to, aux) {
-        if (numDiscs === 1) {
-          move(from, to);
-        } else {
-          solve(numDiscs - 1, from, aux, to);
-          move(from, to);
-          solve(numDiscs - 1, aux, to, from);
-        }
-      }
+		li.completed:before {
+			content: "✔";
+			color: #00cc00;
+			font-size: 24px;
+			left: 0;
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+		}
 
-      async function move(from, to) {
-        const disc = discs.find(d => d % 3 === from);
-        const fromPole = poles[from];
-        const toPole = poles[to];
-        const discWidth = disc * discWidthFactor;
-        const startX = fromPole.x - discWidth / 2 + poleWidth / 2;
-        const startY = fromPole.y - (discHeight + discHeightFactor * (discs.indexOf(disc) + 1));
-        const endX = toPole.x - discWidth / 2 + poleWidth / 2;
-        const endY = toPole.y - (discHeight + discHeightFactor * (getTopDiscIndex(to) + 1));
-        const dx = endX - startX;
-        const dy = endY - startY;
-        const duration = 1000;
-        const startTime = Date.now();
-        while (Date.now() - startTime < duration) {
-          const elapsedTime = Date.now() - startTime;
-          const t = elapsedTime / duration;
-          const discX = startX + dx * t;
-          const discY = startY + dy * t;
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          drawPoles();
-          drawDiscs();
-          drawDisc(from, disc, discX, discY);
-          await new Promise(resolve => requestAnimationFrame(resolve));
-        }
-        discs[discs.indexOf(disc)] = discs.filter(d => d % 3 === from || d % 3 === to)[0];
-      }
+		li button {
+			background-color: #ff3333;
+			color: #ffffff;
+			font-size: 14px;
+			position: absolute;
+			right: 12px;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+	</style>
+</head>
+<body>
+	<h1>To-Do List</h1>
 
-      function getTopDiscIndex(poleIndex) {
-        const pole = poles[poleIndex];
-        for (let i = discs.length - 1; i >= 0; i--) {
-          if (discs[i] % 3 === poleIndex) {
-            return i;
-          }
-        }
-        return -1;
-      }
+	<form>
+		<input type="text" id="new-item" placeholder="Add new item" autocomplete="off">
+		<button type="submit">Add Item</button>
+	</form>
 
-      function drawDisc(poleIndex, disc, x, y) {
-        const pole = poles[poleIndex];
-        const discWidth = disc * discWidthFactor;
-        ctx.fillStyle = 'red';
-        ctx.fillRect(x, y, discWidth, discHeight);
-        ctx.fillStyle = 'black';
-        ctx.fillRect(pole.x, y + discHeight, poleWidth, pole.y - (y + discHeight));
-      }
-    </script>
-  </body>
+	<ul id="todo-list">
+		<!-- List items will be added dynamically here -->
+	</ul>
+
+	<script>
+		const form = document.querySelector('form');
+		const input = document.getElementById('new-item');
+		const list = document.getElementById('todo-list');
+
+		function addItem(event) {
+			event.preventDefault();
+
+			if (input.value.trim() === '') {
+				return;
+			}
+
+			const item = document.createElement('li');
+			const text = document.createTextNode(input.value);
+			const deleteBtn = document.createElement('button');
+
+			item.appendChild(text);
+			item.appendChild(deleteBtn);
+			list.appendChild(item);
+
+			input.value = '';
+
+			deleteBtn.addEventListener('click', function() {
+				item.remove();
+			});
+
+			item.addEventListener('click', function() {
+				item.classList.toggle('completed');
+			});
+		}
+
+		form.addEventListener('submit', addItem);
+	</script>
+</body>
 </html>

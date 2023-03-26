@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MDI Icon Transformation Example</title>
+  <!-- Include the MDI CSS stylesheet -->
+  <link rel="stylesheet" href="https://cdn.materialdesignicons.com/6.1.95/css/materialdesignicons.min.css">
+  <style>
+    /* Define the MDI icon styles */
+    .mdi-icon {
+      display: inline-block;
+      font-size: 48px;
+      color: #333;
+    }
+
+    /* Define the "transform" animation */
+    @keyframes transform {
+      0% { transform: rotate(0deg); }
+      50% { transform: rotate(180deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Define the "transformed" animation */
+    @keyframes transformed {
+      0% { opacity: 0; }
+      50% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    /* Define the "transforming" class */
+    .transforming {
+      animation-name: transform;
+      animation-duration: 2s;
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: forwards;
+    }
+
+    /* Define the "transformed" class */
+    .transformed {
+      animation-name: transformed;
+      animation-duration: 1s;
+      animation-timing-function: ease-out;
+      animation-fill-mode: forwards;
+    }
+  </style>
+</head>
+<body>
+  <!-- Original icon -->
+  <i class="mdi-icon mdi mdi-camera"></i>
+  
+  <script>
+    // Get the original icon element
+    const originalIcon = document.querySelector('.mdi-camera');
+    
+    // Create the transformed icon element
+    const transformedIcon = document.createElement('i');
+    transformedIcon.classList.add('mdi-icon', 'mdi', 'mdi-movie');
+    transformedIcon.style.display = 'none';
+    
+    // Insert the transformed icon after the original icon
+    originalIcon.after(transformedIcon);
+    
+    // Add the "transforming" class to the original icon after a delay
+    setTimeout(function() {
+      originalIcon.classList.add('transforming');
+    }, 1000);
+    
+    // After the "transforming" animation finishes, hide the original icon and show the transformed icon
+    setTimeout(function() {
+      originalIcon.style.display = 'none';
+      transformedIcon.style.display = 'inline-block';
+      transformedIcon.classList.add('transformed');
+    }, 3000);
+  </script>
+</body>
+</html>

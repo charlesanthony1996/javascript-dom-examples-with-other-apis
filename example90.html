@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Vue 3 Vuex Complex Example</title>
+        <script src="https://unpkg.com/vue@next"></script>
+        <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+        <style>
+            .completed {
+                text-decoration: line-through;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <h1>Book Library</h1>
+            <div>
+                <h2>Available Books:</h2>
+                <ul>
+                    <li v-for="book in availableBooks" :key="book.id" :class="{completed: book.isRead}">
+                        {{ book.title }} - {{ book.author }}
+                        <button @click="markAsRead(book.id)">Mark as read</button>
+                    </li>
+                </ul>
+            </div>
+    
+            <div>
+                <h2>Read Books:</h2>
+                <ul>
+                    <li v-for="book in readBooks" :key="book.id" :class="{completed: book.isRead}">
+                        {{ book.title }} - {{ book.author }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    
+    <script>
+        const store = new Vuex.Store({
+            state: {
+                books: [
+                    { id: 1, title: 'The Catcher in the Rye', author: 'J.D. Salinger', isRead: false },
+                    { id:2, title: 'To Kill a Mockingbird', author: 'Harper Lee', isRead: false },
+{ id: 3, title: '1984', author: 'George Orwell', isRead: true },
+{ id: 4, title: 'Pride and Prejudice', author: 'Jane Austen', isRead: false },
+{ id: 5, title: 'Moby-Dick', author: 'Herman Melville', isRead: true }
+]
+},
+mutations: {
+MARK_AS_READ(state, bookId) {
+const bookIndex = state.books.findIndex(book => book.id === bookId);
+state.books[bookIndex].isRead = true;
+}
+},
+getters: {
+availableBooks: state => state.books.filter(book => !book.isRead),
+readBooks: state => state.books.filter(book => book.isRead)
+},
+actions: {
+markAsRead({ commit }, bookId) {
+commit('MARK_AS_READ', bookId);
+}
+}
+})
+
+const app = Vue.createApp({
+        setup() {
+            const availableBooks = Vue.computed(() => store.getters.availableBooks);
+            const readBooks = Vue.computed(() => store.getters.readBooks);
+            const markAsRead = bookId => store.dispatch('markAsRead', bookId);
+
+            return { availableBooks, readBooks, markAsRead };
+        }
+    })
+
+    app.use(store)
+app.mount("#app")
+</script>
+</html>

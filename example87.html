@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MDI Icon Animation Example</title>
+  <!-- Include the MDI CSS stylesheet -->
+  <link rel="stylesheet" href="https://cdn.materialdesignicons.com/6.1.95/css/materialdesignicons.min.css">
+  <style>
+    /* Define the MDI icon styles */
+    .mdi-icon {
+      display: inline-block;
+      font-size: 48px;
+      color: #333;
+    }
+
+    /* Define the shake animation */
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      10%, 90% { transform: translateX(-10px); }
+      30%, 70% { transform: translateX(10px); }
+      50% { transform: translateX(0); }
+    }
+
+    /* Define the pulse animation */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    /* Define the "done" animation */
+    .done {
+      animation-name: pulse;
+      animation-duration: 1s;
+      animation-fill-mode: both;
+      animation-timing-function: ease-out;
+    }
+
+    /* Define the "shake" animation for the "done" icon */
+    .done.shake {
+      animation-name: shake;
+      animation-duration: 1s;
+      animation-fill-mode: both;
+      animation-timing-function: ease-out;
+    }
+  </style>
+</head>
+<body>
+  <!-- MDI icons -->
+  <i class="mdi-icon mdi mdi-check"></i>
+  <i class="mdi-icon mdi mdi-close"></i>
+  <i class="mdi-icon mdi mdi-alert"></i>
+  
+  <!-- "Done" icon that shakes and pulses -->
+  <i class="mdi-icon mdi mdi-check done"></i>
+
+  <script>
+    // Add the "shake" animation to the "done" icon after a delay
+    setTimeout(function() {
+      document.querySelector('.done').classList.add('shake');
+    }, 2000);
+  </script>
+</body>
+</html>

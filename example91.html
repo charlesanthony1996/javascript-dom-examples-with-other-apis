@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/sankey.js"></script>
+    </head>
+
+    <body>
+        <div id="my_dataviz"></div>
+    </body>
+
+
+    <script>
+        var margin = {top: 10, right: 10, left: 10, bottom: 10}
+        var width = 450 - margin.left - margin.right
+        var height = 450 - margin.top - margin.bottom
+
+        // append the svg object to the body of the page
+
+        var svg = d3.select("#my_dataviz").append(svg)
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + ", " + margin.top + ")")
+
+        console.log(svg)
+
+        // color scale used
+        var color = d3.scaleOrdinal(d3.schemeCategory20)
+
+        // set the sankey diagram properties
+
+        
+
+
+    </script>
+
+    <style>
+        .link {
+            fill: none;
+            stroke: #000;
+            stroke-opacity: .2;
+        }
+
+        .link:hover {
+            stroke-opacity: .5;
+        }
+    </style>
+</html>
