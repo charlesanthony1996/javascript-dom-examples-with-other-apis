@@ -4,3 +4,7 @@ node_modules
 a.out
 d3
 .vscode
+main.exe
+MakeFile
+flights.csv
+airports.csv
