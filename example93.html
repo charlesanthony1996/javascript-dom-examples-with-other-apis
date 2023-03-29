@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+
+        <!-- loading d3.js -->
+        <script src="https://d3js.org/d3.v4.js"></script>
+        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+        <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+    </head>
+
+    <body>
+        <!-- multi connections on a map!  -->
+        <svg id="my_dataviz" width="400" height="400"></svg>
+    </body>
+
+    <script>
+
+        var svg = d3.select("svg")
+        var width = svg.attr("width")
+        var height = svg.attr("height")
+
+        // map and projection
+        var projection = d3.geoMercator()
+        .scale(85)
+        .translate([width/ 2, height/ 2 * 1.3])
+
+        // console.log(projection)
+        // create data : coordinates of start and end 
+        var link = [
+            {type: "LineString", coordinates: [[100, 60], [-60, -30]] },
+            {type: "LineString", coordinates: [[10, -20], [-60, -30]] },
+            {type: "LineString", coordinates: [[100, 60], [-60, -30]] }
+        ]
+
+        console.log(link)
+
+        // a path generator
+        var path = d3.geoPath()
+        .projection(projection)
+
+        // load world shape
+        d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson", function(data) {
+
+            // draw the map
+            svg.append("g")
+            .selectAll("path")
+            .data(data.features)
+            .enter().append("path")
+            .attr("fill", "#b8b8b8")
+            .attr("d", d3.geoPath()
+            .projection(projection))
+            .style("stroke", "#fff")
+            .style("stroke-width", 0)
+
+        })
+
+        // add the path
+        svg.selectAll("myPath")
+        .data(link)
+        .enter()
+        .append("path")
+        .attr("d", function(d){
+            return path(d)
+        })
+        .style("fill", "none")
+        .style("stroke", "orange")
+        .style("stroke-width", 7)
+
+
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>
