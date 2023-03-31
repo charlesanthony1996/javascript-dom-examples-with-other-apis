@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>vue 3 vuex simple template</title>
+        <script src="https://unpkg.com/vue@next"></script>
+        <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+
+        <style>
+            canvas {
+                display: block;
+                margin: 0 auto;
+                background-color: #f0f0f0;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <canvas ref="gameCanvas" width="400" height="400"></canvas>
+        </div>
+
+        <script>
+            const store = new Vuex.Store({
+                state: {
+                    snake: [{ x: 100, y: 100 }],
+                    food: { x: 200, y: 200 },
+                    dx: 10,
+                    dy: 0,
+                    gridSize: 20,
+                    gameOver: false,
+                },
+                mutations: {
+                    moveSnake(state, { x, y }) {
+                        state.snake.unshift({ x, y });
+                        state.snake.pop();
+                    },
+                    growSnake(state) {
+                        state.snake.push({ ...state.snake[state.snake.length + 1]})
+                    },
+                    setFood(state, { x, y }) {
+                        state.food = { x, y };
+                    },
+                    setDirection(state, { dx, dy }) {
+                        state.dx = dx;
+                        state.dy = dy;
+                    },
+                    setGameOver(state, status) {
+                        state.gameOver = status;
+                    },
+                },
+                getters: {
+                    snakeHead: state => state.snake[0],
+                },
+                actions: {
+                    moveSnake({ commit, state }) {
+                        const x = state.snake[0].x + state.dx;
+                        const y = state.snake[0].y + state.dy;
+                        commit('moveSnake', { x, y });
+                    },
+                },
+            })
+
+            const app = Vue.createApp({
+                setup() {
+                    const gameCanvas = Vue.ref(null);
+
+                    return { gameCanvas };
+                },
+
+                methods: {
+                    initGame() {
+                        this.drawBoard();
+                        this.drawSnake();
+                        this.drawFood();
+                        this.gameLoop();
+                    },
+
+                    drawBoard() {
+                        const ctx = this.$refs.gameCanvas.getContext('2d');
+                        ctx.clearRect(0, 0, this.$refs.gameCanvas.width, this.$refs.gameCanvas.height);
+                    },
+
+                    drawSnake() {
+                        const ctx = this.$refs.gameCanvas.getContext('2d');
+                        ctx.fillStyle = 'green';
+                        for (const segment of this.$store.state.snake) {
+                            ctx.fillRect(segment.x, segment.y, this.$store.state.gridSize -2, this.$store.state.gridSize -2);
+                            ctx.strokeRect(segment.x, segment.y, this.$store.state.gridSize - 2, this.$store.state.gridSize -2);
+                        }
+                    },
+
+                    drawFood() {
+                        const ctx = this.$refs.gameCanvas.getContext('2d');
+                        ctx.fillStyle = 'red';
+                        ctx.fillRect(this.$store.state.food.x, this.$store.state.food.y, this.$store.state.gridSize -2, this.$store.state.gridSize -2);
+                        ctx.strokeRect(this.$store.state.food.x, this.$store.state.food.y, this.$store.state.gridSize -2, this.$store.state.gridSize -2);
+                    },
+
+                    gameLoop() {
+                        if (this.$store.state.gameOver) {
+                            alert("Game Over!");
+                            location.reload();
+                            return;
+                        }
+
+                        this.update();
+                        this.drawBoard();
+                        this.drawSnake();
+                        this.drawFood();
+                        setTimeout(() => this.gameLoop(), 100);
+                    },
+
+                    update() {
+                        this.checkCollision();
+                        this.$store.dispatch('moveSnake');
+                        this.checkFood();
+                    },
+
+                    checkCollision() {
+                        const head = this.$store.getters.snakeHead;
+                        const body = this.$store.state.snake.slice(1);
+
+                        for (const segment of body) {
+                            if (head.x === segment.x && head.y === segment.y) {
+                                this.$store.commit('setGameOver', true);
+                            }
+                        }
+
+                        if (head.x < 0 || head.x >= this.$refs.gameCanvas.width || head.y < 0 || head.y >= this.$refs.gameCanvas.height) {
+                            this.$store.commit('setGameOver', true);
+                        }
+                    },
+
+                    checkFood() {
+                        const head = this.$store.getters.snakeHead;
+                        const food = this.$store.state.food;
+
+                        if (head.x === food.x && head.y === food.y) {
+                            this.$store.commit('growSnake');
+
+                            let newFood;
+                            do {
+                                newFood = {
+                                    x: Math.floor(Math.random() * this.$refs.gameCanvas.width / this.$store.state.gridSize) * this.$store.state.gridSize,
+                                    y: Math.floor(Math.random() * this.$refs.gameCanvas.height / this.$store.state.gridSize) * this.$store.state.gridSize,
+                                };
+                            } while (this.isFoodOnSnake(newFood))
+
+                            this.$store.commit('setFood', newFood)
+                        }
+                    },
+
+                    isFoodOnSnake(food) {
+                        for (const segment of this.$store.state.snake) {
+                            if (segment.x === food.x && segment.y === food.y) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    },
+
+                    changeDirection(event) {
+                        const { dx, dy } = this.$store.state;
+                        let newDx = dx;
+                        let newDy = dy;
+
+                        switch (event.key) {
+                            case 'ArrowUp':
+                                if (dy === 0) {
+                                    newDx = 0;
+                                    newDy = -this.$store.state.gridSize;
+                                }
+                                break;
+                            case 'ArrowDown':
+                                if (dy === 0) {
+                                    newDx = 0;
+                                    newDy = this.$store.state.gridSize;
+                                }
+                                break;
+                            case 'ArrowLeft':
+                                if (dx === 0) {
+                                    newDx = -this.$store.state.gridSize;
+                                    newDy = 0;
+                                }
+                                break;
+                            case 'ArrowRight':
+                                if (dx === 0) {
+                                    newDx = this.$store.state.gridSize;
+                                    newDy = 0;
+                                }
+                                break;
+                            }
+
+                            this.$store.commit('setDirection', { dx: newDx, dy: newDy });
+                    },
+                },
+
+                mounted() {
+                    window.addEventListener('keydown', this.changeDirection);
+                    this.initGame();
+                },
+
+                beforeUnmount() {
+                    window.removeEventListener('keydown', this.changeDirection);
+                },
+            });
+
+            app.use(store);
+            app.mount("#app");
+        </script>
+    </body>
+</html>

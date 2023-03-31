@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>scaleLog() method</title>
+        <script src="https://d3js.org/d3.min.v4.js"></script>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+    </head>
+
+    <body>
+        <svg id="log_demo" width="500" height="500"></svg>
+    </body>
+
+    <script>
+        var svg = d3.select("#log_demo")
+        .append("svg")
+        .attr("width", 1000)
+        .attr("height", 200)
+
+        // console.log(svg)
+
+        // create the scale
+        var x = d3.scaleLog()
+        .domain([1, 1000])
+        .range([100, 800])
+        .base(10)
+
+        console.log(x)
+
+        // draw the axis
+        svg
+        .append("g")
+        .attr("transform", "translate(0, 150)")
+        .call(d3.axisBottom(x).tickFormat(d3.format(".2")))
+
+        // console.log("")
+
+    </script>
+
+    <style>
+
+        
+    </style>
+</html>
