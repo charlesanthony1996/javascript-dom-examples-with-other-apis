@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+
+    <body>
+        <svg id="" width="500" height="500"></svg>
+    </body>
+
+    <script>
+        // create svg element
+        var svg = d3.select("#vertical")
+        .append("svg")
+        .attr("width", 1000)
+        .attr("height", 300)
+
+        console.log(svg)
+
+        // create the scale
+        var y = d3.scaleLinear()
+        .domain([0, 100])
+        .range(290, 10)
+
+        // draw the axis
+        svg.append("g")
+        .attr("transform", "translate(50, 0)")
+        .call(d3.axisLeft(y))
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>

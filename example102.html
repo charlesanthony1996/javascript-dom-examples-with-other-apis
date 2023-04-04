@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>rotate and custom axis labels</title>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src=""></script>
+    </head>
+
+    <body>
+        <svg id="rotate" width="1000" height="1000"></svg>
+
+    </body>
+
+    <script>
+        // create the svg element
+        var svg = d3.select("#rotate")
+        .append("svg")
+        .attr("width", 1000)
+        .attr("height", 300)
+
+
+        console.log(x)
+
+        // create the scale
+        var x = d3.scaleBand()
+        .domain(["long name", "Another one", "Here", "And this is","The end", "ouuu", "not yet"])
+        .range([0, 800])
+
+        svg.append("g")
+        .attr("transform", "translate(100, 100)")
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+        .attr("transform", "translate(-10, 10)rotate(-45)")
+        .style("text-anchor", "end")
+        .style("font-size", 20)
+        .style("fill", "#69a3b2")
+
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>
