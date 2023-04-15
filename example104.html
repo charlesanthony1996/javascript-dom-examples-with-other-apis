@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>left axis setup for d3js</title>
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+    </head>
+    
+    <body>
+        <svg id="vertical" width="600" height="600"></svg>
+    </body>
+
+    <script>
+        // left axis setup
+        var svg = d3.select("#vertical")
+        .append("svg")
+        .attr("width", 600)
+        .attr("height", 600)
+
+        console.log(svg)
+
+        // create the scale
+        var y = d3.scaleLinear()
+        .domain([0, 100])
+        .range([290, 10])
+
+        console.log(y)
+
+        svg.append("g")
+        .attr("transform", "translate(50, 0)")
+        .call(d3.axisLeft(y))
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>

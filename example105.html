@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>getRect function in keyboard.ts file explained in plain js and html</title>
+    </head>
+
+    <body>
+        <div id="exampleDiv">
+            <button id="calculateDimensions">Calculate dimensions</button>
+        </div>
+    </body>
+
+    <script>
+        function getRect(element) {
+            const clientRect = element.getBoundingClientRect()
+            const computedStyle = window.getComputedStyle(element)
+            const marginTopString = computedStyle.marginTop
+            const marginTop = marginTopString !== null ? parseInt(marginTopString): 0
+            const marginBottomString = computedStyle.marginBottom
+            const marginBottom = marginBottomString !== null ? parseInt(marginBottomString) : 0
+
+            return {
+                x: clientRect.left,
+                y: clientRect.top,
+                width: clientRect.width,
+                height: clientRect.height - marginTop - marginBottom
+            }
+        }
+
+
+        document.getElementById("calculateDimensions").addEventListener("click", function() {
+            const exampleDiv = document.getElementById("exampleDiv")
+            const rect = getRect(exampleDiv)
+
+            console.log(`x: ${rect.x}, y: ${rect.y}, width: ${rect.width}, height: ${rect.height}`)
+
+        })
+
+    </script>
+
+    <style>
+
+        #exampleDiv {
+            width: 200px;
+            height: 200px;
+            background-color: red;
+            margin-top: 30px;
+            margin-bottom: 50px;
+        }
+    </style>
+</html>

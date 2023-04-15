@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Vue3 , emit and slots</title>
+        <script src="https://unpkg.com/vue@next"></script>
+        <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+        <!-- <script src="https://unpkg.com/pinia"></script> -->
+        <!-- <script src="https://unpkg.com/vue@latest"></script> -->
+        <!-- <script src="https://unpkg.com/vue-demi"></script> -->
+
+    </head>
+
+    <body>
+        <div id="app">
+            <parent-component>
+                <template #header>
+                    <h1>This is a slot header example</h1>
+                </template>
+            </parent-component>
+        </div>
+    </body>
+
+    <script>
+        // import { ref, vue} from "vue"
+        // import { defineStore } from "vuex"
+
+
+        const store = new Vuex.Store({
+            state: {
+
+            },
+            mutations: {
+
+            },
+            getters: {
+
+            },
+            actions: {
+
+            }
+        })
+
+        const ChildComponent = {
+            template: 
+            `<div>
+                <button @click="handleClick">Click me!</button>
+            </div>`,
+            methods: {
+                handleClick() {
+                    this.$emit("child-clicked", "Message from Child")
+                }
+            }
+        }
+
+        const ParentComponent = {
+            template:
+            `<div>
+                <slot name="header"></slot>
+                <child-component @click="handleChildClicked"></child-component>
+                <grandchild-component></grandchild-component>
+            </div>`,
+
+            components: {
+                "child-component": ChildComponent,
+            },
+
+            methods: {
+                handleChildClicked(message) {
+                    console.log("Child component clicked: ", message)
+                    this.$root.$emit("root-event", "Message from Root")
+                }
+            }
+        }
+
+        const GrandChildComponent = {
+            template: 
+            `<div>
+                <button @click="handleClick">Click me for root event!</button>
+            </div>`,
+
+            methods: {
+                handleClick() {
+                    this.$root.$on("root-event", (message) => {
+                        console.log("Received root event in granchild component: ", message)
+                    })
+                }
+            }
+        }
+
+
+        const app = Vue.createApp({
+            components: {
+                "parent-component": ParentComponent,
+                "grandchild-component": GrandChildComponent
+            }
+        })
+
+        app.mount("#app")
+    </script>
+
+    <style>
+
+
+    </style>
+</html>

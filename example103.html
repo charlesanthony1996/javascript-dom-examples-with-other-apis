@@ -1,15 +1,38 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title></title>
+        <title>Scale point with d3js</title>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
     </head>
 
     <body>
-        
-
+        <svg id="ordinal_demo" width="1000" height="1000"></svg>
     </body>
 
     <script>
+        var svg = d3.select("#ordinal_demo")
+        .append("svg")
+        .attr("width", 1000)
+        .attr("height", 200)
+
+        // create the scale
+        var x = d3.scalePoint()
+        .domain(["A", "B", "C", "D", "E"])
+        .range([100, 800])
+
+        console.log(x)
+
+        // draw the axis
+        svg.append("g")
+        .attr("transform", "translate(0, 150)")
+        .call(d3.axisBottom(x))
+
+        // add 1 circle for the group B
+        svg.append("circle")
+        .attr("cx", x("B"))
+        .attr("cy", 50)
+        .attr("r", 8)
 
 
     </script>
