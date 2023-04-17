@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <script src="https://unpkg.com/vue@next"></script>
+        <script src="https://unpkg.com/vue@latest"></script>
+        <script src="https://unpkg.com/vuex@latest"></script>
+        <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div id="app" class="container mt-4">
+            <h2 class="mb-4">Todo list</h2>
+            <form @submit.prevent = "addTodo">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Enter new todo" v-model="newTodo" required>
+                    <button class="btn btn-primary" type="submit">Add</button>
+                </div>
+            </form>
+
+            <!--  -->
+            <ul class="list-group">
+                <li class="list-group-item" v-for="(todo, index) in todos":key="index">
+                    <input type="checkbox" class="form-check-input me-2" @change="toggleTodo(index)" :checked="todo.completed">
+                    <span :class="{'text-decoration-line-through': todo.completed}">{{ todo.text }}</span>
+                    <button class="btn btn-danger btn-sm float-end" @click="removeTodo(index)">Remove</button>
+                    <!-- <button class="btn btn-danger btm-sm float-end" @click="removeTodo(index)">Remove</button> -->
+                </li>
+            </ul>
+        
+
+        </div>
+        
+
+    </body>
+
+    <script>
+        const store = new Vuex.Store({
+            state: {
+                todos: []
+            },
+            mutations: {
+                addTodo(state, todo) {
+                    state.todos.push(todo)
+                },
+                toggleTodo(state, index) {
+                    state.todos[index].completed = !state.todos[index].completed
+                },
+                removeTodo(state, index) {
+                    state.todos.splice(index, 1)
+                }
+
+            },
+            getters: {
+                todos: state => state.todos
+            }
+        })
+
+        // console.log(store)
+
+        const app = Vue.createApp({
+            setup() {
+                const newTodo = Vue.ref("")
+                const todos = Vue.computed(() => store.getters.todos)
+
+                // todo function
+
+                function addTodo() {
+                    if(newTodo.value.trim()) {
+                        store.commit("addTodo", {
+                            // trim todo value
+                            text: newTodo.value.trim(),
+                            // state change
+                            completed: false
+                        })
+                        newTodo.value = ""
+                    }
+                }
+
+                function toggleTodo(index) {
+                    store.commit("toggleTodo", index)
+                }
+
+                function removeTodo(index) {
+                    store.commit("removeTodo", index)
+                }
+
+                return {newTodo, todos, addTodo, toggleTodo, removeTodo }
+            }
+        })
+
+        app.use(store)
+        app.mount("#app")
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>

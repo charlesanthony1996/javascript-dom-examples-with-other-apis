@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>emit, slots and root 2nd example</title>
+        <script src="https://unpkg.com/vue@next"></script>
+        <script src="https://unpkg.com/vue@latest"></script>
+    </head>
+
+    <body>
+        <div id="app">
+            <parent-component>
+                <template #header>
+                    <h1>This is a slot header example</h1>
+                </template>
+            </parent-component>
+        </div>
+        
+
+    </body>
+
+    <script>
+        const ChildComponent = {
+            template:
+            `<div>
+                <button @click="handleClick">Click me!</button>
+            </div>`,
+            methods: {
+                handleClick() {
+                    this.$emit("child-clicked", "Message from child")
+                }
+            }
+        }
+
+
+        const ParentComponent = {
+            template:
+            `<div>
+                <slot name="header"></slot>
+                <child-component @child-clicked="handleChildClicked"></child-component>
+                <grandchild-component></grandchild-component>
+            </div>`,
+            
+            components: {
+                "child-component": ChildComponent, 
+            },
+
+            methods: {
+                handleChildClicked(message) {
+                    console.log("Child component clicked: ", message)
+                    this.$root.$emit("root-event", "Message from root")
+                }
+            }
+        }
+
+        const GrandChildComponent = {
+            template: 
+            `<div>
+                <button @click="handleClick">Click me!</button>
+            </div>`,
+
+            mounted() {
+                this.$root.$on("root-event", (message) => {
+                    console.log("Received root in grandchild component", message)
+                })
+            },
+
+            methods: {
+                handleClick() {
+                    console.log("Granchild component clicked!")
+                }
+            }
+        }
+
+
+        const app = Vue.createApp({
+            components: {
+                "parent-component": ParentComponent,
+                "grandchild-component": GrandChildComponent
+            }
+        })
+
+        app.mount("#app")
+    </script>
+
+    <style>
+
+
+    </style>
+</html>
