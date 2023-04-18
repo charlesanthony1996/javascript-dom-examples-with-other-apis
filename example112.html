@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title></title>
+    </head>
+
+    <body>
+        <div style="padding: 50px;">
+            <input id="inputElement" type="text">
+
+            <div id="numpad" class="numeric-keyboard">
+                <p>1 2 3</p>
+                <p>4 5 6</p>
+                <p>7 8 9</p>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        const inputElement = document.getElementById("inputElement")
+        const numpad = document.getElementById("numpad")
+
+        function moveNumpad() {
+            // Get the input element's position and dimensions
+            const inputRect = inputElement.getBoundingClientRect();
+
+            // Calculate the new position for the numpad
+            const numpadTop = inputRect.top + inputRect.height + 10; // Add 10px margin
+            const numpadLeft = inputRect.left;
+
+            setTimeout(() => {
+                // Apply the new position to the numpad
+                numpad.style.top = `${numpadTop}px`;
+                numpad.style.left = `${numpadLeft}px`;
+                numpad.style.display = "block"
+            }, 300)
+        }
+
+        function hideNumpad() {
+
+            const inputRect = inputElement.getBoundingClientRect();
+
+            const numpadTop = inputRect.top + inputRect.height // Add 10px margin
+            const numpadLeft = inputRect.left
+            setTimeout(() => {
+                numpad.style.top = `${numpadTop}px`
+                numpad.style.left = `${numpadLeft}px`
+                numpad.style.display = "block"
+            }, 300)
+            
+        }
+
+        inputElement.addEventListener("focus", moveNumpad)
+        inputElement.addEventListener("blur", hideNumpad)
+    </script>
+
+    <style>
+        .numeric-keyboard {
+            position: absolute;
+            background-color: lightgray;
+            padding: 10px;
+            border: 1px solid darkgray;
+            border-radius: 5px;
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radar Scanner Animation</title>
+<style>
+  body { margin: 0; }
+  canvas { display: block; background-color: #000; }
+  .blip { position: absolute; width: 5px; height: 5px; background-color: red; border-radius: 50%; }
+</style>
+</head>
+<body>
+<canvas id="radar"></canvas>
+<div class="blip" id="blip1" style="left: 50px; top: 50px;"></div>
+<div class="blip" id="blip2" style="left: 100px; top: 150px;"></div>
+<div class="blip" id="blip3" style="left: 200px; top: 200px;"></div>
+
+<script>
+  const canvas = document.getElementById('radar');
+  const ctx = canvas.getContext('2d');
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+  const radius = Math.min(canvas.width, canvas.height) / 2;
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let angle = 0;
+
+  function drawRadar() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw radar circle
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+    ctx.strokeStyle = 'rgba(0, 255, 0, 0.5)';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // Draw radar scanner line
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(centerX + radius * Math.cos(angle), centerY + radius * Math.sin(angle));
+    ctx.strokeStyle = 'rgba(0, 255, 0, 0.9)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    angle += 0.01;
+    if (angle > 2 * Math.PI) {
+      angle = 0;
+    }
+
+    requestAnimationFrame(drawRadar);
+  }
+
+  drawRadar();
+</script>
+</body>
+</html>
