@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <script src="https://d3js.org/d3.v4.js"></script>
+    </head>
+
+    <body>
+        <svg id="dataviz" width="300" height="300"></svg>
+    </body>
+
+    <script>
+        // draw a circle
+        var myCircle = d3.select("#dataviz")
+        .append("g")
+        .append("circle")
+        .attr("cx", 150)
+        .attr("cy", 150)
+        .attr("r", 40)
+        .attr("fill", "#69a3b2")
+
+        // add brushing
+        d3.select("dataviz")
+        .call(d3.brush()
+        .extent([[0, 0], [300, 400]])
+        .on("start end", updateChart)
+        )
+
+        // function that is triggered when brushing is performed
+        
+
+
+
+
+
+    </script>
+
+    <style>
+
+        
+    </style>
+</html>

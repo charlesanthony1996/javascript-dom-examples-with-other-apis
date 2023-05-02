@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>brushing example for d3, this is just a starting example to achieve the final brushing stage</title>
+        <!-- d6 might not work -->
+        <script src="https://d3js.org/d3.v6.min.js"></script>
+        <!-- <script src="https://d3js.org/d3.v4.min.js"></script> -->
+    </head>
+
+    <body>
+        <svg id="dataviz" width="400" height="400"></svg>
+    </body>
+
+    <script>
+        var myCircle = d3.select("#dataviz")
+        .append("svg")
+        .append("circle")
+        .attr("cx", 200)
+        .attr("cy", 200)
+        .attr("r", 40)
+        .attr("fill", "#69a3b2")
+
+        // add brushing
+        d3.select("#dataviz")
+        // usiing the brush function
+        .call(d3.brush()
+        // initialize the brush area: start at 0, 0 and it finishes with width and height
+        .extent([[0, 0], [400, 400]]))
+
+        // console.log(myCircle)
+
+
+
+
+    </script>
+
+    <style>
+
+
+
+    </style>
+</html>
