@@ -3,6 +3,7 @@
     <head>
         <title></title>
         <script src="https://d3js.org/d3.v4.js"></script>
+        <!-- <script src="https://d3js.org/d3.v6.js"></script> -->
     </head>
 
     <body>
@@ -20,23 +21,32 @@
         .attr("fill", "#69a3b2")
 
         // add brushing
-        d3.select("dataviz")
+        d3.select("#dataviz")
         .call(d3.brush()
         .extent([[0, 0], [300, 400]])
-        .on("start end", updateChart)
+        .on("start brush", updateChart)
         )
 
         // function that is triggered when brushing is performed
-        
+        function updateChart()
+        {
+            // get the basic selection
+            extent = d3.event.selection;
+            // looks like [ [12, 11], [132, 178] ]
 
+            // is the circle in the selection
+            isBrushed = extent[0][0] <= myCircle.attr("cx") && extent[1][0] <= myCircle.attr("cx") &&
+                        extent[0][1] <= myCircle.attr("cy") && extent[1][1] <= myCircle.attr("cy")
 
-
-
-
+            // circle is green if in the selection, pink otherwise
+            myCircle.classed("selected", isBrushed)
+        }
     </script>
 
     <style>
-
-        
+        .selected {
+            fill:red;
+            opacity: 1;
+        }
     </style>
 </html>

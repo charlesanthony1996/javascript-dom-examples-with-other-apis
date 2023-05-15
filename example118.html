@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <script src="https://d3js.org/d3.v4.js"></script>
+    </head>
+
+    <body>
+        <div id="dataviz"></div>
+        
+
+    </body>
+    
+
+    <script>
+        // set the dimensions and margins of the graph
+        var margin = { top: 10, right: 30, bottom: 30, left: 60}
+        var width = 460 - margin.left - margin.right
+        var height = 400 - margin.top - margin.bottom
+
+        console.log(width)
+        console.log(height)
+
+        // append the svg object to body of the page
+        var svg = d3.select("#dataviz")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.right + ")")
+
+        // see dev tools here
+        console.log(svg)
+
+        d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/iris.csv", function(data) {
+
+            // add x axis
+            var x = d3.scaleLinear()
+            .domain([4, 8])
+            .range([0, width])
+
+
+            var xAxis = svg.append("g")
+            .attr("transform", "translate(0" + height + ")")
+
+            // add y axis
+            var y = d3.scaleLinear()
+            .domain([0, 9])
+            .range([height, 0])
+            svg.append("g")
+            .call(d3.axisLeft(y))
+
+            // add a clippath: everything out of this area wont be drawn 
+            var clip = svg.append("defs").append("svg:clipPath")
+            .attr("id", "clip")
+            .append("svg:rect")
+            .attr("width", width)
+            .attr("height", )                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+
+        })
+
+
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>
