@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+
+        <!-- load d3 annotations -->
+        <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
+
+        <!--  -->
+        <!-- <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script> -->
+
+    </head>
+
+    <body>
+        <svg width="460" height="460" id="dataviz"></svg>
+    </body>
+
+    <script>
+        
+        // features of the annotation
+        const annotations = [
+            {
+                note: {
+                    label: "Here is the annotation label",
+                    title: "Annotation title"
+                },
+                x: 100,
+                y: 100,
+                dx: 100,
+                dy: 100,
+            }
+        ]
+
+        // add annotations to the chart
+        const makeAnnotations = d3.annotation()
+        .annotations(annotations)
+        d3.select("#dataviz")
+        .append("g")
+        .call(makeAnnotations)
+
+
+        console.log(makeAnnotations)
+        
+
+
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>
