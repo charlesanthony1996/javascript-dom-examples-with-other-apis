@@ -2,6 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import heapq
 
+# try to do this without using deque as well
+from collections import deque
+
 
 def heuristic(a, b):
     return abs(b[0] - a[0]) + abs(b[1] - a[1])
@@ -137,7 +140,7 @@ import numpy as np
 
 grid = np.zeros((5, 5))
 grid[2][3] = 1
-# print(grid)
+print(grid)
 
 
 # 2. neighbour calculation
@@ -152,7 +155,7 @@ def neighbour_calculation(cell):
     return neighbours
 
 
-print(neighbour_calculation((2, 2)))
+# print(neighbour_calculation((2, 2)))
 
 # now we calculate it for a 8 connected grid. this is to introduce the diagonals as well.
 # consider a 3 x 3 grid
@@ -164,7 +167,7 @@ def neighbour_calculation_8(cell):
 
 
 
-print(neighbour_calculation_8((2, 2)))
+# print(neighbour_calculation_8((2, 2)))
 
 # 3. boundary checking
 
@@ -174,10 +177,10 @@ def is_within_bounds(grid, cell):
     return 0 <= cell[0] < grid.shape[0] and 0 <= cell[1] < grid.shape[1]
 
 
-print(is_within_bounds(grid, (2,2)))
+# print(is_within_bounds(grid, (2,2)))
 
 # check the grid again to see why this is false
-print(is_within_bounds(grid, (3, 5)))
+# print(is_within_bounds(grid, (3, 5)))
 
 
 
@@ -193,10 +196,124 @@ def is_wall(grid, cell):
 # this is from the numpy grid at the start of the exercise
 
 # check whether a wall or a "1" is there at the position below
-print(is_wall(grid, (0, 1)))
+# print(is_wall(grid, (0, 1)))
 
 # this is from the numpy grid at the start of the exercise
-print(is_wall(grid, (2, 3)))
+# this is true becuase we have already initialized a 1 at this point -> (2, 3)
+# print(is_wall(grid, (2, 3)))
 
 
 # 5.Moving on a grid
+
+# given a start cell, write a function to move in a specified direction. the function
+# should check if the move is valid (i.e: the destination cell is within the grid and is
+# not a wall), and if it is, it should return the coordinates of the destination of 
+# the cell
+
+def move(grid, cell, direction):
+    neighbour = (cell[0] + direction[0], cell[1] + direction[1])
+    if is_within_bounds(grid, neighbour) and not is_wall(grid, neighbour):
+        return neighbour
+    else:
+        return "Not a valid move, either out of bounds or hitting a wall"
+
+
+# returns as an invalid move
+# since its moving from (2, 2) to (2, 3)
+# print(move(grid, (2, 2), (0, 1)))
+
+
+# returns invalid as well
+# since its moving from (3, 3) to ()
+# print(move(grid, (3, 3), (-1, 0)))
+
+
+# 6. Path finding (simple approach)
+
+# starting from a specified cell, write a function to find a path to a
+# destination cell. the function can move only right or down, and it should
+# return the list of cell coordinates on the path. 
+
+# we should not worry about finding the shortest path for now
+
+def find_path(start, goal):
+    path = []
+    current = start
+    while current != goal:
+        path.append(current)
+        if(current[0] < goal[0]):
+            current = (current[0] + 1, current[1])
+        else:
+            current = (current[0], current[1] + 1)
+    
+    path.append(goal)
+    return path
+
+
+# not the shortest path -> makes an L
+# print(find_path((0, 0), (2, 2)))
+
+# warning not the shortest path! -> check the moves
+# print(find_path((1, 1), (2, 3)))
+
+
+# 7. path finding -> advanced example
+
+# here we are implmenting a bfs search , which is more complicated . we'll also
+# need a helper function to get valid neighbours of a cell
+
+def get_valid_neighbours(grid, cell):
+    # calculate the neighbours of the cell
+    neighbours = neighbour_calculation(cell)
+
+    # return only neighbours that are within the grid and are not walls
+    return [n for n in neighbours if is_within_bounds(grid, n) and not is_wall(grid, n)]
+
+
+def find_path_bfs(start, goal, grid):
+    # initialize a queue with the starting position
+    queue = [start]
+
+    # a dictionary to keep track of where we came from for each cell we visit
+    # initially , we came from nowhere to the starting position
+    came_from = {start: None}
+
+
+    # continue until there are no more cells in the queue
+    while queue:
+        # pop a cell from the front of the queue
+        current = queue.pop(0)
+        # if the cell is the goal, then we're done
+        if current == goal:
+            # pop a cell from the front of the queue
+            break
+
+        # get the valid neighbours of the current cell
+        for neighbour in get_valid_neighbours(grid, current):
+            # if this neighbouring cell has not been visited yet, add it to the queue
+            if neighbour not in came_from:
+                queue.append(neighbour)
+                # and also mark that we came to this neighbour from the current cell
+
+
+    # if the goal was never reached, then theres no valid path
+    if goal not in came_from:
+        return None
+
+    # now we need to construct the path from the start to the goal
+    current = goal
+    path = []
+
+    # go backwards from the goal through the came_from links
+    while current is not None:
+        path.append(current)
+        current = came_from[current]
+    
+    # since we went backwards, we need to reverse the path to get it from start to goal
+    path.reverse()
+    return path
+
+
+# 
+print(find_path_bfs((0, 1), (3, 4), grid))
+

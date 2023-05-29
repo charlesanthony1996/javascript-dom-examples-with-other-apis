@@ -2,15 +2,46 @@
 <html>
     <head>
         <title>customizing the note section of the annotation -> annotation example</title>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+
     </head>
 
     <body>
-        <svg id="dataviz" width="460" height="460"></svg>
-        
+        <svg id="dataviz" width="500" height="500"></svg>
     </body>
 
     <script>
+
+        var totalCO21990 = 10
+        var totalCO22019 = 20
+
+        // select the counter element
+        var svg = d3.select("#dataviz")
+
+        var text = svg.append("text")
+        .attr("x", 250)
+        .attr("y", 100)
+        .attr("text-anchor", "middle")
+        .style("font-size", "50px")
+        .text(totalCO21990)
+
         
+        // init with the 1990 value
+        // counter.text(totalCO21990)
+
+        // wait 2 seconds and then transition to 2019 value
+        setTimeout(function() {
+            text.transition()
+            .duration(3000)
+            .tween("text", function() {
+                var interpolator = d3.interpolateNumber(totalCO21990, totalCO22019)
+
+                return function(t) {
+                    text.text(Math.round(interpolator()))
+                }
+            })
+        }, 2000)
 
 
     </script>
