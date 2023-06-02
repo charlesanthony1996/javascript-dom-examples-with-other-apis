@@ -4,6 +4,7 @@
         <title>customizing the note section of the annotation -> annotation example</title>
         <script src="https://d3js.org/d3.v4.min.js"></script>
         <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="https://d3js.org/d3.v6.min.js"></script>
 
     </head>
 
@@ -13,35 +14,95 @@
 
     <script>
 
-        var totalCO21990 = 10
-        var totalCO22019 = 20
+        var totalCO21990 = 0
+        var totalCO22019 = 0
 
         // select the counter element
+        // var svg = d3.select("#dataviz")
+
+        // var text = svg.append("text")
+        // .attr("x", 250)
+        // .attr("y", 100)
+        // .attr("text-anchor", "middle")
+        // .style("font-size", "50px")
+        // .text(totalCO21990)
+
+
+        // init with the 1990 value
+        // counter.text(totalCO21990)
+
+        // loading the data and getting the individual sums for 1990 and 2019
+        d3.csv("CO2_emission_wrangled.csv").then(function(data) {
+            data.forEach(function(d) {
+                if(d.Year == "1990") {
+                    totalCO21990 += +d.CO2_emission
+                    // console.log("1990 emissions: ", totalCO21990)
+                }
+                if(d.Year == "2019") {
+                    totalCO22019 += +d.CO2_emission
+                    // console.log("2019 emissions: ", totalCO22019)
+                }
+            })
+    
+
         var svg = d3.select("#dataviz")
+
 
         var text = svg.append("text")
         .attr("x", 250)
         .attr("y", 100)
         .attr("text-anchor", "middle")
         .style("font-size", "50px")
-        .text(totalCO21990)
+        .text(totalCO21990.toFixed(2))
 
-        
-        // init with the 1990 value
-        // counter.text(totalCO21990)
+
+
 
         // wait 2 seconds and then transition to 2019 value
-        setTimeout(function() {
-            text.transition()
-            .duration(3000)
-            .tween("text", function() {
-                var interpolator = d3.interpolateNumber(totalCO21990, totalCO22019)
+        // set timeout function only does it once
+        // we need a set interval
+        // setTimeout(function() {
+        //     text.transition()
+        //     .duration(3000)
+        //     .tween("text", function() {
+        //         var interpolator = d3.interpolateNumber(totalCO21990, totalCO22019)
 
+        //         return function(t) {
+        //             text.text((interpolator(t)).toFixed(2))
+        //         }
+        //     })
+        // }, 2000)
+
+        var currentYear = 1990
+        text.text(totalCO21990.toFixed(2))
+
+
+            setInterval(function() {
+                if(currentYear == 1990) {
+                    transition(text, totalCO21990, totalCO22019)
+                    currentYear = 2019
+                }
+                else {
+                    transition(text, totalCO22019, totalCO21990)
+                    currentYear = 1990
+                }
+            }, 5000)
+        })
+
+        
+        // transition function
+
+        function transition(textElement, startValue, endValue) {
+            textElement.transition()
+            .duration(3000)
+            .tween("text", function(){
+                var interpolator = d3.interpolateNumber(startValue, endValue)
                 return function(t) {
-                    text.text(Math.round(interpolator()))
+                    textElement.text(interpolator(t).toFixed(2))
                 }
             })
-        }, 2000)
+
+        }
 
 
     </script>
