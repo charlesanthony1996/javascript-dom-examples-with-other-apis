@@ -1,54 +1,127 @@
+import time
+import random
+
+# # define the size of the grid
+# size = 5
+
+# # grid layout building parts
+# vertical = "|"
+# horizontal = "_"
+# intersection = "+"
+
+
+# # creating the grid
+# for i in range(size):
+#     # print horizaontal lines
+#     print(intersection + horizontal*size + intersection)
+
+#     # print vertical lines
+#     print((vertical + " "*size)* size + vertical)
+
+# # print the last horizontal line
+# print(intersection + horizontal*size + intersection)
+
+
+# end of drawing a grid
+class Grid:
+    def __init__(self, size):
+        self.size = size
+        self.grid = [["  " for _ in range(size)] for _ in range(size)]
+        # position of the x
+        self.position = [size // 2, size // 2]
+        # for the target? why should it be in the init function?
+        self.place_target()
+        # place X after the target
+        self.grid[self.position[0]][self.position[1]] = " X "
 
 
 
+    def print_grid(self):
+        for row in self.grid:
+            print("|" + "|".join(row) + " | ")
+            # seperator line
+            print("--" * (self.size * 2 + 1))
+        # wait for 1 second to print the next grid
+        time.sleep(1)
+        print()
 
 
+    def move_up(self):
+        # what does this mean?
+        # going up is possible -> there is a top row available
+        if self.position[0] > 0:
+            self.grid[self.position[0]][self.position[1]] = "  "
+            self.position[0] -= 1
+            self.grid[self.position[0]][self.position[1]] = " X "
 
 
+    def move_left(self):
+        # able to go a left
+        # draw a 5 x 5 grid on paper and see
+        # there is a 1 column on the left for traversal
+        if self.position[0] > -1:
+            self.grid[self.position[-1]][self.position[0]] = "  "
+            self.position[0] -= 1
+            self.grid[self.position[-1]][self.position[0]] = " X "
 
 
+    def move_down(self):
+        # able to go down by 1 unit
+        # draw a 5 by 5 grid on paper and see
+        # there is 1 row at the bottom for the X to go
+        if self.position[1] > 1:
+            self.grid[self.position[-1]][self.position[0]] = "  "
+            self.position[1] += 1
+            self.grid[self.position[-1]][self.position[0]] = " X "
 
 
+    def move_right(self):
+        if self.position[0] > 1:
+            self.grid[self.position[1]][self.position[0]] = "  "
+            self.position[0] += 1
+            self.grid[self.position[1]][self.position[0]] = " X "
 
 
+    def place_target(self):
+        while True:
+            # generate random row and column indices
+            # make sure to import random
+            target_row = random.randint(0, self.size - 1)
+            target_col = random.randint(0, self.size - 1)
+
+            # if the selected cell is not currently occupied by "X", place the target
+            if self.grid[target_row][target_col] == "  ":
+                self.grid[target_row][target_col] = " T "
+                break
 
 
+    def follow_target(self):
+        # scan the position of the target here
+        target_position = [(i, j) for i in range(self.size) for j in range(self.size) if self.grid[i][j] == " T "][0]
+
+        # move horizontally towards the target
+        while self.position[1] != target_position[1]:
+            if self.position[1] < target_position[1]:
+                self.move_right()
+                # self.print_grid()
+            else:
+                self.move_left()
+                # self.print_grid()
+            self.print_grid()
 
 
-
-
-
-
-
-
-
-
-
-
-# class Grid:
-#     def __init__(self, size):
-#         self.size = size
-#         self.grid = [['   ' for _ in range(size)] for _ in range(size)]
-#         self.position = [size // 2, size // 2]  # start at the center
-#         self.grid[self.position[0]][self.position[1]] = 'X'
-
-#     # printing the playground grid 
-#     def print_grid(self):
-#         for row in self.grid:
-#             print('|' + '|'.join(row) + '|')
-#             print('--' * (self.size*2+1))  # separator line
-
-#     # function to move up the x by a single unit
-#     def move_up(self):
-#         if self.position[0] > 0:
-#             self.grid[self.position[0]][self.position[1]] = '   ' 
-#             self.position[0] -= 1  # move up
-#             self.grid[self.position[0]][self.position[1]] = ' X ' 
+        # move vertically towards the target
+        while self.position[0] != target_position[0]:
+            if self.position[0] < target_position[0]:
+                self.move_down()
+            else:
+                self.move_up()
+            self.print_grid()
 
 
 
 # # Initializing the grid
-# grid = Grid(5)
+grid = Grid(5)
 
 # # printing the grid before the grud
 # grid.print_grid()
@@ -58,3 +131,37 @@
 
 # # print the grid after
 # grid.print_grid()
+
+# print the left movement operation
+# grid.move_left()
+
+# print the grid after
+# grid.print_grid()
+
+# print the down movement operation
+# grid.move_down()
+
+# print the grid
+# grid.print_grid()
+
+# print the right movement operation
+# grid.move_right()
+
+# print the grid
+# grid.print_grid()
+
+
+# put a target on the grid
+# grid.place_target()
+
+
+# print the grid
+grid.print_grid()
+
+# move the target
+grid.follow_target()
+
+
+# print the exit
+
+
