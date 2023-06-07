@@ -1,5 +1,6 @@
 import time
 import random
+import torch
 
 # # define the size of the grid
 # size = 5
@@ -34,6 +35,9 @@ class Grid:
         # place X after the target
         self.grid[self.position[0]][self.position[1]] = " X "
 
+        # intialize the cost to zero here
+        self.cost = 0
+
 
 
     def print_grid(self):
@@ -53,34 +57,66 @@ class Grid:
             self.grid[self.position[0]][self.position[1]] = "  "
             self.position[0] -= 1
             self.grid[self.position[0]][self.position[1]] = " X "
+            self.cost += 1
+
+    # diagonal move function towards the top right quadrant
+    def move_up_right(self):
+        if self.position[0] > 0 and self.position[1] < self.size - 1:
+            self.grid[self.position[0]][self.position[1]] = "  "
+            self.position[0] -= 1
+            self.position[1] += 1
+            self.grid[self.position[0]][self.position[1]] = " X "
+            self.cost += 1
+
 
 
     def move_left(self):
         # able to go a left
         # draw a 5 x 5 grid on paper and see
         # there is a 1 column on the left for traversal
-        if self.position[0] > -1:
-            self.grid[self.position[-1]][self.position[0]] = "  "
+        if self.position[1] > 0:
+            self.grid[self.position[0]][self.position[1]] = "  "
+            self.position[1] -= 1
+            self.grid[self.position[0]][self.position[1]] = " X "
+            self.cost += 1
+
+
+    def move_up_left(self):
+        if self.position[0] > 0 and self.position[1] < self.size - 1:
+            self.grid[self.position[0]][self.position[1]] = "  "
             self.position[0] -= 1
-            self.grid[self.position[-1]][self.position[0]] = " X "
+            self.position[1] -= 1
+            self.grid[self.position[0]][self.position[1]] = " X "
+            self.cost += 1
 
 
     def move_down(self):
         # able to go down by 1 unit
         # draw a 5 by 5 grid on paper and see
         # there is 1 row at the bottom for the X to go
-        if self.position[1] > 1:
-            self.grid[self.position[-1]][self.position[0]] = "  "
-            self.position[1] += 1
-            self.grid[self.position[-1]][self.position[0]] = " X "
+        if self.position[0] < self.size - 1:
+            self.grid[self.position[0]][self.position[1]] = "  "
+            self.position[0] += 1
+            self.grid[self.position[0]][self.position[1]] = " X "
+            self.cost += 1
+
+
+    def move_down_right(self):
+        if self.position[0] > 0 and self.position[1] < self.size - 1:
+            self.grid[self.position[0]][self.position[1]] = "  "
+            self.position[0] += 1
+            self.position[1] -= 1
 
 
     def move_right(self):
-        if self.position[0] > 1:
-            self.grid[self.position[1]][self.position[0]] = "  "
-            self.position[0] += 1
-            self.grid[self.position[1]][self.position[0]] = " X "
+        if self.position[1] < self.size - 1:
+            self.grid[self.position[0]][self.position[1]] = "  "
+            self.position[1] += 1
+            self.grid[self.position[0]][self.position[1]] = " X "
+            self.cost += 1
 
+    def move_down_left(self):
+        pass
 
     def place_target(self):
         while True:
@@ -93,6 +129,10 @@ class Grid:
             if self.grid[target_row][target_col] == "  ":
                 self.grid[target_row][target_col] = " T "
                 break
+
+
+    def print_cost(self):
+        print(f"Total cost: {self.cost}")
 
 
     def follow_target(self):
@@ -159,9 +199,36 @@ grid = Grid(5)
 grid.print_grid()
 
 # move the target
-grid.follow_target()
+# grid.follow_target()
 
 
-# print the exit
+# grid.print_cost()
+
+
+# print the diagonal movement functions out!
+grid.move_up_left()
+
+grid.print_grid()
+
+
+# adding the cost part to the algorithm? why is it important though?
+
+# basically cost is a measure of the effort thats required for the X
+
+# 1. path optimization -> in more complex scenarios when there are multiple routes to the target?
+# this becomes important. maybe increase the grid size? and check this point further down the road
+
+# 2. reward system
+# this basically comes under a reinforcement algorithm the cost function can serve as a reward system
+# that encourages the AI to find an optimal path
+
+# 3. energy constraints
+# if your simulating a real world situation, the x might represent a
+# robot that has a finite amount of energy. in such cases minimizing the cost
+# would be critical -> very complex scenario!
+
+
+# remember our basic cost function also resembles the steps taken here, so its a pretty basic system here
+
 
 
