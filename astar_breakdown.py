@@ -105,8 +105,9 @@ class Grid:
         if self.position[0] > 0 and self.position[1] < self.size - 1:
             self.grid[self.position[0]][self.position[1]] = "  "
             self.position[0] += 1
-            self.position[1] -= 1
-
+            self.position[1] += 1
+            self.grid[self.position[0]][self.position[1]] = " X "
+            self.cost += 1
 
     def move_right(self):
         if self.position[1] < self.size - 1:
@@ -116,7 +117,12 @@ class Grid:
             self.cost += 1
 
     def move_down_left(self):
-        pass
+        if self.position[0] > 0 and self.position[1] < self.size - 1:
+            self.grid[self.position[0]][self.position[1]] = "  "
+            self.position[0] += 1
+            self.position[1] -= 1
+            self.grid[self.position[0]][self.position[1]] = " X "
+            self.cost += 1
 
     def place_target(self):
         while True:
@@ -206,8 +212,30 @@ grid.print_grid()
 
 
 # print the diagonal movement functions out!
-grid.move_up_left()
+# move up left function
+# grid.move_up_left()
 
+# print the grid
+# grid.print_grid()
+
+# move up right function
+# grid.move_up_right()
+
+# print the grid
+# grid.print_grid()
+
+# move down right function
+# grid.move_down_right()
+
+# print the grid
+# grid.print_grid()
+
+
+# move down left function
+grid.move_down_left()
+
+
+# print the grid
 grid.print_grid()
 
 
