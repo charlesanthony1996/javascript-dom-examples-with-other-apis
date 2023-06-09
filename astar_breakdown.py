@@ -1,6 +1,7 @@
 import time
 import random
 import torch
+import pygame
 
 # # define the size of the grid
 # size = 5
