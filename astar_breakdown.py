@@ -166,6 +166,47 @@ class Grid:
             self.print_grid()
 
 
+    def follow_target_with_diagonal(self):
+        # scan the position of the target here
+        target_position = [(i, j) for i in range(self.size) for j in range(self.size) if self.grid[i][j] == " T "][0]
+
+        # move towards the target
+        while self.position != target_position:
+            # check if we can move diagonally?
+            if self.position[0] < target_position[0] and self.position[1] < target_position[1]:
+                self.move_down_right()
+
+            if self.position[0] > target_position[0] and self.position[1] > target_position[1]:
+                self.move_up_left()
+
+            if self.position[1] < target_position[0] and self.position[1] > target_position[1]:
+                self.move_down_left()
+
+            if self.position[1] > target_position[0] and self.position[1] < target_position[1]:
+                self.move_up_right()
+
+
+            # if not, move horizontally or vertically
+            elif self.position[1] < target_position[1]:
+                self.move_right()
+
+            elif self.position[1] > target_position[1]:
+                self.move_left()
+
+            elif self.position[0] < target_position[0]:
+                self.move_down()
+
+            elif self.position[0] > target_position[0]:
+                self.move_up()
+
+            self.print_grid()
+
+
+        
+
+
+
+
 
 # # Initializing the grid
 grid = Grid(5)
@@ -203,7 +244,7 @@ grid = Grid(5)
 
 
 # print the grid
-grid.print_grid()
+# grid.print_grid()
 
 # move the target
 # grid.follow_target()
@@ -233,11 +274,21 @@ grid.print_grid()
 
 
 # move down left function
-grid.move_down_left()
+# grid.move_down_left()
 
 
 # print the grid
-grid.print_grid()
+# grid.print_grid()
+
+# place the target again
+# grid.place_target()
+
+# use the path finding function with diagonal movements
+grid.follow_target_with_diagonal()
+
+
+# print the grid
+# grid.print_grid()
 
 
 # adding the cost part to the algorithm? why is it important though?
