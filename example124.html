@@ -11,7 +11,8 @@
       async function fetchWeatherData(city) {
         const apiKey = 'c606d2ba7ecbb0bd3f61222557d391d7';
         const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`);
-        const data = await response.json();
+        const data = await response.json()
+        console.log(data)
         const temps = data.list.map(item => item.main.temp - 273.15);
         const humidities = data.list.map(item => item.main.humidity);
         return { temps, humidities };
@@ -19,15 +20,19 @@
 
       async function trainModel(city) {
         console.log('Training model...');
+
         const { temps, humidities } = await fetchWeatherData(city);
         const inputTemps = tf.tensor2d(temps.slice(0, -1), [temps.length - 1, 1]);
         const inputHumidities = tf.tensor2d(humidities.slice(0, -1), [humidities.length - 1, 1]);
-        const input = tf.concat2d([inputTemps, inputHumidities], 1);  // concatenate tensors along axis 1
+        const input = tf.concat2d([inputTemps, inputHumidities], 1);
+
         const output = tf.tensor(temps.slice(1));
-        const model = tf.sequential();
-        model.add(tf.layers.dense({units: 50, inputShape: [2], activation: 'relu'}));  // Added more neurons and a 'relu' activation function
+
+        const model = tf.sequential()
+        model.add(tf.layers.dense({units: 50, inputShape: [2], activation: 'relu'}))
+        model.add(tf.layers.dense({units: 50,activation: "sigmoid"}))
         model.add(tf.layers.dense({units: 1}));
-        model.compile({optimizer: tf.train.adam(0.01), loss: 'meanSquaredError'});  // Used the 'adam' optimizer with a smaller learning rate
+        model.compile({optimizer: tf.train.adam(0.01), loss: 'meanSquaredError'})
         await model.fit(input, output, {epochs: 100});
         return model;
       }

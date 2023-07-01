@@ -30,10 +30,24 @@ void print_grid()
 }
 
 
+// for reference
+// origin is at the top left
+
+//     0   1   2   3   4   <- x-coordinate (position[1])
+// 0 | a | b | c | d | e |
+// 1 | f | g | h | i | j |
+// 2 | k | l | m | n | o |
+// 3 | p | q | r | s | t |
+// 4 | u | v | w | x | y |
+// ^
+// |
+// y-coordinate (position[0])
+
+
 void initialize_grid()
 {
     position[0] = size/ 2;
-    position[1] = size/2;
+    position[1] = size/ 2;
 
     // initialize all cells to empty
     for(int i =0; i < size; i++)
@@ -56,12 +70,60 @@ void initialize_grid()
 
 }
 
+void move_right()
+{
+    if(position[1] < size - 1)
+    {
+        // ensure we are not on the right edge of the grid
+        // make current cell empty
+        strcpy(grid[position[0]][position[1]], empty);
+
+        // move to the right
+        position[1] += 1;
+
+        // mark new cell as pos
+        strcpy(grid[position[0]][position[1]], pos);
+    }
+    else {
+        printf("Cant move right from here\n");
+    }
+}
+
+
+void move_left()
+{
+    if(position[1] > 0)
+    {
+        strcpy(grid[position[0]][position[1]], empty);
+
+        position[1] -= 1;
+
+        strcpy(grid[position[0]][position[1]], pos);
+    }
+    else {
+        printf("canot move left from here\n");
+    }
+}
+
+
+
+
+
+
 
 int main()
 {
     printf("create the grid here\n");
     srand(time(NULL));
     initialize_grid();
+    print_grid();
+
+    // printf("move right\n");
+    // move_right();
+    // print_grid();
+
+    printf("move left\n");
+    move_left();
     print_grid();
 
     return 0;

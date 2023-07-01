@@ -83,7 +83,7 @@ class Grid:
 
 
     def move_up_left(self):
-        if self.position[0] > 0 and self.position[1] < self.size - 1:
+        if self.position[0] > 0 and self.position[1] > 0:
             self.grid[self.position[0]][self.position[1]] = "  "
             self.position[0] -= 1
             self.position[1] -= 1
@@ -103,7 +103,7 @@ class Grid:
 
 
     def move_down_right(self):
-        if self.position[0] > 0 and self.position[1] < self.size - 1:
+        if self.position[0] < self.size - 1 and self.position[1] < self.size - 1:
             self.grid[self.position[0]][self.position[1]] = "  "
             self.position[0] += 1
             self.position[1] += 1
@@ -118,7 +118,7 @@ class Grid:
             self.cost += 1
 
     def move_down_left(self):
-        if self.position[0] > 0 and self.position[1] < self.size - 1:
+        if self.position[0] < self.size - 1 and self.position[1] > 0:
             self.grid[self.position[0]][self.position[1]] = "  "
             self.position[0] += 1
             self.position[1] -= 1
@@ -179,10 +179,10 @@ class Grid:
             if self.position[0] > target_position[0] and self.position[1] > target_position[1]:
                 self.move_up_left()
 
-            if self.position[1] < target_position[0] and self.position[1] > target_position[1]:
+            if self.position[0] < target_position[0] and self.position[1] > target_position[1]:
                 self.move_down_left()
 
-            if self.position[1] > target_position[0] and self.position[1] < target_position[1]:
+            if self.position[0] > target_position[0] and self.position[1] < target_position[1]:
                 self.move_up_right()
 
 
@@ -201,6 +201,11 @@ class Grid:
 
             self.print_grid()
 
+
+
+
+    def neighbors(self, node):
+        dirs = 
 
         
 
@@ -278,7 +283,7 @@ grid = Grid(5)
 
 
 # print the grid
-# grid.print_grid()
+grid.print_grid()
 
 # place the target again
 # grid.place_target()
