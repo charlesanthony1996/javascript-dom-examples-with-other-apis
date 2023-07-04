@@ -1,0 +1,65 @@
+<!-- learning about mode building here -->
+<!-- integrating tensorflow with d3 js -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>d3 with tensorflow</title>
+
+        <script src="https://d3js.org/d3.v4.js"></script>
+        <!-- load tensorflow models -->
+
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.8.2"></script>
+    </head>
+
+    <body>
+        <div id="#my_dataviz"></div>
+    </body>
+
+    <script>
+        // set the dimensions and margins of the graph
+        var margin = {top: 20, left: 30, right: 30, left: 30}
+        var width = 460 - margin.left - margin.right
+        var height = 460 - margin.top - margin.bottom
+
+        var svg = d3.select("#my_dataviz")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.right + ")")
+
+        // loading the model here
+        const model = tf.loadLayersModel("model.json")
+        console.log(model)
+
+        // read the data here
+        d3.csv("./data_value.csv", function(d) {
+            // when reading the csv, i must format the variables
+            return { date: d3.timeParse("%Y-%m-%d")(d.date), value: d.value }
+        },
+
+        // now i can use this dataset
+        function(data) {
+
+            // make prediction
+            const inputData = data.map(d => [d.date.getTime(), d.value])
+            const outputData = model.predict(inputData)
+            
+        }
+        
+        
+        
+        )
+
+
+
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>

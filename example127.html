@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+
+    <body>
+        <form action="#" method="post">
+            <div>
+                <label for="name">Text Input</label>
+                <input type="text" name="name" id="name" value="charles anthony" tabindex="1">
+            </div>
+
+            <div>
+                <label for="textarea">Textarea</label>
+                <textarea name="textarea" id="textarea" cols="40" rows="8"></textarea>
+            </div>
+        </form> 
+        
+        
+    </body>
+
+
+    <script>
+
+    </script>
+
+    <style>
+        input[type=text], textarea {
+            @include transition(all 0.30s ease-in-out);
+            -webkit-transition: all 0.30s ease-in-out;
+            -moz-transition: all 0.30s ease-in-out;
+            -ms-transition: all 0.30s ease-in-out;
+            -o-transition: all 0.30s ease-in-out;
+            outline: none;
+            padding: 3px 0px 3px 3px;
+            margin: 5px 1px 3px 0px;
+            border: 1px solid #DDDDDD;
+        }
+
+        input[type=text]:focus, textarea:focus {
+            @include box-shadow(0 0 5px rgba(81, 203, 238 1));
+            padding: 3px 0px 3px 3px;
+            margin: 5px 1px 3px 0px;
+            border: 1px solid rgba(81, 203, 238, 1);
+        }
+
+        label {
+            width: 150px;
+            float: left;
+        }
+
+        body {
+            padding: 20px;
+        }
+
+
+    </style>
+</html>
