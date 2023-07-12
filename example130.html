@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+
+    <body>
+        <div id="box"></div>
+    </body>
+
+    <script>
+        window.onload = function() {
+            const box = document.getElementById("box")
+
+            box.addEventListener("click", function(e) {
+                e.stopPropagation()
+                console.log("inside")
+            })
+
+            window.addEventListener("click", function(event) {
+                event.stopPropagation()
+                console.log("outside")
+            })
+        }
+
+
+    </script>
+
+    <style>
+        #box {
+            width: 200px;
+            height: 200px;
+            background-color: #00f;
+            position: relative;
+            margin: 50px;
+        }
+
+
+    </style>
+</html>
