@@ -21,8 +21,24 @@
         // set default value
         textarea.defaultValue = "This is the default text"
 
-        
+        // disabled after 5 seconds
+        setTimeout(function () {
+            textarea.disabled = true
+            alert("text area disabled after 5 seconds")
+        }, 5000)
 
+        // enable again after 10 seconds and set readonly
+        setTimeout(function() {
+            textarea.disabled = true
+            textarea.readOnly = true
+            alert("text area enabled but readonly after 10 seconds")
+        }, 10000)
+
+        // handle form submit
+        document.getElementById("myForm").addEventListener("submit", function(event) {
+            event.preventDefault()
+            alert("Textarea content: " + textarea.value)
+        })
     </script>
 
     <style>
