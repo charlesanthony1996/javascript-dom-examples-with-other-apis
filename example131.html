@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>textarea demo</title>
+    </head>
+
+    <body>
+        <form id="myForm">
+            <textarea id="myTextArea" name="myTextArea" rows="10" cols="50" autocomplete="on" autofocus 
+            placeholder="Start typing here..." maxlength="500" required wrap="soft">
+        </textarea>
+        <br>
+        <button type="submit">Submit</button>
+        </form>
+    </body>
+
+    <script>
+        // guess the textarea
+        let textarea = document.getElementById("myTextArea")
+
+        // set default value
+        textarea.defaultValue = "This is the default text"
+
+        
+
+    </script>
+
+    <style>
+        textarea {
+            font-size: 20px;
+        }
+    </style>
+</html>
