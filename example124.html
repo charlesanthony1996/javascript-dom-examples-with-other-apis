@@ -39,12 +39,12 @@
 
       async function predictTemperature(model, city) {
         console.log('Making prediction...');
-        const { temps, humidities } = await fetchWeatherData(city);
+        const { temps, humidities } = await fetchWeatherData(city)
         const lastTemp = temps[temps.length - 1];
-        const lastHumidity = humidities[humidities.length - 1];
-        const input = tf.tensor2d([[lastTemp, lastHumidity]]);
-        const prediction = await model.predict(input);
-        return prediction.dataSync()[0];
+        const lastHumidity = humidities[humidities.length - 1]
+        const input = tf.tensor2d([[lastTemp, lastHumidity]])
+        const prediction = await model.predict(input)
+        return prediction.dataSync()[0]
       }
 
       (async function() {
@@ -52,8 +52,8 @@
         const model = await trainModel(city);
         const prediction = await predictTemperature(model, city);
         const result = document.getElementById('result');
-        result.textContent = `The predicted temperature in ${city} tomorrow is ${prediction.toFixed(2)}°C.`;
-      })();
+        result.textContent = `The predicted temperature in ${city} tomorrow is ${prediction.toFixed(2)}°C.`
+      })()
     </script>
   </body>
 </html>
