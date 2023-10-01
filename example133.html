@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>custom expansion panel</title>
+    </head>
+
+    <body>
+        <expansion-panel>
+            <div slot="header">panel header 1</div>
+            <div slot="content">lorem ipsum here</div>
+        </expansion-panel>
+
+        <br>
+        
+
+    </body>
+
+    <script>
+        class ExpansionPanel extends HTMLElement {
+            constructor() {
+                super()
+                this.attachShadow({ mode: 'open'})
+                this.shadowRoot.innerHTML = `
+                <div class="panel-header">
+                    <slot name="header"></slot>
+                </div>
+
+                <div class="panel-content">
+                    <slot name="content"></slot>
+                </div>
+                `
+                // this.shadowRoot.querySelector(".panel-header").onclick = () => {
+                //     const content = this.shadowRoot.querySelector(".panel-content")
+                //     content.style.display = (content.style.display === 'block') ? 'none': 'block'
+                // }
+
+                this.shadowRoot.querySelector(".panel-header").addEventListener("click", () => {
+                    const content = this.shadowRoot.querySelector(".panel-content")
+                    content.style.display = (content.style.display === 'block') ? 'none' : 'block'
+                })
+            }
+        }
+
+        customElements.define('expansion-panel', ExpansionPanel)
+    </script>
+
+    <style>
+        expansion-panel {
+            display: block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .panel-header {
+            background-color: #f1f1f1;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .panel-content {
+            display: none;
+            padding: 10px;
+            border-top: 1px solid #ccc;
+        }
+    </style>
+</html>
