@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>breadcrumb component</title>
+
+    <body>
+        <ul class="breadcrumb" id="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Category</a></li>
+            <li class="breadcrumb-item">Current page</li>
+            <!-- <li class="breadcrumb-item">Second page</li> -->
+            <!-- <li class="breadcrumb-item">Third page</li> -->
+        </ul>
+    </body>
+
+    <script>
+        function updateBreadcrumb() {
+            const breadcrumb = document.getElementById('breadcrumb')
+            const path = window.location.pathname.split("/").filter(Boolean)
+            let breadcrumbHTML = ''
+        
+
+        for(let i = 0;i < path.length;i++) {
+            breadcrumbHTML += `<li class="breadcrumb-item"><a href="#">${path[i]}</a></li>`
+        }
+        breadcrumb.innerHTML = breadcrumbHTML
+    }
+
+    // call the function when is the page loads
+    window.onload = updateBreadcrumb
+
+
+    </script>
+
+    <style>
+        .breadcrumb {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .breadcrumb-item {
+            display: inline;
+            margin-right: 5px;
+        }
+
+        .breadcrumb-item::after {
+            content: " > ";
+        }
+
+        .breadcrumb-item:last-child::after {
+            content: "";
+        }
+    </style>
+</head>
