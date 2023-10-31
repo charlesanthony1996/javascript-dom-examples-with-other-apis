@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+
+        <!-- box icons -->
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css">
+        <title>portfolio website</title>
+    </head>
+
+    <body>
+        <!-- header -->
+        <header class="l-header">
+            <nav class="nav bd-grid">
+                <div>
+                    <a href="#" class="nav__logo">Charles</a>
+                </div>
+
+                <div>
+                     
+                </div>
+            </nav>
+        </header>
+        
+
+    </body>
+
+    <script>
+        // menu show
+        const showMenu = (toggleId, navId) => {
+            const toggle = document.getElementById(toggleId)
+            const nav = document.getElementById(navId)
+
+            if(toggle && nav) {
+                toggle.addEventListener("click", () => {
+                    nav.classList.toggle("show")
+                })
+            }
+        }
+
+        showMenu('nav-toggle', 'nav-menu')
+
+
+
+
+    </script>
+
+    <style>
+        /* font library */
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
+
+        /* variables */
+        :root {
+            --header-height: 3rem;
+            --font-semi: 600;
+            
+            /* colors */
+            /* purple */
+            /* hsl color mode */
+            --hue-color: 224;
+            --first-color: hsl(var(--hue-color), )
+
+        }
+
+
+
+    </style>
+</html>
