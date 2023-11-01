@@ -22,11 +22,24 @@
                 <div class="nav__menu" id="nav-menu">
                     <ul class="nav__list">
                         <li class="nav__item"><a href="#home" class="nav__link active">Home</a></li>
+                        <li class="nav__item"><a href="#about" class="nav__link">About</a></li>
+                        <li class="nav__item"><a href="#about" class="nav__link">Skills</a></li>
+                        <li class="nav__item"><a href="#about" class="nav__link">Work</a></li>
+                        <li class="nav__item"><a href="#about" class="nav__link">Contact</a></li>
                     </ul>
-                     
+                </div>
+
+                <div class="nav__toggle" id="nav-toggle">
+                    <i class="bx bx-menu"></i>
                 </div>
             </nav>
         </header>
+
+        <main class="l-main">
+            <!-- home -->
+
+
+        </main>
         
 
     </body>
@@ -45,6 +58,20 @@
         }
 
         showMenu('nav-toggle', 'nav-menu')
+
+        // remove menu mobile
+        const navlink = document.querySelectorAll(".nav__link")
+
+        function linkAction() {
+            const navMenu = document.getElementById("nav-menu")
+
+            // when we click on each nav link we remove the show menu class
+            navMenu.classList.remove("show")
+        }
+        navlink.forEach(n => n.addEventListener("click", linkAction))
+
+
+        // scroll sections active link
 
 
 
@@ -129,7 +156,38 @@
             display: block;
         }
 
-        
+        /* class css */
+        .section-title {
+            position:absolute;
+            font-size: var(--h2-font-size);
+            color: var(--first-color);
+            margin-top: var(--mb-2);
+            margin-bottom: var(--mb-4);
+            text-align: center;
+        }
+
+        .section-title::after {
+            position:absolute;
+            content: '';
+            width: 64px;
+            height: 0.18rem;
+            left: 0;
+            right: 0;
+            margin: auto;
+            top: 2rem;
+            background-color: var(--first-color);
+        }
+
+        .section {
+            padding-top: 3rem;
+            padding-bottom: 2rem;
+        }
+
+        /* layout */
+
+        .bd-grid {
+            max-width: 1024px;
+        }
 
 
 
