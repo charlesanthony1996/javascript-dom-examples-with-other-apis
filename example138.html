@@ -19,7 +19,10 @@
                     <a href="#" class="nav__logo">Charles</a>
                 </div>
 
-                <div>
+                <div class="nav__menu" id="nav-menu">
+                    <ul class="nav__list">
+                        <li class="nav__item"><a href="#home" class="nav__link active">Home</a></li>
+                    </ul>
                      
                 </div>
             </nav>
@@ -58,12 +61,75 @@
             --font-semi: 600;
             
             /* colors */
-            /* purple */
+            /* purple -> 260 */
+            /* red -> 355 */
+            /* blue -> 224 */
+            /* pink -> 340 */
             /* hsl color mode */
             --hue-color: 224;
-            --first-color: hsl(var(--hue-color), )
+            --first-color: hsl(var(--hue-color), 89%, 60%);
+            --second-color: hsl(var(--hue-color), 56%, 12%);
 
+
+            /* font typography */
+            --body-font: 'Poppins', sans-serif;
+            --big-font-size: 2rem;
+            --h2-font-size: 1.25rem;
+            --normal-font-size: 0.938rem;
+            --smaller-font-size: 0.75rem;
+
+
+            /* margins */
+            --mb-2: 1rem;
+            --mb-4: 2rem;
+            --mb-5: 2.5rem;
+            --mb-6: 3rem;
+
+            /* z index */
+            --z-back: -10;
+            --z-fixed: 100;
         }
+
+        @media screen and (min-width: 968px) {
+            :root {
+                --big-font-size: 3.5rem;
+                --h2-font-size: 2rem;
+                --normal-font-size: 1rem;
+                --smaller-font-size: 0.875rem;
+            }
+        }
+
+        /* base */
+        *, ::before, ::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: var(--header-height) 0 0 0;
+            font-family: var(--body-font);
+            font-size: var(--normal-font-size);
+            color: var(--second-color);
+        }
+
+        h1, h2, p {
+            margin: 0;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        
 
 
 
