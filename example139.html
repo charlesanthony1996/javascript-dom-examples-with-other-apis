@@ -22,16 +22,45 @@
             </div>
         </header>
 
-        <div class="container">
+        <section id="hero">
+            <div class="hero-content">
+                <h1>Welcome to our site</h1>
+                <p>Discover our world class services</p>
+            </div>
+        </section>
+
+        <section id="main-content">
+            <div class="column">
+                <h2>Column 1</h2>
+                <p>Some text here...</p>
+            </div>
+
+            <div class="column">
+                <h2>Column 3</h2>
+                <p>Some text here...</p>
+            </div>
+
+        </section>
+
+        <!-- <div class="container">
             <p>This is a basic example of a responsive web design layout.resize your browser to see how it adapts to different screen sizes</p>
-        </div>
+        </div> -->
 
-
+        <footer>
+            <p>&copy; 2023 Your Company Name</p>
+        </footer>
     </body>
 
     <script>
-
-
+        function toggleMenu() {
+            var navlist = document.getElementById("nav-list")
+            if(navlist.style.display === 'block') {
+                navlist.style.display = 'none'
+            }
+            else  {
+                navlist.style.display = 'block'
+            }
+        }
     </script>
 
     <style>
@@ -40,6 +69,72 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        /* navigation styles */
+        nav {
+            background: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        #nav-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        #nav-list li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        #nav-list a {
+            color: white;
+            text-decoration: none;
+        }
+
+        #nav-toggle {
+            display: none;
+            cursor: pointer;
+        }
+
+        /* hero section */
+        #hero {
+            background-image: url("hero-image.jpg");
+            background-size: cover;
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .hero-content {
+            background: rgba(0, 0, 0, 0.5);
+            display: inline-block;
+            padding: 20px;
+        }
+
+        /* main content */
+        #main-content {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .column {
+            flex: 1;
+            margin: 10px;
+            padding: 20px;
+            background: #f4f4f4;
+        }
+
+
+        /* footer */
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
         }
 
         .container {
@@ -76,10 +171,21 @@
             nav ul li {
                 display: block;
                 margin: 0;
+                text-align: left;
+            }
+
+            #nav-toggle {
+                display: block;
             }
 
             .container {
                 width: 90%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #main-content {
+                flex-direction: column;
             }
         }
 
@@ -88,6 +194,14 @@
             nav ul li {
                 margin: 0;
                 padding: 10px;
+            }
+
+            #nav-list {
+                display: none;
+            }
+
+            #nav-toggle {
+                display: block;
             }
         }
 
