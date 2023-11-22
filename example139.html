@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Responsive Design Example
+        </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+
+    <body>
+        <header>
+            <div class="">
+                <h1>Responsive Web Design</h1>
+                <nav>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <div class="container">
+            <p>This is a basic example of a responsive web design layout.resize your browser to see how it adapts to different screen sizes</p>
+        </div>
+
+
+    </body>
+
+    <script>
+
+
+    </script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        header {
+            background: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        nav ul {
+            padding: 0;
+            list-style: none;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* style for tablets */
+        @media (max-width: 768px) {
+            nav ul li {
+                display: block;
+                margin: 0;
+            }
+
+            .container {
+                width: 90%;
+            }
+        }
+
+        /* styles for phones */
+        @media (max-width: 480px) {
+            nav ul li {
+                margin: 0;
+                padding: 10px;
+            }
+        }
+
+        /* styles for large screens like 1920 x 1080 px */
+        @media (min-width: 1920px) {
+            .container {
+                width: 70%;
+            }
+            nav ul li {
+                margin: 0 30px;
+            }
+
+            body {
+                font-size: 18px;
+            }
+        }
+    </style>
+</html>
