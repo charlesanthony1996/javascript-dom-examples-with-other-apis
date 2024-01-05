@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>border images in css</title>
+    </head>
+
+    <body>
+        <div class="box">Charles Anthony</div>
+    </body>
+
+    <script>
+
+    </script>
+
+    <style>
+        html , body {
+            height: 100%;
+        }
+
+        body {
+            display: grid;
+            place-items: center;
+        }
+
+        .box {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            margin: 10px;
+            font-size: 1.2em;
+            background: #fff3d4;
+        }
+
+        .box {
+            border-width: 30px;
+            border-style: solid;
+            border: 30px solid transparent;
+            border-image-source: url("https://developer.mozilla.org/en-US/blog/border-images-interop-2023/nature.png");
+            border-image-slice: 70;
+            border-image-width: 30px;
+            border-image-outset: 10px;
+        }
+
+    </style>
+</html>
