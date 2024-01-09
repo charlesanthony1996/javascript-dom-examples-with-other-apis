@@ -6,27 +6,32 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const inputField = document.getElementById('customInput');
-            inputField.addEventListener('keydown', function(event) {
-                if (event.key === 'Backspace') {
-                    event.preventDefault();
-                    handleBackspace(inputField);
-                }
-            });
+            const backspaceButton = document.getElementById('backspaceButton')
+
+            backspaceButton.addEventListener('click', function(event) {
+                handleBackspace(inputField)
+            })
+            // inputField.addEventListener('keydown', function(event) {
+            //     if (event.key === 'Backspace') {
+            //         event.preventDefault();
+            //         handleBackspace(inputField);
+            //     }
+            // });
 
             function handleBackspace(input) {
-                const startPos = input.selectionStart;
-                const endPos = input.selectionEnd;
+                const startPos = input.selectionStart
+                const endPos = input.selectionEnd
 
                 if (startPos === endPos) {
                     // No text selected, delete one character before the cursor
-                    const newValue = input.value.substring(0, startPos - 1) + input.value.substring(endPos);
+                    const newValue = input.value.substring(0, startPos - 1) + input.value.substring(endPos)
                     input.value = newValue;
-                    input.selectionStart = input.selectionEnd = startPos - 1;
+                    input.selectionStart = input.selectionEnd = startPos - 1
                 } else {
                     // Text is selected, delete the selected range
                     const newValue = input.value.substring(0, startPos) + input.value.substring(endPos);
                     input.value = newValue;
-                    input.selectionStart = input.selectionEnd = startPos;
+                    input.selectionStart = input.selectionEnd = startPos
                 }
 
                 // Triggering custom change event (simulating your keyboard.onInputChange)
@@ -41,5 +46,6 @@
 </head>
 <body>
     <input type="text" id="customInput" placeholder="Type here...">
+    <button id="backspaceButton">Backspace</button>
 </body>
 </html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>custom backspace and clear handlers</title>
+    </head>
+
+    <body>
+        <input type="text" id="customInput" placeholder="type here...">
+        <button id="backspaceButton">Backspace</button>
+        <button id="clearButton">Clear</button>
+    </body>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputField = document.getElementById('customInput')
+            const backspaceButton = document.getElementById('backspaceButton')
+            const clearButton = document.getElementById('clearButton')
+
+            backspaceButton.addEventListener('click', function(event) {
+                handleBackspace(inputField)
+            })
+
+            clearButton.addEventListener('click', function(event) {
+                handleClear(inputField)
+            })
+
+            function handleBackspace(input) {
+                const startPos = input.selectionStart
+                const endPos = input.selectionEnd
+
+                if(startPos == endPos) {
+                    const newValue = input.value.substring(0, startPos - 1) + input.value.substring(endPos)
+                    input.value = newValue
+                    input.selectionStart = input.selectionEnd = Math.max(startPos - 1, 0)
+                } else {
+                    const newValue = input.value.substring(0, startPos) + input.value.substring(endPos)
+                    input.value = newValue
+                    input.selectionStart = input.selectionEnd = startPos
+                }
+
+                input.dispatchEvent(new Event('change'))
+
+            }
+
+
+
+            function handleClear(input) {
+                input.value = ''
+                input.dispatchEvent(new Event('change'))
+            }
+
+            inputField.addEventListener('change', function() {
+                console.log('Input changed: ', inputField.value)
+            })
+        })
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>

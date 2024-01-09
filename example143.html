@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>custom handlers with history</title>
+    </head>
+
+    <body>
+        <input type="text" id="customInput" placeholder="type here...">
+        <button id="enterButton">Enter</button>
+        <button id="restoreButton">Restore</button>
+        <!-- remember to put the other existing buttons as well -->
+    </body>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputField = document.getElementById('customInput')
+            const enterButton = document.getElementById('enterButton')
+            const restoreButton = document.getElementById('restoreButton')
+
+            let history = []
+
+            enterButton.addEventListener('click', function() {
+                recordHistory(inputField.value)
+            })
+
+            restoreButton.addEventListener('click', function() {
+                console.log("last 10 entries: ", getlasttentries())
+            })
+
+            function recordHistory(value) {
+                if(value) {
+                    history.push(value)
+                    inputField.value = ''
+                }
+            }
+
+            function getlasttentries() {
+                return history.slice(-10)
+            }
+
+        })
+        
+    </script>
+
+    <style>
+
+
+    </style>
+</html>
