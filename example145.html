@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+
+    <body>
+        <input type="text" id="custonmInput" placeholder="Type here...">
+        <button id="shiftButton">Shift</button>
+        <button id="capsLockButton">Caps lock</button>
+    </body>
+
+
+    <script>
+        let isShiftActive = false
+        let isCapsLockActive = false
+
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const inputField = document.getElementById("customInput")
+            const shiftButton = document.getElementById("shiftButton")
+            const capsLockButton = document.getElementById("capsLockButton")
+
+            shiftButton.addEventListener("click", function() {
+                isShiftActive = !isShiftActive
+                updateShiftState()
+            })
+
+            capsLockButton.addEventListener("click", function() {
+                isCapsLockActive = !isCapsLockActive
+                updateCapsLockState()
+            })
+
+
+            function updateShiftState() {
+                shiftButton.classList.toggle("active", isShiftActive)
+                updateInputField(inputField)
+            }
+
+            function updateCapsLockState() {
+                capsLockButton.classList.toggle("active", isCapsLockActive)
+                updateInputField(inputField)
+            }
+
+            function updateInputField(input) {
+                let value = input.value
+                if (isShiftActive || isCapsLockActive) {
+                    input.value = value.toUpperCase()
+                } else {
+                    input.value = value.toLowerCase()
+                }
+            }
+        })
+    </script>
+
+    <style>
+        .active {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</html>
