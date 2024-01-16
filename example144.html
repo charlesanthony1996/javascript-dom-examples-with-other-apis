@@ -5,12 +5,33 @@
     </head>
 
     <body>
+        <input type="text" id="customInput" placeholder="Type here...">
+        <button id="shiftButton">Shift</button>
 
     </body>
 
     <script>
+        let isShiftActive = false
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const inputField = document.getElementById("customInput")
+            const shiftButten = document.getElementById("shiftButton")
+
+            shiftButten.addEventListener("click", function() {
+                isShiftActive = !isShiftActive
+                updateInputField(inputField)
+            })
 
 
+            inputField.addEventListener("input", function() {
+                updateInputField(inputField)
+            })
+
+            function updateInputField(input) {
+                let value = input.value
+                input.value = isShiftActive ? value.toUpperCase() : value.toLowerCase()
+            }
+        })
     </script>
 
     <style>
