@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>creating 3d clouds with css</title>
+    </head>
+
+    <body>
+        <div id="viewport">
+            <div id="world"></div>
+        </div>
+
+    </body>
+
+    <script>
+        (function() {
+            var lastime = 0
+            var vendors = ["ms", "moz", "webkit", "o"]
+            for (var x = 0;x < vendors.length && !window.requestAnimationFrame; ++x) {
+                window.requestAnimationFrame = window[vendors[x] + "RequestAnimationFrame"]
+                window.cancelAnimationFrame = window[vendors[x] + "CancelRequestAnimationFrame"]
+            }
+
+            if (!window.requestAnimationFrame)
+                window.requestAnimationFrame = function (callback, element) {
+                    var currTime = new Date().getTime()
+                    var timeToCall = Math.max(0, 16 - (currTime - lastime))
+                    var id = window.setTimeout(function () {
+                        callback(currTime + timeToCall)
+                    }, timeToCall)
+                    lastime = currTime + timeToCall
+                    return id
+                }
+            
+            if (!window.cancelAnimationFrame) {
+                window.cancelAnimationFrame = function(id) {
+                    clearTimeout(id)
+                }
+            }
+        })
+
+
+        var world = document.getElementById('world')
+        var viewport = document.getElementById('viewport')
+
+        worldXAngle = 0
+        worldYAngle = 0
+        d = 0
+
+        // event listener to transform the mouse position into angles
+        // from -180 to 180 degrees, both vertically and horizontally
+
+        window.addEventListener('mousemove', function(e) {
+            worldYAngle = -(0.5 - (e.clientX / window.innerWidth)) * 180
+            worldXAngle = (0.5 - (e.clientY / window.innerHeight)) * 180
+            updateView()
+        })
+
+        function updateView() {
+            world.style.transform = 'translateZ( ' + d + 'px) rotateX( ' + worldXAngle + 'deg) rotateY( ' + worldYAngle + 'deg)'
+        }
+
+        // objects is an array of cloud bases
+        // layers is an array of cloud layers
+        var objects = []
+        var layers = []
+        var textures = []
+        var p = 400
+        var computedWeights = []
+
+        var links = 
+
+        // clears the dom of previous clouds bases
+        // and generates a new set of cloud bases
+
+        function generate() {
+            objects = []
+            layers = []
+
+            if(world.hasChildNodes()) {
+                while(world.hasChildNodes.length >= 1) {
+                    world.removeChild(world.firstChild)
+                }
+            }
+
+            for(var j = 0; j < 5;j++) {
+                objects.push(createCloud2())
+            }
+        }
+
+        function createCloud() {
+            var div = document.createElement('div')
+            div.className = "cloudBase"
+            var t = 'translateX(' + random_x + 'px ) translateY(' + random_y + 'px) translateZ(' + random_z + 'px)'
+            div.style.transform = t
+            world.appendChild(div)
+            return div
+        }
+
+        // more better version of creating a cloud
+        function createCloud2() {
+            var div = document.createElement('div')
+            div.className = "cloudBase"
+            var t = 'translateX(' + random_x + 'px) + translateY(' + random_y + 'px) + translateZ(' + random_z + 'px)'
+            div.style.transform = t
+            world.appendChild(div)
+
+            for(var j = 0; j < 5 + Math.round(Math.random() * 10); j++) {
+                var cloud = document.createElement('div')
+                cloud.className = 'cloudLayer'
+                cloud.data = {
+                    x: random_x,
+                    y: random_y,
+                    z: random_z,
+                    a: random_a,
+                    s: random_s
+
+                }
+
+                var t = 'translateX(' + random_x + 'px) translateY(' + random_y + 'px) translateZ(' + random_z + 'px) rotateZ(' + random_a + 'deg) scale(' + random_s + ')'
+
+                cloud.style.transform = t
+
+                div.appendChild(cloud)
+                layers.push(cloud)
+            }
+
+            return div
+        }
+
+        function update() {
+            for(var j = 0; j < layers.length; j++ ) {
+                var layer = layers[j]
+                layer.data.a += layer.data.speed
+                var t = 'translateX( ' + layer.data.x + 'px) translateY(' + layer.data.y + 'px) translateZ(' + layer.data.z + 'px)'
+                layer.style.transform = t
+            }
+            requestAnimationFrame(update)
+        }
+
+        generate()
+    </script>
+
+    <style>
+        #viewport  {
+            bottom: 0;
+            left: 0;
+            overflow: hidden;
+            perspective: 400;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        #world {
+            height: 512px;
+            left: 50%;
+            margin-left: -256px;
+            margin-top: -256px;
+            position: absolute;
+            top: 50%;
+            transform-style: preserve-3d;
+            width: 512px;
+        }
+
+        /* cloud base styling */
+        .cloudBase {
+            height: 20px;
+            left: 256px;
+            margin-left: -10px;
+            margin-top: -10px;
+            position: absolute;
+            top: 256px;
+            width: 20px;
+        }
+
+        .cloudLayer {
+            height: 256px;
+            left: 50%;
+            margin-left: -128px;
+            margin-right: -128px;
+            position: absolute;
+            top: 50%;
+            width: 256px;
+        }
+    </style>
+</html>
