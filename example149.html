@@ -8,10 +8,10 @@
 
     <body>
         <div id="app">
-            <select v-model="internalValue" @change="updateValue($event.target.value)"></select>
+            <select v-model="internalValue" @change="updateValue($event.target.value)">
             <option v-for="entry in coilPlaces" :key="entry.id" :value="entry.id">{{ entry.label }}</option>
+            </select>
         </div>
-        
 
     </body>
 
@@ -23,6 +23,15 @@
                     { id: '1', label: 'Place 1'},
                     { id: '2', label: 'Place 2'}
                 ])
+
+                const internalValue = ref('')
+
+                const updateValue = (value) => {
+                    internalValue.value = value
+                    console.log('Selected value: ', internalValue.value)
+                }
+
+                return { coilPlaces, internalValue, updateValue }
             }
         }).mount('#app')
 
