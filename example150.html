@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    </head>
+
+    <body>
+        <div id="app">
+            <select v-model="internalValue" @change="updateValue($event.target.value)">
+                <option v-for="value in restrictions.oneOf" :key="value.symbol" :value="value">
+                    {{ value.symbol }} ({{ value.decimals }} Decimals)
+                </option>
+            </select>
+        </div>
+        
+
+    </body>
+
+    <script>
+        const { createApp, ref, watchEffect, VueElement } = Vue
+        console.log(Vue)
+
+        createApp({
+            setup() {
+                const restrictions = ref({
+                    oneOf: [
+                        { symbol: 'USD', decimals: 2, factor: 100 },
+                        { symbol: 'EUR', decimals: 2, factor: 100 }
+                    ]
+                })
+
+                const internalValue = ref(undefined)
+
+                const updateValue = (value) => {
+                    console.log('selected value: ', value)
+                    internalValue.value = value
+                }
+
+                watchEffect(() => {
+                    if(restrictions.value.oneOf) {
+                        let foundValue = false
+                        for(let one of restrictions.value.oneOf) {
+                            if (JSON.stringify(internalValue.value) === JSON.stringify(one)) {
+                                internalValue.value = one
+                                foundValue = true
+                                break
+                            }
+                        }
+
+                        if (!foundValue) {
+                            internalValue.value = undefined
+                        }
+                    }
+                })
+
+                return { restrictions, internalValue, updateValue}
+            }
+        }).mount('#app')
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>
