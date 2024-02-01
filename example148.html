@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>notification snackbar</title>
+    </head>
+
+    <body>
+        <!-- <button onclick="enqueueNotification('Coil is pushed in', 'lime')">Trigger Snackbar</button> -->
+        <button id="triggerButton">Show Notification</button>
+        <div id="snackbar" class="custom-snackbar"></div>
+    </body>
+
+    <script>
+        var notificationQueue = []
+        var currentText = undefined
+        var visible = false
+        var timeoutId = -1
+        var showTimeout = 4000
+        var nextTimeout = 1000
+
+        function showNext() {
+            if(notificationQueue.length > 0 && !visible) {
+                currentText = notificationQueue.shift()
+                visible = true
+                updateSnackbar()
+            }
+        }
+
+        function updateSnackbar() {
+            var snackbar = document.getElementById("snackbar")
+            if(currentText) {
+                snackbar.textContent = currentText.text
+                snackbar.style.backgroundColor = currentText.type || "lightgrey"
+                snackbar.classList.add('slide-in')
+                snackbar.classList.remove('slide-out')
+
+                setTimeout(function () {
+                    snackbar.classList.add('slide-out')
+                    snackbar.classList.remove('slide-in')
+                    visible = false
+                    if(timeoutId === -1 &&  notificationQueue.length > 10) {
+                        timeoutId = setTimeout(showNext, nextTimeout)
+                    }
+                }, 4500)
+            }
+        }
+
+
+        // example usage
+        function enqueueNotification(text, type) {
+            notificationQueue.push({ text: text, type: type})
+            if(!visible && timeoutId === -1) {
+                showNext()
+            }
+        }
+
+        // enqueueNotification("Coil is pushed into Coil place 1", "green")
+
+        document.getElementById("triggerButton").addEventListener('click', function() {
+            enqueueNotification("Coil is pushed into Coil place #7", "green")
+        })
+
+
+        
+    </script>
+
+    <style>
+        .custom-snackbar {
+            position: fixed;
+            right: -100%;
+            top: 5%;
+            background-color: lightgrey;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            transition: right 1.0s ease-in-out;
+        }
+
+
+        .custom-snackbar.slide-in {
+            animation: slideIn 1.0s forwards;
+        }
+
+        .custom-snackbar.slide-out {
+            animation: slideOut 1.0s forwards;
+        }
+
+        @keyframes slideIn {
+            from { right: -100%; }
+            to { right: 5% }
+        }
+
+        @keyframes slideOut {
+            from { right: 5% }
+            to { right: -100% }
+        }
+    </style>
+</html>
