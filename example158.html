@@ -1,1 +1,74 @@
 <!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div id="app">
+            <dynamic-input :model-value="inputValue" @update:model-value="inputValue = $event" label="Boolean Input"></dynamic-input>
+            <dynamic-input :model-value="intervalValue"></dynamic-input>
+            <dynamic-input :model-value="selectValue"></dynamic-input>
+        </div>
+    </body>
+
+    <script>
+        const { createApp, ref } = Vue
+        const { createVuetify } = Vuetify
+
+        const app = createApp({
+            data() {
+                return {
+                    inputValue: true,
+                    intervalValue: 'Charles Anthony',
+                    selectValue: '',
+                    selectOptions: [
+                        { value: 'option 1', text: 'Option 1'},
+                        { value: 'option 2', text: 'Option 2'},
+                        { value: 'option 3', text: 'Option 3'}
+                    ]
+                }
+            },
+            components: {
+                DynamicInput: {
+                    props: ['modelValue', 'options', 'label'],
+                    emits: ['update:modelValue'],
+                    computed: {
+                        inputType() {
+                            if(typeof this.modelValue === "boolean") return 'v-switch'
+                            else if(Array.isArray(this.options)) return 'v-select'
+                            return 'v-text-field'
+                        }
+                    },
+                    methods: {
+                        getType() {
+                            return this.inputType()
+                        }
+                    },
+                    template: `
+                    <component :is="getType()"
+                    :model-value='modelValue'
+                    @update:model-value="$emit('update:modelValue', $event)"
+                    :label='label'
+                    :items='options'
+                    item-text='text'
+                    item-value='value'
+                    class='mt-4' 
+                    `
+
+                }
+            }
+        })
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>
