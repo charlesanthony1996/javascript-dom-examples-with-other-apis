@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Number display</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+        <!-- from chatgpt -->
+        <!-- <script src="https://unpkg.com/vuetify@3"></script> -->
+        <!-- <script src="https://unpkg.com/@vuelidate/core"></script> -->
+        <!-- <script src="https://unpkg.com/@vuelidate/validators"></script> -->
+
+        <!-- taken from the vuetify website -->
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+        <!-- <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css"></script> -->
+    </head>
+
+    <body>
+        <div id="app">
+            <v-text-field
+            v-model.number="internalValue"
+            :class="[validationClass, 'centered_input']"
+            type="number"
+            class="number_box"
+            @input="validateValue"
+            @focus="focused = true"
+            @blur="focused = false"
+            >
+            </v-text-field>
+            <v-alert v-if="displayWarning" color="warning" icon="primary" text="Value must be between 1 and 100"></v-alert>
+        </div>
+        
+
+    </body>
+
+    <script>
+
+        const { createApp, ref, computed, reactive } = Vue
+        const { createVuetify } = Vuetify
+        // const { useVuelidate , ErrorObject } = Vuelidate
+        // const { minValue, maxValue, between } = VuelidateValidators
+        const vuetify = createVuetify()
+
+        createApp({
+            setup() {
+                const internalValue = ref(300)
+                const focused = ref(false)
+                const restrictions = reactive({ min: 1, max: 100})
+                const displayWarning = ref(false)
+
+                // const updateValue = (value) => {
+                //     internalValue.value = value
+                // }
+
+                // const validationRules = computed(() => {
+                //     return {
+                //         internalValue: {
+                //             minValue: minValue(restrictions.min),
+                //             maxValue : maxValue(restrictions.max)
+
+                //         }
+                //     }
+                // })
+
+                const validateValue = (value) => {
+                    internalValue.value = value
+                    if(value < 1 || value > 100) {
+                        displayWarning.value = true
+                    }
+                    else {
+                        displayWarning.value = false
+                    }
+                }
+
+
+                const validationClass = computed(() => {
+                    if(displayWarning.value) {
+                        return 'hasError'
+                    } else if (focused.value) {
+                        return 'hasFocus'
+                    }
+
+                    return 'notFocused'
+                })
+
+                return { internalValue, focused, validateValue, validationClass, displayWarning }
+            }
+
+        }).use(vuetify).mount('#app')
+    </script>
+
+    <style>
+
+        /* @import url(https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css) */
+
+        .hasError input[type="number"] {
+            background-color: #fde7e7 !important;
+            box-shadow: 0 0 2px 0 lightcoral;
+            text-align: center;
+        }
+
+        .hasFocus input[type="number"] {
+            background-color: #edfde7 !important;
+            box-shadow: 0 0 2px 0 lightgreen;
+            text-align: center;
+
+        }
+
+        .notFocused input[type="number"] {
+            text-align: center !important;
+        }
+
+        input[input="number"] {
+            text-align: center !important;
+        }
+    </style>
+</html>

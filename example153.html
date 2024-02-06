@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div id="app">
+            <select-display v-model="selectedCoilPlaceId" :coil-places="coilPlaces"></select-display>
+            <div>Selected coil place id: {{ selectedCoilPlaceId }}</div>
+        </div>
+        
+
+    </body>
+
+    <script>
+        const { createApp, ref, computed, watch } = Vue
+        const { createVuetify, VSelect } = Vuetify
+    
+        // Create the vuetify instance first
+        const vuetify = createVuetify()
+    
+        const SelectDisplay = {
+            props: ['modelValue', 'coilPlaces'],
+            emits: ['update:modelValue'],
+            components: {
+                VSelect
+            },
+            template: `
+            <v-select
+                :items="selectOptions"
+                v-model="internalValue"
+                item-value="value"
+                item-text="text"
+                @change="$emit('update:modelValue', $event)"
+            ></v-select>
+            `,
+            setup(props, { emit }) {
+                const internalValue = ref(props.modelValue)
+                const selectOptions = computed(() => {
+                    return props.coilPlaces.map((place) => ({
+                        value: place.id, text: place.pos
+                    }))
+                })
+    
+                watch(() => props.modelValue, (newVal) => {
+                    internalValue.value = newVal
+                })
+    
+                return { internalValue, selectOptions }
+            }
+        }
+    
+
+        createApp({
+            components: {
+                SelectDisplay
+            },
+            setup() {
+                const selectedCoilPlaceId = ref('')
+                const coilPlaces = ref([
+                    { id: 1, pos: 'A1'},
+                    { id: 2, pos: 'A2'},
+                    { id: 3, pos: 'A3'}
+                ])
+    
+                return { selectedCoilPlaceId, coilPlaces }
+            }
+        }).use(vuetify).mount('#app')
+    </script>
+    
+
+    <style>
+
+
+    </style>
+</html>

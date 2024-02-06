@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div id="app">
+            <dynamic-input :model-value="inputValue" @update:model-value="inputValue = $event"></dynamic-input>
+            <dynamic-input :model-value="internalValue"></dynamic-input>
+        </div>
+        
+
+    </body>
+
+    <script>
+        const { createApp, ref, computed } = Vue
+        const { createVuetify } = Vuetify
+
+        const vuetify = createVuetify()
+
+        const app = createApp({
+            data() {
+                return {
+                    inputValue: true,
+                    internalValue: 'Charles Anthony'
+                }
+            },
+            components: {
+                DynamicInput: {
+                    props: ['modelValue'],
+                    emits: ['update:modelValue'],
+                    computed: {
+                        inputType() {
+                            return typeof this.modelValue === "boolean" ? 'v-switch' : 'v-text-field'
+                        }
+                    },
+                    methods: {
+                        getType() {
+                            return this.inputType
+                        }
+
+                    },
+                    template: `
+                    <component :is="getType()"
+                    :model-value="modelValue"
+                    @update:model-value="$emit('update:modelValue', $event)"
+                    label="Dynamic input"
+                    class="mt-4"
+                    >
+                    </component>
+                    `
+                }
+            }
+        }).use(vuetify).mount('#app')
+
+
+    </script>
+    
+
+    <style>
+        
+
+    </style>
+</html>

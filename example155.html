@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://unpkg.com/vuetify@3"></script>
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3/dist/vuetify.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3/dist/vuetify.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3/dist/vuetify.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <v-app>
+            <v-container>
+                <v-select
+                    v-model="selected"
+                    :items="items"
+                    item-title="value"
+                    item-text="text"
+                    item-value="value"
+                    label="Select"
+                >{{  }}</v-select>
+                <div>Selected: {{ selected }}</div>
+            </v-container>
+        </v-app>
+    </div>
+
+    <script>
+        const { createApp, ref } = Vue
+        const { createVuetify, VApp, VContainer, VSelect } = Vuetify
+        // import { VApp, VSelect, VContainer } from 'vuetify/lib'
+
+
+        const vuetify = createVuetify() 
+
+        const App = {
+            components: { VApp, VContainer, VSelect },
+            setup() {
+                const selected = ref('')
+                const items = [
+                    { text: 'Item 1', value: '1' },
+                    { text: 'Item 2', value: '2' },
+                    { text: 'Item 3', value: '3' }
+                ]
+
+                return { selected, items };
+            }
+        };
+
+        createApp(App).use(vuetify).mount('#app')
+    </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    </head>
+
+    <body>
+        <div id="app">
+            <select v-model="selectedValue">
+                <option v-for="item in items" :value="item.id">{{ item.text }}</option>
+            </select>
+            Selected Value: {{ selectedValue }}
+        </div>
+        
+
+    </body>
+
+    <script>
+        const { createApp, ref } = Vue
+
+        createApp({
+            setup() {
+                const selectedValue = ref('')
+                const items = [
+                    { id: 1, text: 'Item 1'},
+                    { id: 2, text: 'Item 2'},
+                    { id: 3, text: 'Item 3'}
+                ]
+
+                return { selectedValue, items }
+            }
+        }).mount('#app')
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>

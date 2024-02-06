@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div id="app">
+            <v-container>
+                <v-row>
+                    <v-col cols="6" sm="6">
+                    <v-text-field
+                    label="Enter a number"
+                    v-model.number="internalValue"
+                    :class="[validationClass, 'centered_input']"
+                    type="number"
+                    class="number_box"
+                    @input="validateValue"
+                    @focus="focused = true"
+                    @blur="focused = false"
+                    >
+                    </v-text-field>
+                    <v-alert v-if="displayWarning" type="error" dismissable>{{ warningMessage }}</v-alert>
+                </v-col>
+
+                <v-col>
+                    <v-col cols="12" sm="6">
+                    <v-text-field
+                    label="Enter your name"
+                    v-model="name"
+                    :class="{'hasError': !isNameValid, 'notFocused': isNameValid }"
+                    @blur="validateName"
+                    >
+                    </v-text-field>
+                    <v-alert v-if="!isNameValid" type="error" dismissable>Name cannot be empty</v-alert>
+                </v-col>
+
+                </v-row>
+
+                <v-btn :disabled="!isFormValid" color="success" @click="submitForm">Submit</v-btn>
+            </v-container>
+        </div>
+        
+
+    </body>
+
+    <script>
+        const { createApp, ref, computed } = Vue
+        const { createVuetify } = Vuetify
+        const vuetify = createVuetify()
+
+        createApp({
+            setup() {
+
+                const internalValue= ref(0)
+                const focused = ref(false)
+                const displayWarning = ref(false)
+                const warningMessage = ref('')
+                const name = ref('')
+                const isNameValid = ref(true)
+
+
+                const validateValue = (value) => {
+                    internalValue.value = value
+                    if(value < 1 || value > 100) {
+                        displayWarning.value = value
+                    } 
+                }
+
+
+                const validateName = () => {
+                    isNameValid.value = name.value.trim().length > 0
+                }
+
+                const validationClass = computed(() => {
+                    if(displayWarning.value) {
+                        return 'hasError'
+                    } else if (focused.value) {
+                        return 'hasFocus'
+                    }
+                    return 'notFocused'
+                })
+
+                const formIsValid = computed(() => {
+                    return !displayWarning.value && isNameValid.value && internalValue.value !== 0
+                })
+
+                const submitForm = () => {
+                    alert(`Submitting:\nNumber: ${internalValue.value}\nName: ${name.value}`)
+                }
+
+                }
+            }).use(vuetify).mount('#app')
+    </script>
+
+    <style>
+        .hasError input[type="text"], .hasError input[type="number"] {
+            background-color: #fde7e7 !important;
+            box-shadow: 0 0 2px 0 lightcoral;
+            text-align: center;
+        }
+
+        .hasFocus input[type="text"], .hasFocus input[type="number"] {
+            background-color: #edfde7 !important;
+            box-shadow: 0 0 2px 0 lightgreen;
+            text-align: center;
+        }
+
+        .notFocused input[type="text"], .notFocused input[type="number"] {
+            text-align: center !important;
+        }
+
+        input[type="number"], input[type="text"] {
+            text-align: center !important;
+        }
+
+    </style>
+</html>

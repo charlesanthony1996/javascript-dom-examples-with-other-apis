@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Display Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3/dist/vuetify.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3/dist/vuetify.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <v-app>
+            <select-display style="width:200px; min-height: 50px;" v-model="selectedCoilPlaceId" max-height="50" :coil-places="coilPlaces" :item-value="value"></select-display>
+            <br><br>
+            <p>Selected coil place id: {{ selectedCoilPlaceId.value }}</p>
+        </v-app>
+    </div>
+
+    <script>
+        const { createApp, ref, computed } = Vue
+        const { createVuetify, VSelect, VApp } = Vuetify
+
+        const vuetify = createVuetify()
+
+        const SelectDisplay = {
+            props: {
+                modelValue: String | Number,
+                coilPlaces: Array,
+            },
+            emits: ['update:modelValue'],
+            components: {
+                VSelect,
+            },
+            setup(props, { emit }) {
+                const internalValue = ref(props.modelValue);
+
+                const selectOptions = computed(() => props.coilPlaces.map(place => ({
+                    value: place.id,
+                    text: place.pos,
+                })))
+                console.log(selectOptions.value)
+
+                function updateValue(value) {
+                    emit('update:modelValue', value);
+                }
+
+                return { internalValue, selectOptions, updateValue }
+            },
+            template: `
+                <v-select
+                    :items="selectOptions"
+                    v-model="internalValue"
+                    item-value="value"
+                    item-text="text"
+         
+                ></v-select>
+            `,
+        };
+
+        createApp({
+            components: {
+                SelectDisplay,
+                VApp,
+            },
+            setup() {
+                const selectedCoilPlaceId = ref("")
+                const coilPlaces = ref([
+                    { id: '1', pos: 'A1' },
+                    { id: '2', pos: 'A2' },
+                    { id: '3', pos: 'A3' },
+                ]);
+
+                return { selectedCoilPlaceId, coilPlaces }
+            },
+        }).use(vuetify).mount('#app')
+    </script>
+
+    <style>
+        .v-select {
+            height: 30px;
+            max-height: 30px;
+            min-height: 30px;
+        }
+    </style>
+</body>
+</html>
