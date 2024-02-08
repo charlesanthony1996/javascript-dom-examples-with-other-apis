@@ -17,6 +17,17 @@
     </body>
 
     <script>
+        const { createApp, ref, computed, watch, reactive} = Vue
+        const { createVuetify } = Vuetify
+
+        const vuetify = createVuetify()
+
+        const app = createApp({
+            setup() {
+                
+            }
+
+        }).use(vuetify).mount('#app')
 
 
 

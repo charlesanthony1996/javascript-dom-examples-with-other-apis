@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+
+    </head>
+
+    <body>
+        <div id="app">
+            <dynamic-input :model-value="inputValue"  @updated:model-value="inputValue = $event" label="Boolean Input" density="compact"></dynamic-input>
+            <dynamic-input :model-value="internalValue" @update:model-value="internalValue = $event" label="Text Input" :restrictions="{ maxLength: 10 }"></dynamic-input>
+            <dynamic-input :model-value="selectValue" @update:model-value="selectValue = $event" :options="selectOptions" label="Select Input"></dynamic-input>
+            <v-alert color="error">Hello</v-alert>
+
+        </div>
+
+    </body>
+
+    <script>
+        const { createApp, ref, computed, reactive, watch, watchEffect } = Vue
+        const { createVuetify, VSelect, VSwitch } = Vuetify
+
+        const vuetify = createVuetify()
+
+
+        const app = createApp({
+            data() {
+                return {
+                    inputValue: ref(false),
+                    internalValue: ref('Charles'),
+                    selectValue: ref(''),
+                    selectOptions: [
+                        { value: '1', text: 'Option 1'},
+                        { value: '2', text: 'Option 2'},
+                        { value: '3', text: 'Option 3'}
+                    ],
+                    // errorMessages: []
+                }
+            },
+            methods: {
+                toggle: () => {
+                    return inputValue = !inputValue
+                }
+
+            },
+            components: {
+                DynamicInput: {
+                    props: ['modelValue', 'options', 'label', 'density', 'restrictions'],
+                    emits: ['update:modelValue'],
+                    setup(props, { emit }) {
+                        const errorMessages = ref([])
+
+                        const validateInput = (value) => {
+                            errorMessages.value = []
+                            if(props.restrictions) {
+                                if(props.restrictions.maxLength && value.length > props.restrictions.maxLength) {
+                                    errorMessages.value.push(`Input must be less than ${props.restrictions.maxLength} charachters`)
+                                }
+                            }
+                        }
+
+                        watch(() => props.modelValue, validateInput, { immediate: true })
+
+                        const inputType = computed(() => {
+                            if(typeof props.modelValue === "boolean") return 'v-switch'
+                            else if(Array.isArray(props.options)) return 'v-select'
+                            return 'v-text-field'
+                        })
+
+                        const getType = () => {
+                            return inputType.value
+                        }
+
+                        return { getType, errorMessages }
+                    },
+                    template: `
+                    <component :is="getType()"
+                    :model-value="model-value"
+                    @update:model-value="$emit('update:modelValue', $event)"
+                    :label="label"
+                    :items="options"
+                    item-text="text"
+                    item-value="value"
+                    :density="density"
+                    outlined
+                    item-title="value"
+                    >
+                    </component>
+                    `
+                }
+            }
+        }).use(vuetify).mount('#app')
+
+    </script>
+
+    <style>
+
+
+    </style>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+    </head>
+
+    <body>
+        <div id="app">
+            <v-app>
+                <v-container>
+            <br>
+            <v-select
+            v-model="selectedOption"
+            active 
+            append-icon="selectedOption ? '' : 'mdi-check'" 
+            autofocus="true" 
+            clearable 
+            density="compact" 
+            :error-messages="errorMessages" 
+            :items="items"
+            type="string"
+            variant="outlined"
+            :loading="loading"
+            label="Select an option"
+            @update:modelValue="stopLoading"
+            >
+        </v-select>
+
+        <v-btn
+        variant="outlined"
+        style="position:relative;left:100px;top:400px;border:1px solid black;width:150px;height:30px;align-items:center;justify-content:center;"
+        >
+        <v-icon 
+        icon="mdi-check"  
+        mdi-check 
+        >
+        </v-icon>
+        Submit
+        </v-btn>
+        </v-container>
+        </v-app>
+            
+        </div>
+        
+
+    </body>
+
+    <script>
+        const { createApp, ref, computed, watch, reactive} = Vue
+        const { createVuetify, VSelect, VBtn, VSwitch, VIcon, Vapp, VContainer } = Vuetify
+
+        const vuetify = createVuetify()
+
+        const app = createApp({
+            setup() {
+                const selectedOption = ref(null)
+                const loading = ref(true)
+                const errorMessages = ref('')
+                const items = ref(['Option 1', 'Option 2', 'Option 3'])
+
+                async function stopLoading () {
+                    loading.value = false
+                }
+
+                async function startLoading() {
+                    loading.value = true
+                }
+
+                watch(selectedOption, (newVal, oldVal) => {
+                    if(newVal !== null && oldVal === null) {
+                        stopLoading()
+                    } else if(newVal === null && oldVal !== null) {
+                        startLoading()
+                    }
+                })
+
+                return { selectedOption, loading, errorMessages, items, stopLoading }
+                
+            }
+
+        }).use(vuetify).mount('#app')
+
+
+
+    </script>
+
+    
+
+    <style>
+        .v-select {
+            width: 300px;
+            max-height: 30px;
+        }
+        
+
+    </style>
+</html>

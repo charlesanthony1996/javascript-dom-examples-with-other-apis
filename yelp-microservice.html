@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Yelp pizza</title>
+</head>
+<body>
+  <h1>Yelp pizza</h1>
+  <ul id="pizza-list"></ul>
+
+  <!-- Inside your HTML <script> tag -->
+<script>
+    const searchlocation = 'vienna';
+    const searchradius = 10000; // 10 km
+    const searchterm = 'pizza';
+
+    fetch(`http://localhost:4000/search?term=${searchterm}&location=${searchlocation}&radius=${searchradius}`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        const pizzaList = document.getElementById('pizza-list');
+        data.businesses.forEach(business => {
+          const li = document.createElement('button');
+          li.textContent = business.name;
+          
+          li.addEventListener('click', () => {
+            console.log(business.rating)
+          })
+
+          pizzaList.appendChild(li)
+        });
+      })
+      .catch(error => console.error(error))
+  </script>
+  
+</body>
+</html>

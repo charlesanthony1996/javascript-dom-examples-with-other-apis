@@ -11,14 +11,18 @@
     <body>
         <div id="app">
             <dynamic-input :model-value="inputValue" @update:model-value="inputValue = $event" label="Boolean Input"></dynamic-input>
-            <dynamic-input :model-value="intervalValue"></dynamic-input>
-            <dynamic-input :model-value="selectValue"></dynamic-input>
+            <dynamic-input :model-value="internalValue" @update:model-value="intervalValue = $event" label="Text Input"></dynamic-input>
+            <dynamic-input :model-value="selectValue"@update:model-value="selectValue = $event" :options="selectOptions" label="Select Input"></dynamic-input>
+            <!-- <v-select return-object :items="selectOptions" :v-model="selectValue" item-value="value" item-title="text"></v-select> -->
+            
         </div>
     </body>
 
     <script>
         const { createApp, ref } = Vue
-        const { createVuetify } = Vuetify
+        const { createVuetify, VSelect } = Vuetify
+
+        const vuetify = createVuetify()
 
         const app = createApp({
             data() {
@@ -27,9 +31,9 @@
                     intervalValue: 'Charles Anthony',
                     selectValue: '',
                     selectOptions: [
-                        { value: 'option 1', text: 'Option 1'},
-                        { value: 'option 2', text: 'Option 2'},
-                        { value: 'option 3', text: 'Option 3'}
+                        { value: '1', text: 'coil place 1'},
+                        { value: '2', text: 'coil place 2'},
+                        { value: '3', text: 'coil place 3'}
                     ]
                 }
             },
@@ -46,7 +50,7 @@
                     },
                     methods: {
                         getType() {
-                            return this.inputType()
+                            return this.inputType
                         }
                     },
                     template: `
@@ -57,12 +61,14 @@
                     :items='options'
                     item-text='text'
                     item-value='value'
-                    class='mt-4' 
+                    class='mt-4'
+                    item-title="text"
+                    outlined>
+                    </component>
                     `
-
                 }
             }
-        })
+        }).use(vuetify).mount('#app')
 
 
     </script>
