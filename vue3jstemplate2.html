@@ -42,9 +42,6 @@
                     websocket.send(JSON.stringify({ type: 'publish', topic, data }))
                 }
 
-                websocket.onopen = function() {
-                    console.log("websocket connection established")
-                }
 
                 websocket.onmessage = function(event) {
                     console.log("Received data:", event.data); 
@@ -72,6 +69,14 @@
 
                 function sendTestMessage2() {
                     publishToTopic('active_messages', { text: 'Plc connection is acting crazy man'} )
+                }
+
+                function authenticate(username) {
+                    websocket.send(JSON.stringify({ type: 'authenticate', username }))
+                }
+
+                websocket.onopen = function() {
+                    subscribeToTopic("active_messages")
                 }
 
                 return { messages, sendTestMessage }

@@ -3,6 +3,8 @@ const WebSocket = require('ws')
 const wss = new WebSocket.Server({ port: 8080 })
 
 const subscriptions = {}
+const users = {}
+
 
 wss.on('connection', function connection(ws) {
   console.log('A new client connected')
@@ -27,11 +29,35 @@ wss.on('connection', function connection(ws) {
                 }
             })
             break
+
+        case 'authenticate':
+            const username = message.username
+            users[username] = ws
+            ws.username = username
+            break
+
+        case 'private_message':
+            const recipient = message.recipient
+            const sender = ws.username
+            if(users[recipient] && users[recipient].readyState === WebSocket.OPEN) {
+                users[recipient].send(JSON.stringify({
+                    type: 'private_message',
+                    from: sender,
+                    text: message.text
+                }))
+            }
+
         }
+
+
     })
 
 
     ws.on("close", () => {
+        if(ws.username) {
+            delete users[ws.username]
+        }
+
         for(const topic in subscriptions) {
             subscriptions[topic].delete(ws)
         }
