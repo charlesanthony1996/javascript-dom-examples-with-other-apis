@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div id="app">
+            <v-container>
+                <v-row>
+                    <v-col>
+                        <v-card style="border-radius:50%;width:250px;height:250px;">
+                            <v-card-title style="align-items: center;justify-content: center;align-self: center;position: relative;left:15%;top:5%;">material details</v-card-title>
+                            <v-card-text>
+                                <div style="align-items: center;justify-content: center;align-self: center;position: relative;left:20%;"><b>Raw material:  </b>{{ materialDetails.rawMaterial }}</div>
+                                <div style="align-items: center;justify-content: center;align-self: center;position: relative;left:20%;"><b>Raw material:  </b>{{ materialDetails.coating }}</div>
+                                <div style="align-items: center;justify-content: center;align-self: center;position: relative;left:20%;"><b>Raw material:  </b>{{ materialDetails.thickness }}</div>
+                                <div style="align-items: center;justify-content: center;align-self: center;position: relative;left:20%;"><b>Raw material:  </b>{{ materialDetails.hasFoil ? 'Yes': 'No' }}</div>
+                                <div style="align-items: center;justify-content: center;align-self: center;position: relative;left:20%;"><b>Raw material:  </b>{{ materialDetails.isPerforated ? 'Yes': 'No' }}</div>
+                            </v-card-text>
+                        </v-card>
+                    </v-col>
+
+                    <v-col>
+                        <v-card>edit material properties</v-card>
+                        <v-card-text>
+                            <v-form>
+                                <v-select
+                                v-model="materialDetails.rawMaterial"
+                                :items="['steel', 'aluminium', 'copper']"
+                                label="raw material"
+                                >
+                                </v-select>
+                                <v-select
+                                v-model="materialDetails.coating"
+                                :items="['galvanized', 'painted', 'none']"
+                                label="coating"
+                                >
+                                </v-select>
+
+                                <v-test-field
+                                v-model="materialDetails.thickness"
+                                label="thickness"
+                                suffix="mm"
+                                >
+                                </v-test-field>
+
+                                <v-switch
+                                v-model="materialDetails.hasFoil"
+                                label="Has foil?"
+                                >
+                                </v-switch>
+                                <v-switch
+                                v-model="materialDetails.isPerforated"
+                                label="isPerforated?"
+                                >
+                                </v-switch>
+                            </v-form>
+                        </v-card-text>
+
+                    </v-col>
+                </v-row>
+            </v-container>
+           
+        </div>
+    </body>
+
+    <script>
+        const { createApp, ref, computed, reactive, watch, watchEffect, onMounted } = Vue
+        const { createVuetify } = Vuetify
+
+        const vuetify = createVuetify()
+
+
+        const app = createApp({
+            setup() {
+                const materialDetails = ref({
+                    rawMaterial: "Steel",
+                    coating: "Galvanized",
+                    thickness: "1.2mm",
+                    hasFoil: false,
+                    isPerforated: true
+                })
+
+                return { materialDetails }
+
+
+            }
+        }).use(vuetify).mount('#app')
+
+
+
+    </script>
+
+    
+
+    <style>
+        
+
+    </style>
+</html>

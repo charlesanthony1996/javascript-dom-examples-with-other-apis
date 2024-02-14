@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div id="app">
+            <v-app>
+                <v-container>
+                    <v-btn @click="sendTestMessage2" variant="outlined">Send Test Message</v-btn>
+                    <v-list>
+                        <v-list-item v-for="message in messages" :key="message.id">
+                            {{ message.text }}
+                        </v-list-item>
+                    </v-list>
+
+                    <v-btn @click="authenticateUser" variant="outlined">Authenticate User</v-btn>
+                </v-container>
+            </v-app>
+        </div>
+    </body>
+
+    <script>
+        const { createApp, ref, computed, reactive, watch, watchEffect, onMounted } = Vue
+        const { createVuetify } = Vuetify
+
+        const vuetify = createVuetify()
+
+
+        const app = createApp({
+            setup() {
+                const websocket = new WebSocket("ws://localhost:8080")
+                const messages = ref([])
+                const authenticatedUser = ref(null)
+
+                function subscribeToTopic(topic) {
+                    websocket.send(JSON.stringify({ type: 'subscribe', topic}))
+                }
+
+                function publishToTopic(topic, data) {
+                    websocket.send(JSON.stringify({ type: 'publish', topic, data }))
+                }
+
+                function authenticate(username) {
+                    websocket.send(JSON.stringify({ type: 'authenticate', username }))
+                    publishToTopic("authenticate", {type: 'authenticate', username })
+                }
+
+                function authenticateUser() {
+                    authenticate("charles")
+                }
+
+
+                websocket.onmessage = function(event) {
+                    console.log("Received data:", event.data); 
+                    try {
+                        const message = JSON.parse(event.data)
+                        messages.value.push(message)
+                        switch(message.type) {
+                            case 'authenticated':
+                                authenticatedUser.value = message.username
+                                console.log(`Authenticated as ${authenticatedUser.value}`)
+                                break
+
+                        }
+                        messages.value.push(message)
+
+                    } catch(e) {
+                        console.error("Error parsing message JSON: ", e)
+
+                    }
+                    // const message = JSON.parse(event.data)
+                    // messages.value.push(message)
+                }
+
+                websocket.onerror = function(error) {
+                    console.log("Websocket error: ", error)
+                }
+
+                function sendTestMessage() {
+                    const testMessage = { text: "Hello world"}
+                    websocket.send(JSON.stringify(testMessage))
+                    console.log(testMessage)
+                }
+
+                function sendTestMessage2() {
+                    const testMessage2 = { text: "Plc connection is acting crazy man"}
+                    publishToTopic('active_messages', { text: 'Plc connection is acting crazy man'} )
+                    console.log(testMessage2)
+                    
+                }
+
+                function authenticate(username) {
+                    // websocket.send(JSON.stringify({ type: 'authenticate', username }))
+                    publishToTopic("authenticate", {type: 'authenticate', username })
+                }
+
+                websocket.onopen = function() {
+                    subscribeToTopic("active_messages")
+                }
+
+                function onMounted() {
+                    authenticate("charles")
+                }
+
+
+                // onMounted(() => {
+                //     authenticate("charles")
+                // })
+
+                return { messages, sendTestMessage, onMounted, authenticateUser, authenticatedUser, onMounted, sendTestMessage2}
+
+
+            }
+        }).use(vuetify).mount('#app')
+
+
+
+    </script>
+
+    
+
+    <style>
+        
+
+    </style>
+</html>

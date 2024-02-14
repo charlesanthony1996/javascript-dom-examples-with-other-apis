@@ -10,7 +10,8 @@ wss.on('connection', function connection(ws) {
   console.log('A new client connected')
   
   ws.on('message', function incoming(message) {
-    console.log('received: %s', message)
+    // const parsedMessage = JSON.parse(data)
+    console.log('Message received: ', message)
 
     switch(message.type) {
         case 'subscribe':
@@ -34,6 +35,8 @@ wss.on('connection', function connection(ws) {
             const username = message.username
             users[username] = ws
             ws.username = username
+
+            ws.send(JSON.stringify({ type: 'authenticated', username: username }))
             break
 
         case 'private_message':
