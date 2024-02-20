@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div id="app">
+            <v-app>
+                <v-container>
+                    <v-card>
+                        <v-card-title>Coil Actions</v-card-title>
+                        <v-card-text>
+                            <v-btn color="secondary" @click="performAction('Move coil')">Move coil</v-btn>
+                            <v-btn color="secondary" @click="performAction('Thread Out')">Thread out</v-btn>
+                        </v-card-text>
+                    </v-card>
+                </v-container>
+            </v-app>
+        </div>
+    </body>
+
+    <script>
+        const { createApp, ref, computed, reactive, watch, watchEffect, onMounted } = Vue
+        const { createVuetify } = Vuetify
+
+        const vuetify = createVuetify()
+
+
+        const app = createApp({
+            setup() {
+                const materialDetails = ref({
+                    rawMaterial: "Steel",
+                    coating: "Galvanized",
+                    thickness: "1.2mm",
+                    hasFoil: false,
+                    isPerforated: true
+
+                })
+
+                const processingData = ref({
+                    speed: 100,
+                    temperature: 200
+                })
+
+                function performAction() {
+                    alert(`Performing: ${action}`)
+                }
+
+                return { materialDetails, processingData, performAction }
+
+
+
+            }
+        }).use(vuetify).mount('#app')
+
+
+
+    </script>
+
+    
+
+    <style>
+        
+
+    </style>
+</html>

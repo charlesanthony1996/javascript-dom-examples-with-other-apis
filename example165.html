@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+</head>
+
+<body>
+<div id="app">
+    <v-app>
+        <v-container>
+<!--            <v-stepper-header>Just a stepper</v-stepper-header>-->
+<!--            <v-stepper-window>-->
+<!--                <p>something here</p>-->
+<!--            </v-stepper-window>-->
+
+<!--            <v-stepper-actions>-->
+<!--                <v-btn>Submit</v-btn>-->
+<!--            </v-stepper-actions>-->
+
+            <v-stepper :items="['step 1', 'step 2', 'step 3']">
+                <template v-slot:item.1>
+                    <v-card-title title="Step one" flat>...</v-card-title>
+                </template>
+
+                <template v-slot:item.2>
+                    <v-card-title title="Step two" flat>...</v-card-title>
+                </template>
+
+                <template v-slot:item.3>
+                    <v-card-title title="Step three" flat>...</v-card-title>
+                </template>
+
+            </v-stepper>
+        </v-container>
+    </v-app>
+
+</div>
+</body>
+
+<script>
+    const { createApp, ref, computed, reactive, watch, watchEffect, onMounted } = Vue
+    const { createVuetify } = Vuetify
+
+    const vuetify = createVuetify()
+
+
+    const app = createApp({
+        setup() {
+
+
+        }
+    }).use(vuetify).mount('#app')
+
+
+
+</script>
+
+
+
+<style>
+
+
+</style>
+</html>
