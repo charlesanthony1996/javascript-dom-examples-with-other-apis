@@ -125,4 +125,3 @@ composite.add(text)
 const shapeProxy = new ShapeProxy(composite)
 
 shapeProxy.draw()
-
