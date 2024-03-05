@@ -13,7 +13,7 @@ class ShapeInterface {
 
 // existing interface
 class Text {
-    constructor() {
+    constructor(content) {
         this.content = content
     }
 
@@ -103,3 +103,26 @@ class RasterRenderer {
         console.log("Rendering in raster format")
     }
 }
+
+
+// integration exampple
+
+// create some shapes
+const circle = new Shape(new VectorRenderer())
+const square = new Shape(new RasterRenderer())
+
+
+// wrap a text object as a shape
+const text = new TextShapeAdapter(new Text("Hello, world!"))
+
+// composite shapes
+const composite = new CompositeShape()
+composite.add(circle)
+composite.add(square)
+composite.add(text)
+
+// proxy to control access
+const shapeProxy = new ShapeProxy(composite)
+
+shapeProxy.draw()
+
