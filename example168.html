@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue 3 Example with Vuex and Complex Permissions</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
+    <script src="https://unpkg.com/vuetify@3"></script>
+    <script src="https://unpkg.com/vuex@4"></script>
+    <link href="https://unpkg.com/vuetify@3/dist/vuetify.min.css" rel="stylesheet">
+</head>
+<body>
+<div id="app">
+    <!--    <v-app-bar>-->
+        <v-toolbar-title>Vue app with router</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn to="/">Home</v-btn>
+        <v-btn to="/about">About</v-btn>
+        <router-view></router-view>
+
+<!--    </v-app-bar>-->
+
+    <router-view></router-view>
+</div>
+
+<script>
+const { createApp } = Vue;
+const { createVuetify } = Vuetify;
+const { createStore } = Vuex;
+const { createRouter, createWebHistory } = VueRouter;
+
+// Vuex store configuration
+const store = createStore({
+    state() {
+        return {
+            isLoggedIn: false,
+            permissions: {},
+        };
+    },
+    mutations: {
+        login(state, { permissions }) {
+            state.isLoggedIn = true;
+            state.permissions = permissions;
+        },
+        logout(state) {
+            state.isLoggedIn = false;
+            state.permissions = {};
+        }
+    },
+    getters: {
+        hasPermission: (state) => (permissionKey) => {
+            // Split the permission key to navigate through the nested permissions object
+            const keys = permissionKey.split('.');
+            let current = state.permissions;
+            for (const key of keys) {
+                if (current[key] === undefined) {
+                    return false;
+                }
+                current = current[key];
+            }
+            return current === true;
+        }
+    }
+});
+
+// Router views
+const HomeView = { 
+    template: `<div>Home <button @click="loginAsAdmin">Login as Admin</button><button @click="loginAsUser">Login as User</button></div>`,
+    methods: {
+        loginAsAdmin() {
+            this.$store.commit('login', { permissions: { core: { user: { hasAccess: true } } } });
+        },
+        loginAsUser() {
+            this.$store.commit('login', { permissions: { core: { user: { hasAccess: false } } } });
+        }
+    }
+};
+const AboutView = {
+    template: `
+        <div>
+            About
+            <div v-if="hasDashboardAccess">You have access to the dashboard.</div>
+            <div v-else>You do not have access to the dashboard.</div>
+            <button @click="logout">Logout</button>
+        </div>
+    `,
+    computed: {
+        hasDashboardAccess() {
+            return this.$store.getters.hasPermission('core.user.hasAccess');
+        }
+    },
+    methods: {
+        logout() {
+            this.$store.commit('logout');
+        }
+    }
+};
+
+// Router setup
+const router = createRouter({
+    history: createWebHistory(),
+    routes: [
+        { path: '/', component: HomeView },
+        { path: '/about', component: AboutView }
+    ]
+});
+
+// Create and mount the Vue application
+createApp({})
+.use(createVuetify())
+.use(store)
+.use(router)
+.mount('#app');
+
+</script>
+</body>
+</html>
