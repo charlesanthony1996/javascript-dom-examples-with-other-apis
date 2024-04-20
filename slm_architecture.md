@@ -12,11 +12,11 @@
           |                                                      |                   |                       |
           |                                                      |                   |                       |
     Hyperparameter turning       ---------------------RELU--------              Attention               Batch Norm
-                                |                      |       \                    |                        |  
-                                |                      |        \                   |                   Layer Norm
-                                |                      |         \              Multi head Attention         |          
-                                |                    Swish       GLU                                     RMS Norm
-                                |                      ----SwiGLU--                 -------------------------|
+         |                      |                      |       \                    |                        |  
+         |                      |                      |        \                   |                   Layer Norm
+         |                      |                      |         \              Multi head Attention         |          
+         |                      |                    Swish       GLU                                     RMS Norm
+ mew scaling laws               |                      ----SwiGLU--                 -------------------------|
                                 |                                                   |
                       Transformer block --------------------------------------------|                                      
                                 |       

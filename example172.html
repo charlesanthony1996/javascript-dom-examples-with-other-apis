@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>indexed db example with vue 3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+    <!--    vue router-->
+    <script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
+    <!-- vuex cdn -->
+    <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+    <script src="https://unpkg.com/vuex@4"></script>
+
+</head>
+
+<body>
+<div id="app">
+    <router-view></router-view>
+
+</div>
+</body>
+
+<script>
+    const { createApp, ref, computed, reactive, watch, watchEffect, onMounted, defineComponent } = Vue
+    const { createVuetify, VBtn, VSelect, VTextField, VSwitch } = Vuetify
+
+    const vuetify = createVuetify()
+
+    // mock components for demonstration
+    const NumberDisplay = {
+        props: ['modelValue'],
+        emits: ['update:modelValue'],
+        template: '<v-text-field type="number" v-model="internalValue" @input="$emit(\'update:modelValue\', internalValue)"></v-text-field',
+        setup(props, {emit}) {
+            const internalValue = ref(props.modelValue)
+            return { internalValue }
+        }
+    }
+
+    const ToggleDisplay = null
+
+    // make the main forminput component
+    const FormInput = defineComponent({
+        props: {
+            modelValue: [Number],
+            items: Array,
+            label: String
+        },
+        emits: ['update:modelValue'],
+        setup(props, {emit}) {
+            const internalValue = computed({
+                get: () => props.modelValue,
+                set: (value) => emit('udpate:modelValue', value)
+            })
+
+            const determineComponent = () => {
+                if (Array.isArray(props.modelValue)) return SelectDisplay
+                switch(typeof props.modelValue) {
+                    case "number":
+                        return NumberDisplay
+                }
+            }
+            return { internalValue, determineComponent }
+        },
+        template: `
+        <div>
+            <label>{{ label }}</label>
+            <component :is="determineComponent()" v-model="internalValue" :items="items"></component>
+        </div>
+        
+        `
+    })
+
+    // router setup
+    const router = VueRouter.createRouter({
+        history: VueRouter.createWebHistory(),
+        routes: [
+
+        ]
+    })
+
+
+    const app = createApp({
+        components: { FormInput },
+        setup() {
+            const numberValue = ref(10)
+
+            const items = [{text: 'Option 1', value: 1}, {text: 'Option 2', value: 2}]
+
+            return { numberValue, items }
+
+        },
+        template: 
+        `
+        <v-app>
+            <v-main>
+                <v-container>
+                    <form-input label="Number input" v-model="numberValue"></form-input>
+                </v-container>
+            </v-main>
+        </v-app>
+        `
+    }).use(vuetify).use(router).mount('#app')
+
+
+
+</script>
+
+
+
+<style>
+
+
+</style>
+</html>

@@ -71,6 +71,8 @@
     "picocolors": "^1.0.0",
     "pkg-dir": "^4.2.0",
     "punycode": "^2.3.0",
+    "puppeteer": "^22.4.1",
+    "puppeteer-core": "^22.4.1",
     "randombytes": "^2.1.0",
     "rechoir": "^0.8.0",
     "resolve": "^1.22.1",
