@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>indexed db example with vue 3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+    <!--    vue router-->
+    <script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
+    <!-- vuex cdn -->
+    <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+    <script src="https://unpkg.com/vuex@4"></script>
+
+</head>
+
+<body>
+<div id="app">
+    <v-app>
+        <v-container>
+            <v-row class="ml-2 mr-10">
+                <v-progress-linear
+                height="12"
+                bg-color="dark"
+                :model-value="remainingWeightPercentage"
+                :color="remainingWeightPercentage <= 20 ? 'red' : 'green'"
+                class="mt-2"
+                >
+                </v-progress-linear>
+                <span
+                class="remaining-coil-weight-text"
+                :style="textPositionStyle"
+                >
+                {{ formattedRemainingWeight }}m
+                </span>
+            </v-row>
+            <router-view></router-view>
+        </v-container>
+    </v-app>
+</div>
+</body>
+
+<script>
+    const { createApp, ref, computed, reactive, watch, watchEffect, onMounted } = Vue
+    const { createVuetify, VSpacer, VProgressLinear } = Vuetify
+
+    const vuetify = createVuetify()
+
+
+    // router setup
+    const router = VueRouter.createRouter({
+        history: VueRouter.createWebHistory(),
+        routes: []
+    })
+
+
+    const app = createApp({
+        setup() {
+            const selectedCoil = ref({
+                length: {
+                    remaining: 2300,
+                    initial: 5000
+                }
+            })
+
+            const change = ref()
+
+            const remainingWeightPercentage = computed(() => {
+            return Math.round((selectedCoil.value.length.remaining / selectedCoil.value.length.initial) * 100);
+            });
+
+            const formattedRemainingWeight = computed(() => Math.round(selectedCoil.value.length.remaining / 1000))
+
+            const textPositionStyle = computed(() => {
+            return {
+                position: 'relative',
+                left: `calc(${remainingWeightPercentage.value}% + 14px)`,
+                top: '20px'
+            }
+            })
+
+            // setInterval(() => {
+            //     remainingWeightPercentage += change
+            // }, 2000)
+
+
+            return { remainingWeightPercentage, formattedRemainingWeight, textPositionStyle, change }
+
+        }
+    }).use(vuetify).use(router).mount('#app')
+
+
+
+</script>
+
+
+
+<style scoped>
+    .remaining-coil-weight-text {
+        transition: left 2s ease-in-out;
+    }
+
+    .remaining-coil-weight-text {
+        position: relative;
+        right: 0;
+        top: 200px;
+        color: black;
+    }
+
+</style>
+</html>
