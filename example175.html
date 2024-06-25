@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+    <!--    vue router-->
+    <script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
+    <!-- vuex cdn -->
+    <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+    <script src="https://unpkg.com/vuex@4"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/14.0.0/material-components-web.min.js"></script>
+
+</head>
+
+<body>
+<div id="app">
+    <input class="input" placeholder="Tap on the virtual keyboard to start" />
+	<div class="simple-keyboard"></div>
+    <router-view></router-view>
+
+</div>
+</body>
+
+<script>
+    const { createApp, ref, computed, reactive, watch, watchEffect, onMounted } = Vue
+    const { createVuetify } = Vuetify
+
+    const vuetify = createVuetify()
+
+
+    // router setup
+    const router = VueRouter.createRouter({
+        history: VueRouter.createWebHistory(),
+        routes: [
+
+        ]
+    })
+
+    const store = Vuex.createStore({
+        state() {
+            return {
+
+            }
+        },
+        mutations: {
+
+        },
+        actions: {
+
+        }
+    })
+
+
+    const app = createApp({
+        setup() {
+            onMounted(() => {
+
+            let Keyboard = window.SimpleKeyboard.default
+
+            let keyboard = new Keyboard({
+                onChange: input => onChange(input),
+                onKeyPress: button => onKeyPress(button),
+                layout: {
+                    default: [
+                        "q w e r t y u i o p {square-left} {arrowright}",
+                        "a s d f g h j k l {semicolon-key1} {square-right} {cursor-left}",
+                        "{shift-test-icon} z x c v b n m {bksp} {cursor-right}",
+                        "{num-keys-switch} {space} . {keyboard-close-outline-test-icon}"
+                    ],
+                    "shift-test-icon": [
+                        "Q W E R T Y U I O P {square-left} {arrowright}",
+                        "A S D F G H J K L {semicolon-key1} \" {cursor-left}",
+                        "{shift-test-icon} Z X C V B N M {bksp} {cursor-right}",
+                        "{num-keys-switch} {space} . {keyboard-close-outline-test-icon}"
+                    ],
+                },
+                display: {
+                    "{shift}": "Shift",
+                    "{space}": "Space",
+                    "{bacspace}": "Backspace",
+                    "{square-left}": "SquareLeft",
+                    "{square-right}": "SquareRight",
+                    "{arrowright}": "ArrowrRight",
+                    "{cursor-left}": "CurosLeft",
+                    "{cursor-right}": "CursorRight",
+                    "{shift-test-icon}": "ShiftTestIcon",
+                    "{bksp}": "Backspace",
+                    "{num-keys-switch}": "NumKeysSwitch",
+                    "{keyboard-close-outline-test-icon}": ""
+
+                },
+            })
+
+            const onChange = input => {
+                document.querySelector(".input").value = input
+                console.log("Input changed: ", input)
+            }
+
+            const onKeyPress = button => {
+                console.log("Button pressed: ", button)
+                if (button === "{shift}") {
+                    handleShift()
+                }
+            }
+
+            const handleShift = () => {
+                let currentLayout = keyboard.options.layoutName
+                let newLayout = currentLayout === "default" ? "shift" : "default"
+
+                keyboard.setOptions({
+                    layoutName: newLayout
+                })
+            }
+
+            document.querySelector(".input").addEventListener("input", event => {
+                keyboard.setInput(event.target.value)
+            })
+
+            console.log(keyboard)
+            })
+        }
+    }).use(vuetify).use(router).use(store).mount('#app')
+
+
+
+</script>
+
+
+
+<style>
+    .simple-keyboard {
+        max-width: 850px;
+    }
+
+
+</style>
+</html>
