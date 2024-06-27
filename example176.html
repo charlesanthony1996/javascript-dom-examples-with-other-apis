@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title></title>
+        <title>Project Herzogenburg 🤫</title>
         <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 
@@ -21,24 +21,205 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.css">
         <script src="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.js"></script>
 
+        <!-- vuetify -->
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+
     </head>
 
     <body>
         <div id="app">
-            <h2>{{ message }}</h2>
+            <v-app>
+                <v-container>
+            <!-- <h2>{{ message }}</h2> -->
+            <br>
+            <input class="input" placeholder="Tap on the virtual keyboard to start">
+            <div class="simple-keyboard"></div>
+            <!-- <router-view></router-view> -->
+             </v-container>
+             </v-app>
         </div>
     </body>
 
     <script>
+        Vue.use(Vuetify)
+        Vue.use(VueRouter)
+        Vue.use(Vuex)
+
+        // functionality for keys starts here
+
+        // arrow nav class
+        class ArrowNav {
+            trigger(keyboard, input) {
+                throw new Error("Method 'trigger()' must be implemented")
+            }
+
+            isSelected(input) {
+                return input.value.length > 0 &&
+                input.selectionEnd !== null &&
+                input.selectionStart !== null &&
+                (input.selectionEnd - input.selectionStart) === input.value.length
+            }
+
+            setInput(keyboard, input) {
+                keyboard.setInput(input.value)
+            }
+
+            updateLastValues(keyboard, input) {
+                keyboard.updateLastValues(input)
+            }
+        }
+     
+
+        // arrow left class
+        class ArrowLeft extends ArrowNav {
+            trigger(keyboard, input) {
+                if(this.isSelected(input)) {
+                    keyboard.setSelection(input, 0)
+                } else if(keyboard.caretPosition === 0) {
+                    keyboard.setSelection(input, input.value.length)
+                } else if(keyboard.caretPosition) {
+                    keyboard.setSelection(input, keyboard.caretPosition - 1)
+                }
+                this.updateLastValues(keyboard, input)
+            }
+        }
+
+        // arrow right class
+        class ArrowRight extends ArrowNav {
+            trigger(keyboard, input) {
+                this.setInput(keyboard, input)
+                if(this.isSelected(input)) {
+                    keyboard.setSelection(input, input.value.length)
+                } else if(keyboard.caretPosition > (input.value.length - 1)) {
+                    keyboard.setSelection(input, 0)
+                } else {
+                    keyboard.setSelection(input, keyboard.caretPosition + 1)
+                }
+                this.updateLastValues(keyboard, input)
+            }
+        }
+
+
+        window.SimpleKeyboard.default.prototype.setSelection = function(input, position) {
+            input.setSelectionRange(position, position)
+            this.caretPosition = position
+        }
+
+        window.SimpleKeyboard.default.prototype.updateLastValues = function(input) {
+            this.caretPosition = input.selectionStart
+        }
+
+
+        const router = VueRouter.createRouter({
+            history: VueRouter.createWebHistory(),
+            routes: [
+
+            ]
+        })
+
+
+        const store = Vuex.createStore({
+            state() {
+                return {
+
+                }
+            },
+            mutations: {
+
+            },
+            actions: {
+
+            }
+        })
+
         new Vue({
             el: "#app",
+            vuetify: new Vuetify(),
+            store,
+            router,
             data: {
                 message: "Hello there"
+            },
+            mounted() {
+                let Keyboard = window.SimpleKeyboard.default
+
+                this.keyboard = new Keyboard({
+                    onChange: input => this.onChange(input),
+                    onKeyPress: button => this.onKeyPress(button),
+                    layout: {
+                        default: [
+                            "q w e r t y u i o p {square-left} {arrowright}",
+                            "a s d f g h j k l {semicolon-key1} {square-right} {cursor-left}",
+                            "{shift-test-icon} z x c v b n m {bksp} {cursor-right}",
+                            "{num-keys-switch} {space} {keyboard-close-outline-test-icon}"
+                        ],
+                        shift: [
+                            "Q W E R T Y U I O P {square-left} {arrowright}",
+                            "A S D F G H J K L {semicolon-key1} \" {cursor-left}",
+                            "{shift-test-icon} Z X C V B N M {bksp} {cursor-right}",
+                            "{num-keys-switch} {space} {keyboard-close-outline-test-icon}"
+                        ]
+                    },
+                    display: {
+                        "{shift}": "Shift",
+                        "{space}": "Space",
+                        "{backspace}": "Backspace",
+                        "{square-left}": "SquareLeft",
+                        "{square-right}": "SquareRight",
+                        "{arrowright}": "<i class='mdi mdi-arrow-right'></i>",
+                        "{cursor-left}": "CursorLeft",
+                        "{cursor-right}": "CursorRight",
+                        "{shift-test-icon}": "ShiftTestIcon",
+                        "{bksp}": "Backspace",
+                        "{num-keys-switch}": "NumkeysSwitch",
+                        "{keyboard-close-outline-test-icon}": "KeyboardCloseOutlineTestIcon"
+                    },
+                })
+
+                document.querySelector(".input").addEventListener("input", event => {
+                    this.keyboard.setInput(event.target.value)
+                })
+
+                // this.keyboard = keyboard
+                this.arrowLeft = new ArrowLeft()
+                this.arrowRight = new ArrowRight()
+            },
+            methods: {
+                onChange(input) {
+                    document.querySelector(".input").value = input
+                    console.log("Input changed: ", input)
+                },
+                onKeyPress(button) {
+                    console.log("Button pressed: ", button)
+                    const input = document.querySelector(".input")
+                    if (button === "{shift-test-icon}") {
+                        this.handleShift()
+                    }
+                    else if (button === "{arrowright}") {
+                        this.arrowRight.trigger(this.keyboard, input)
+                    }
+                    else if (button === "{arrowleft}") {
+                        this.arrowLeft.trigger(this.keyboard, input)
+                    }
+                },
+                handleShift() {
+                    let currentLayout = this.keyboard.options.layoutName
+                    let newLayout = currentLayout === "default" ? "shift-test-icon" : "default"
+
+                    this.keyboard.setOptions({
+                        layoutName: newLayout
+                    })
+                }
             }
         })
     </script>
 
     <style>
+        .simple-keyboard {
+            max-width: 850px
+        }
 
 
     </style>
