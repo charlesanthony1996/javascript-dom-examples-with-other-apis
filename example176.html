@@ -101,6 +101,15 @@
             }
         }
 
+        // clear class
+        class Clear {
+            trigger(keyboard, input) {
+                // throw new Error("clear method not working")
+                keyboard.clearInput()
+                input.value = ''
+            }
+        }
+
 
         window.SimpleKeyboard.default.prototype.setSelection = function(input, position) {
             input.setSelectionRange(position, position)
@@ -155,7 +164,7 @@
                             "{shift-test-icon} z x c v b n m {bksp} {cursor-right}",
                             "{num-keys-switch} {space} {keyboard-close-outline-test-icon}"
                         ],
-                        shift: [
+                        "shift-test-icon": [
                             "Q W E R T Y U I O P {square-left} {arrowright}",
                             "A S D F G H J K L {semicolon-key1} \" {cursor-left}",
                             "{shift-test-icon} Z X C V B N M {bksp} {cursor-right}",
@@ -168,6 +177,7 @@
                         "{backspace}": "Backspace",
                         "{square-left}": "SquareLeft",
                         "{square-right}": "SquareRight",
+                        // "{arrowright}": "ArrowRight",
                         "{arrowright}": "<i class='mdi mdi-arrow-right'></i>",
                         "{cursor-left}": "CursorLeft",
                         "{cursor-right}": "CursorRight",
@@ -185,6 +195,7 @@
                 // this.keyboard = keyboard
                 this.arrowLeft = new ArrowLeft()
                 this.arrowRight = new ArrowRight()
+                this.clear = new Clear()
             },
             methods: {
                 onChange(input) {
@@ -198,10 +209,13 @@
                         this.handleShift()
                     }
                     else if (button === "{arrowright}") {
-                        this.arrowRight.trigger(this.keyboard, input)
+                        this.clear.trigger(this.keyboard, input)
                     }
                     else if (button === "{arrowleft}") {
                         this.arrowLeft.trigger(this.keyboard, input)
+                    }
+                    else if(button === "{clear}") {
+                        this.clear.trigger(this.keyboard, input)
                     }
                 },
                 handleShift() {
@@ -218,9 +232,12 @@
 
     <style>
         .simple-keyboard {
-            max-width: 850px
+            max-width: 850px;
         }
 
+        .simple-keyboard .mdi {
+            font-size: 18px;
+        }
 
     </style>
 </html>
