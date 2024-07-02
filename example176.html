@@ -110,6 +110,18 @@
             }
         }
 
+        class Enter {
+            constructor(keyboard) {
+                this.keyboard = keyboard
+            }
+
+            trigger(keyboard, input) {
+                // error handling?
+                input.blur()
+                this.keyboard.destroy()
+            }
+        }
+
 
         window.SimpleKeyboard.default.prototype.setSelection = function(input, position) {
             input.setSelectionRange(position, position)
@@ -154,7 +166,8 @@
             mounted() {
                 let Keyboard = window.SimpleKeyboard.default
 
-                this.keyboard = new Keyboard({
+                const initializeKeyboard = () => {
+                    this.keyboard = new Keyboard({
                     onChange: input => this.onChange(input),
                     onKeyPress: button => this.onKeyPress(button),
                     layout: {
@@ -162,13 +175,25 @@
                             "q w e r t y u i o p {square-left} {arrowright}",
                             "a s d f g h j k l {semicolon-key1} {square-right} {cursor-left}",
                             "{shift-test-icon} z x c v b n m {bksp} {cursor-right}",
-                            "{num-keys-switch} {space} {keyboard-close-outline-test-icon}"
+                            "{num-keys-switch} {space} . {keyboard-close-outline-test-icon}"
                         ],
                         "shift-test-icon": [
                             "Q W E R T Y U I O P {square-left} {arrowright}",
                             "A S D F G H J K L {semicolon-key1} \" {cursor-left}",
                             "{shift-test-icon} Z X C V B N M {bksp} {cursor-right}",
-                            "{num-keys-switch} {space} {keyboard-close-outline-test-icon}"
+                            "{num-keys-switch} {space} . {keyboard-close-outline-test-icon}"
+                        ],
+                        "numkeys": [
+                            "1 2 3 4 5 6 7 8 9 0 {arrowright}",
+                            "_ \\ | ~ < > $ # ¥ ● {cursor-left}",
+                            "{hashtag-plus-equals-icon} . ,  ? ! ' {bksp} {cursor-right}",
+                            "{char-keys-switch} {space} . {keyboard-close-outline-test-icon}"
+                        ],
+                        "numkeyssecondstate": [
+                            "[ ] { } # % ^ * + = {arrowright}",
+                            "_ \\ | ~ < > $ # ¥ ● {cursor-left}",
+                            "{hashtag-plus-equals-icon} . , ? ! ' {bksp} {cursor-right}",
+                            "{char-keys-switch} {space} . {keyboard-close-outline-test-icon}"
                         ]
                     },
                     display: {
@@ -177,7 +202,6 @@
                         "{backspace}": "Backspace",
                         "{square-left}": "<span style='align-items:center;justify-content:center;position:relative;align-self:center;'>]</span>",
                         "{square-right}": "<span style='align-items:center;justify-content:center;position:relative;align-self:center;'>[</span>",
-                        // "{arrowright}": "ArrowRight",
                         "{arrowright}": "<i style='font-size:30px;' class='mdi mdi-arrow-collapse-right'></i>",
                         "{cursor-left}": "<i style='font-size:30px' class='mdi mdi-arrow-left'></i>",
                         "{cursor-right}": "<i style='font-size:30px' class='mdi mdi-arrow-right'></i>",
@@ -185,8 +209,10 @@
                         "{bksp}": "<i style='font-size:30px;' class='mdi mdi-backspace'></i>",
                         "{num-keys-switch}": "<i style='font-size:30px;' class='mdi mdi-numeric'></i>",
                         "{keyboard-close-outline-test-icon}": "<i style='font-size:30px;' class='mdi mdi-close-circle'></i>",
-                        "{semicolon-key1}": "<span>;</span>",
-                        "{keyboard-close}": "<i>hello</i>"
+                        "{semicolon-key1}": "<p>;</p>",
+                        "{keyboard-close}": "<i>hello</i>",
+                        "{char-keys-switch}": "CharkeysSwitch",
+                        "{hashtag-plus-equals-icon}": "HashtagPlusEqualsIcon"
                     },
                 })
 
@@ -198,6 +224,9 @@
                 this.arrowLeft = new ArrowLeft()
                 this.arrowRight = new ArrowRight()
                 this.clear = new Clear()
+                this.enter = new Enter(this.keyboard)
+
+                }
             },
             methods: {
                 onChange(input) {
@@ -207,18 +236,26 @@
                 onKeyPress(button) {
                     console.log("Button pressed: ", button)
                     const input = document.querySelector(".input")
+
                     if (button === "{shift-test-icon}") {
                         this.handleShift()
                     }
                     else if (button === "{arrowright}") {
-                        this.clear.trigger(this.keyboard, input)
+                        this.arrowRight.trigger(this.keyboard, input)
                     }
                     else if (button === "{arrowleft}") {
                         this.arrowLeft.trigger(this.keyboard, input)
                     }
                     else if(button === "{clear}") {
                         this.clear.trigger(this.keyboard, input)
+                    } 
+                    else if(button === "{keyboard-close-outline-test-icon}") {
+                        this.enter.trigger(this.keyboard, input)
                     }
+                    else if(button === "{char-keys-switch}") {
+                        this.handleShift2()
+                    }
+
                 },
                 handleShift() {
                     let currentLayout = this.keyboard.options.layoutName
@@ -227,6 +264,10 @@
                     this.keyboard.setOptions({
                         layoutName: newLayout
                     })
+                },
+                handleShift2() {
+                    let currentLayout = this.keyboard.options.layoutName
+                    
                 }
             }
         })
