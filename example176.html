@@ -34,7 +34,7 @@
                 <v-container>
             <!-- <h2>{{ message }}</h2> -->
             <br>
-            <input class="input" placeholder="Tap on the virtual keyboard to start">
+            <input class="input" placeholder="Tap on the virtual keyboard to start" style="width:80%;position:relative;top: 10%;border: 1px solid black;">
             <div class="simple-keyboard"></div>
             <!-- <router-view></router-view> -->
              </v-container>
@@ -173,18 +173,20 @@
                     },
                     display: {
                         "{shift}": "Shift",
-                        "{space}": "Space",
+                        "{space}": "<i style='font-size:40px;' class='mdi mdi-keyboard-space'></i>",
                         "{backspace}": "Backspace",
-                        "{square-left}": "SquareLeft",
-                        "{square-right}": "SquareRight",
+                        "{square-left}": "<span style='align-items:center;justify-content:center;position:relative;align-self:center;'>]</span>",
+                        "{square-right}": "<span style='align-items:center;justify-content:center;position:relative;align-self:center;'>[</span>",
                         // "{arrowright}": "ArrowRight",
-                        "{arrowright}": "<i class='mdi mdi-arrow-right'></i>",
-                        "{cursor-left}": "CursorLeft",
-                        "{cursor-right}": "CursorRight",
-                        "{shift-test-icon}": "ShiftTestIcon",
-                        "{bksp}": "Backspace",
-                        "{num-keys-switch}": "NumkeysSwitch",
-                        "{keyboard-close-outline-test-icon}": "KeyboardCloseOutlineTestIcon"
+                        "{arrowright}": "<i style='font-size:30px;' class='mdi mdi-arrow-collapse-right'></i>",
+                        "{cursor-left}": "<i style='font-size:30px' class='mdi mdi-arrow-left'></i>",
+                        "{cursor-right}": "<i style='font-size:30px' class='mdi mdi-arrow-right'></i>",
+                        "{shift-test-icon}": "<i style='font-size:30px;' class='mdi mdi-apple-keyboard-shift'></i>",
+                        "{bksp}": "<i style='font-size:30px;' class='mdi mdi-backspace'></i>",
+                        "{num-keys-switch}": "<i style='font-size:30px;' class='mdi mdi-numeric'></i>",
+                        "{keyboard-close-outline-test-icon}": "<i style='font-size:30px;' class='mdi mdi-close-circle'></i>",
+                        "{semicolon-key1}": "<span>;</span>",
+                        "{keyboard-close}": "<i>hello</i>"
                     },
                 })
 
@@ -231,13 +233,196 @@
     </script>
 
     <style>
+
+        @import url(https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.css);
+
         .simple-keyboard {
-            max-width: 850px;
+            z-index: 10000;
+            max-width: 1345px;
+            position: fixed;
+            min-height: 250px;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            align-self: center;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            pointer-events: all;
+            border-radius: 5px;
+            background: #323228;
+            min-height: 455px;
+
         }
 
         .simple-keyboard .mdi {
             font-size: 18px;
         }
+
+        .simple-keyboard-full.simple-keyboard.hg-theme-default.hg-layout-default.nuslit-keyboard {
+            height: 140px;
+        }
+
+        .hg-button.hg-standardBtn {
+            box-sizing: border-box;
+            border: 1px solid black;
+            width: 100px;
+            min-width: 100px;
+            max-width: 100px;
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            margin-left: 7px;
+            font-weight: 500;
+
+        }
+
+        .hg-button.hg-functionBtn.hg-button-shift-test-icon {
+            box-sizing: border-box;
+            border: 1px solid black;
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            /* margin-left: 7px; */
+            font-weight: 500;
+            width: 212px;
+            min-width: 212px;
+            max-width: 212px;
+            margin-right: 5px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-bksp {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            /* margin-left: 7px; */
+            font-weight: 500;
+            width: 212px;
+            min-width: 212px;
+            max-width: 212px;
+            margin-right: 5px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-square-left {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-square-right {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-semicolon-key1 {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-arrowright {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-cursor-left {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-cursor-right {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-num-keys-switch {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-space {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            height: 100px;
+            width: 840px;
+            min-width: 840px;
+            max-width: 840px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-keyboard-close-outline-test-icon {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+        }
+
+
+
+
+
+
 
     </style>
 </html>

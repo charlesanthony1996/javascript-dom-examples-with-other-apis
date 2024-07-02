@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Snackbar Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/vue-router@4"></script>
+    <script src="https://unpkg.com/vuex@4"></script>
+</head>
+<body>
+<div id="app">
+    <router-view></router-view>
+</div>
+
+<script>
+    const { createApp, ref, computed, watch, onUnmounted } = Vue
+    const { createVuetify } = Vuetify
+    const { createRouter, createWebHistory } = VueRouter
+    const { createStore } = Vuex
+
+    const vuetify = createVuetify()
+
+    const useNotificationStore = () => {
+        return createStore({
+            state: {
+                queue: []
+            },
+            mutations: {
+                addNotification(state, notification) {
+                    state.queue.push(notification)
+                }
+            },
+            actions: {
+                notify({ commit }, notification) {
+                    commit('addNotification', notification)
+                }
+            }
+        })
+    }
+
+    const Snackbar = {
+        template: `
+            <v-snackbar
+                v-model="visible"
+                location="top"
+                :timeout="showTimeout"
+                :color="currentText && currentText.type ? currentText.type : ''"
+                class="custom-snackbar"
+                @click="handleClick"
+            >
+                {{ currentText.text }}
+                <v-progress-linear
+                    :value="progress"
+                    color="blue"
+                    height="4"
+                    class="progress-bar"
+                ></v-progress-linear>
+            </v-snackbar>
+        `,
+        setup() {
+            const notificationStore = Vuex.useStore()
+            const currentText = ref(undefined)
+            const visible = ref(false)
+
+            const showTimeout = 4000
+            const nextTimeout = 1000
+
+            const timeoutId = ref(-1)
+            const progress = ref(100)
+            let intervalId = undefined
+
+            function showNext() {
+                if (notificationStore.state.queue.length > 0 && !visible.value) {
+                    currentText.value = notificationStore.state.queue.shift()
+                    visible.value = true
+                    startProgress()
+                }
+            }
+
+            function startProgress() {
+                progress.value = 100
+                if (intervalId) clearInterval(intervalId)
+                const intervalTime = 100 // Update every 100ms
+                const decrement = (intervalTime / showTimeout) * 100
+                intervalId = setInterval(() => {
+                    progress.value -= decrement
+                    if (progress.value <= 0) {
+                        clearInterval(intervalId)
+                    }
+                }, intervalTime)
+            }
+
+            watch(visible, (value) => {
+                if (!value) {
+                    timeoutId.value = setTimeout(() => {
+                        timeoutId.value = -1
+                        showNext()
+                    }, nextTimeout)
+                } else {
+                    startProgress()
+                }
+            })
+
+            watch(() => notificationStore.state.queue, () => {
+                if (!visible.value && timeoutId.value === -1) {
+                    showNext()
+                }
+            })
+
+            const handleClick = () => {
+                visible.value = false
+            }
+
+            onUnmounted(() => {
+                clearTimeout(timeoutId.value)
+                if (intervalId) clearInterval(intervalId)
+            })
+
+            return { visible, currentText, progress, handleClick, showTimeout, nextTimeout }
+        }
+    }
+
+    const MainComponent = {
+        template: `
+            <div>
+                <v-btn @click="triggerSnackbar">Show Snackbar</v-btn>
+                <Snackbar />
+            </div>
+        `,
+        setup() {
+            const notificationStore = Vuex.useStore()
+
+            const triggerSnackbar = () => {
+                notificationStore.dispatch('notify', { text: 'This is a notification!', type: 'info' })
+            }
+
+            return { triggerSnackbar }
+        },
+        components: {
+            Snackbar
+        }
+    }
+
+    const routes = [
+        { path: '/', component: MainComponent }
+    ]
+
+    const router = createRouter({
+        history: createWebHistory(),
+        routes
+    })
+
+    const notificationStore = useNotificationStore()
+
+    const app = createApp({
+        setup() {
+            return {}
+        }
+    })
+
+    app.use(vuetify)
+    app.use(router)
+    app.use(notificationStore)
+    app.mount('#app')
+</script>
+
+<style>
+.custom-snackbar {
+  position: absolute !important;
+  right: 10% !important;
+  left: auto !important;
+  transform: auto !important;
+  top: 8% !important;
+}
+
+.progress-bar {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+</style>
+</body>
+</html>
