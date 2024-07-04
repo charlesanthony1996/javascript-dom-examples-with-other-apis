@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project Herzogenburg 🤫</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- vue router -->
+    <script src="https://unpkg.com/vue-router@3.5.3/dist/vue-router.js"></script>
+    <!-- vuex cdn -->
+    <script src="https://unpkg.com/vuex@3.6.2/dist/vuex.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+
+    <!-- vue 2 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.6.14/dist/vuetify.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.6.14/dist/vuetify.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+<div id="app">
+    <v-app>
+        <v-container>
+            <br>
+            <input 
+            class="input" 
+            placeholder="Tap on the virtual keyboard to start" 
+            style="border:1px solid black;width:80%;align-items:center;align-self:center;justify-content:center;align-content:center;position:relative;left:50;"/>
+            <div class="simple-keyboard"></div>
+        </v-container>
+    </v-app>
+    <router-view></router-view>
+</div>
+</body>
+
+<script>
+    Vue.use(Vuetify)
+    Vue.use(VueRouter)
+
+    class CustomKeyboard {
+        constructor(rootElementId = 'app') {
+            this.rootElement = document.getElementById(rootElementId)
+            this.currentInput = null
+            this.initialize()
+        }
+
+        initialize() {
+            this.rootElement.addEventListener('click', (event) => {
+                const target = event.target
+                if (target.classList.contains('key')) {
+                    this.handleKeyPress(target.getAttribute('data-key'))
+                    event.preventDefault()
+                } else if (target.tagName.toLowerCase() === 'input' || target.tagName.toLowerCase() === 'textarea') {
+                    this.currentInput = target
+                }
+            })
+        }
+
+        handleKeyPress(key) {
+            if (!this.currentInput) return
+            const currentValue = this.currentInput.value
+            const selectionStart = this.currentInput.selectionStart
+            const selectionEnd = this.currentInput.selectionEnd
+
+            if (key === 'Backspace') {
+                if (selectionStart === selectionEnd && selectionStart > 0) {
+                    this.currentInput.value = currentValue.slice(0, selectionStart - 1) + currentValue.slice(selectionEnd);
+                    this.setCaretPosition(selectionStart - 1)
+                } else {
+                    this.currentInput.value = currentValue.slice(0, selectionStart) + currentValue.slice(selectionEnd);
+                    this.setCaretPosition(selectionStart)
+                }
+            } else {
+                this.currentInput.value = currentValue.slice(0, selectionStart) + key + currentValue.slice(selectionEnd);
+                this.setCaretPosition(selectionStart + 1)
+            }
+
+            this.currentInput.focus()
+        }
+
+        setCaretPosition(pos) {
+            this.currentInput.setSelectionRange(pos, pos)
+        }
+    }
+
+    
+    const Home = { template: '<div>Home</div>' }
+    const About = { template: '<div>About</div>' }
+
+    
+    const routes = [
+        { path: '/', component: Home },
+        { path: '/about', component: About }
+    ];
+
+    
+    const router = new VueRouter({
+        routes
+    })
+
+    new Vue({
+        el: '#app',
+        vuetify: new Vuetify(),
+        router,
+        data: () => ({
+            keyboardInstance: null,
+            customKeyboard: null,
+            inputValue: ''
+        }),
+        mounted() {
+            this.customKeyboard = new CustomKeyboard()
+
+            let SimpleKeyboard = window.SimpleKeyboard.default;
+
+            const initializeKeyboard = () => {
+                if (this.keyboardInstance) return
+
+                this.keyboardInstance = new SimpleKeyboard({
+                    onChange: input => this.onChange(input),
+                    onKeyPress: button => this.onKeyPress(button),
+                    layout: {
+                        default: [
+                            "q w e r t y u i o p {square-left} {arrowright}",
+                            "a s d f g h j k l {semicolon-key1} {square-right} {cursor-left}",
+                            "{shift-test-icon} z x c v b n m {bksp} {cursor-right}",
+                            "{num-keys-switch} {space} . {keyboard-close-outline-test-icon}"
+                        ],
+                        "shift-test-icon": [
+                            "Q W E R T Y U I O P {square-left} {arrowright}",
+                            "A S D F G H J K L {semicolon-key1} \" {cursor-left}",
+                            "{shift-test-icon} Z X C V B N M {bksp} {cursor-right}",
+                            "{num-keys-switch} {space} . {keyboard-close-outline-test-icon}"
+                        ],
+                        "numkeys": [
+                            "1 2 3 4 5 6 7 8 9 0 {arrowright}",
+                            "_ \\ | ~ < > $ # ¥ ● {cursor-left}",
+                            "{hashtag-plus-equals-icon} . ,  ? ! ' {bksp} {cursor-right}",
+                            "{char-keys-switch} {space} . {keyboard-close-outline-test-icon}"
+                        ],
+                        "numkeyssecondstate": [
+                            "[ ] { } # % ^ * + = {arrowright}",
+                            "_ \\ | ~ < > $ # ¥ ● {cursor-left}",
+                            "{hashtag-plus-equals-icon} . , ? ! ' {bksp} {cursor-right}",
+                            "{char-keys-switch} {space} . {keyboard-close-outline-test-icon}"
+                        ]
+                    },
+                    display: {
+                        "{shift}": "Shift",
+                        "{space}": "<i style='font-size:40px;' class='mdi mdi-keyboard-space'></i>",
+                        "{backspace}": "Backspace",
+                        "{square-left}": "<span style='align-items:center;justify-content:center;position:relative;align-self:center;'>]</span>",
+                        "{square-right}": "<span style='align-items:center;justify-content:center;position:relative;align-self:center;'>[</span>",
+                        "{arrowright}": "<i style='font-size:30px;' class='mdi mdi-arrow-collapse-right'></i>",
+                        "{cursor-left}": "<i style='font-size:30px' class='mdi mdi-arrow-left'></i>",
+                        "{cursor-right}": "<i style='font-size:30px' class='mdi mdi-arrow-right'></i>",
+                        "{shift-test-icon}": "<i style='font-size:30px;' class='mdi mdi-apple-keyboard-shift'></i>",
+                        "{bksp}": "<i style='font-size:30px;' class='mdi mdi-backspace'></i>",
+                        "{num-keys-switch}": "<i style='font-size:30px;' class='mdi mdi-numeric'></i>",
+                        "{keyboard-close-outline-test-icon}": "<i style='font-size:30px;' class='mdi mdi-close-circle'></i>",
+                        "{semicolon-key1}": "<p>;</p>",
+                        "{keyboard-close}": "<i>hello</i>",
+                        "{char-keys-switch}": "CharKeysSwitch",
+                        "{hashtag-plus-equals-icon}": "HashtagPlusEqualsIcon"
+                    }
+                })
+
+                // Restore input value when keyboard is re-initialized
+                if (this.inputValue) {
+                    this.keyboardInstance.setInput(this.inputValue)
+                }
+
+                document.querySelector(".input").addEventListener("input", event => {
+                    this.keyboardInstance.setInput(event.target.value)
+                })
+            }
+
+            this.onChange = input => {
+                document.querySelector(".input").value = input
+                this.inputValue = input
+                console.log("Input changed: ", input)
+            }
+
+            this.onKeyPress = button => {
+                console.log("Button pressed: ", button)
+                this.customKeyboard.handleKeyPress(button)
+                if (button === "{shift-test-icon}") {
+                    this.handleShift()
+                } else if (button === "{num-keys-switch}") {
+                    this.handleShift2()
+                }
+            }
+
+            this.handleShift = () => {
+                let currentLayout = this.keyboardInstance.options.layoutName;
+                let newLayout = currentLayout === "default" ? "shift-test-icon" : "default"
+
+                this.keyboardInstance.setOptions({
+                    layoutName: newLayout
+                });
+            }
+
+            this.handleShift2 = () => {
+                let currentLayout = this.keyboardInstance.options.layoutName
+                let newLayout = currentLayout === "default" ? "numkeys" : "default"
+
+                this.keyboardInstance.setOptions({
+                    layoutName: newLayout
+                })
+            }
+
+            document.querySelector(".input").addEventListener("focus", initializeKeyboard)
+
+            // Add event listener to close keyboard when clicking outside of it
+            document.addEventListener("click", (event) => {
+                const inputElement = document.querySelector(".input")
+                const keyboardElement = document.querySelector(".simple-keyboard")
+
+                if (!inputElement.contains(event.target) && !keyboardElement.contains(event.target)) {
+                    if (inputElement === document.activeElement) {
+                        inputElement.blur()
+                    }
+                    if (this.keyboardInstance) {
+                        this.keyboardInstance.destroy()
+                        this.keyboardInstance = null
+                    }
+                }
+            }, true)
+        }
+    })
+</script>
+
+<style>
+    @import url(https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.css);
+
+    .simple-keyboard {
+        z-index: 10000;
+        max-width: 1345px;
+        position: fixed;
+        min-height: 250px;
+        bottom: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+        align-self: center;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        pointer-events: all;
+        border-radius: 5px;
+        background: #323228;
+        min-height: 455px;
+    }
+
+    .simple-keyboard-full.simple-keyboard.hg-theme-default.hg-layout-default.nuslit-keyboard {
+            height: 140px;
+        }
+
+        .hg-button.hg-standardBtn {
+            box-sizing: border-box;
+            border: 1px solid black;
+            width: 100px;
+            min-width: 100px;
+            max-width: 100px;
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            margin-left: 7px;
+            font-weight: 500;
+
+        }
+
+        .hg-button.hg-functionBtn.hg-button-shift-test-icon {
+            box-sizing: border-box;
+            border: 1px solid black;
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            /* margin-left: 7px; */
+            font-weight: 500;
+            width: 212px;
+            min-width: 212px;
+            max-width: 212px;
+            margin-right: 5px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-bksp {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            /* margin-left: 7px; */
+            font-weight: 500;
+            width: 212px;
+            min-width: 212px;
+            max-width: 212px;
+            margin-right: 5px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-square-left {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-square-right {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-semicolon-key1 {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-arrowright {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-cursor-left {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-cursor-right {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-num-keys-switch {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-space {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            height: 100px;
+            width: 840px;
+            min-width: 840px;
+            max-width: 840px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-keyboard-close-outline-test-icon {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+        }
+</style>
+</html>

@@ -34,6 +34,15 @@
                 <v-container>
             <!-- <h2>{{ message }}</h2> -->
             <br>
+            <!-- <v-text-field 
+            label="Text" 
+            class="input" 
+            placeholder="Search for messages here" 
+            style="width:80%;position:relative;top:10%;"
+            >
+            </v-text-field> -->
+            <br>
+            <!-- <v-select :items="['item 1', 'item 2', 'item 3']" label="Select"></v-select> -->
             <input class="input" placeholder="Tap on the virtual keyboard to start" style="width:80%;position:relative;top: 10%;border: 1px solid black;">
             <div class="simple-keyboard"></div>
             <!-- <router-view></router-view> -->
@@ -117,8 +126,9 @@
 
             trigger(keyboard, input) {
                 // error handling?
-                input.blur()
+                // input.blur()
                 this.keyboard.destroy()
+                this.keyboard = null
             }
         }
 
@@ -166,7 +176,7 @@
             mounted() {
                 let Keyboard = window.SimpleKeyboard.default
 
-                const initializeKeyboard = () => {
+                this.initializeKeyboard = () => {
                     this.keyboard = new Keyboard({
                     onChange: input => this.onChange(input),
                     onKeyPress: button => this.onKeyPress(button),
@@ -227,6 +237,17 @@
                 this.enter = new Enter(this.keyboard)
 
                 }
+
+                this.destroyKeyboard = () => {
+                    if(this.keyboard) {
+                        this.keyboard.destroy()
+                        this.keyboard = null
+                    }
+                }
+                // initializeKeyboard()
+
+                document.querySelector(".input").addEventListener("focus", this.initializeKeyboard)
+                document.querySelector(".input").addEventListener("blur", this.destroyKeyboard)
             },
             methods: {
                 onChange(input) {
@@ -267,7 +288,12 @@
                 },
                 handleShift2() {
                     let currentLayout = this.keyboard.options.layoutName
-                    
+                    let newLayout = currentLayout === "default" ? "numkeys" : "default"
+
+                    this.keyboard.setOptions({
+                        layoutName: newLayout
+                    })
+
                 }
             }
         })

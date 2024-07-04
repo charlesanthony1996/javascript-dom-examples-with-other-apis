@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Keyboard with Vue 2</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <v-app>
+      <v-container>
+        <br>
+        <input type="text" v-model="text" placeholder="Click to type..." @focus="showKeyboard" @blur="handleBlur">
+        <div class="keyboard" v-show="isKeyboardVisible">
+          <div class="key" v-for="key in keys" :key="key" @mousedown.prevent="handleKeyPress(key)">{{ key }}</div>
+        </div>
+      </v-container>
+    </v-app>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      vuetify: new Vuetify(),
+      data: {
+        text: '',
+        isKeyboardVisible: false,
+        keys: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'Backspace'],
+        currentInput: null
+      },
+      methods: {
+        showKeyboard() {
+          this.isKeyboardVisible = true;
+        },
+        hideKeyboard() {
+          this.isKeyboardVisible = false;
+          this.currentInput = null;
+        },
+        handleBlur(event) {
+          setTimeout(() => {
+            if (!event.relatedTarget || !this.$el.contains(event.relatedTarget)) {
+              this.hideKeyboard();
+            }
+          }, 10); // Add a short delay to allow relatedTarget to be set
+        },
+        handleKeyPress(key) {
+          if (!this.currentInput) return;
+          const currentValue = this.currentInput.value;
+          const selectionStart = this.currentInput.selectionStart;
+          const selectionEnd = this.currentInput.selectionEnd;
+
+          if (key === 'Backspace') {
+            if (selectionStart === selectionEnd && selectionStart > 0) {
+              this.currentInput.value = currentValue.slice(0, selectionStart - 1) + currentValue.slice(selectionEnd);
+              this.setCaretPosition(selectionStart - 1);
+            } else {
+              this.currentInput.value = currentValue.slice(0, selectionStart) + currentValue.slice(selectionEnd);
+              this.setCaretPosition(selectionStart);
+            }
+          } else {
+            this.currentInput.value = currentValue.slice(0, selectionStart) + key + currentValue.slice(selectionEnd);
+            this.setCaretPosition(selectionStart + 1);
+          }
+
+          this.text = this.currentInput.value; // update Vue's v-model
+          this.currentInput.focus();
+        },
+        setCaretPosition(pos) {
+          this.currentInput.setSelectionRange(pos, pos);
+        }
+      },
+      mounted() {
+        document.addEventListener('click', (event) => {
+          if (this.isKeyboardVisible && !this.$el.contains(event.target)) {
+            this.hideKeyboard();
+          }
+        });
+
+        this.$el.addEventListener('click', (event) => {
+          if (event.target.tagName.toLowerCase() === 'input' || event.target.tagName.toLowerCase() === 'textarea') {
+            this.currentInput = event.target;
+            this.showKeyboard();
+            event.stopPropagation(); // Prevent event from reaching document click listener
+          }
+        });
+      }
+    });
+  </script>
+  <style>
+    #app {
+      width: 100%;
+      max-width: 600px;
+      margin: 20px auto;
+      text-align: center;
+    }
+    .keyboard {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .key {
+      padding: 10px 20px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+  </style>
+</html>

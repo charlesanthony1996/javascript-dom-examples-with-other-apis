@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project Herzogenburg 🤫</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+    <!-- material design -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+
+    <!-- vuex -->
+    <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+    <script src="https://unpkg.com/vuex@4"></script>
+
+    <!-- vue router -->
+    <script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
+
+    <!-- simple keyboard -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.js"></script>
+
+    <!-- vuetify -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <v-app>
+            <v-container>
+                <br>
+                <input class="input" placeholder="Tap on the virtual keyboard to start" style="width:80%;position:relative;top: 10%;border: 1px solid black;">
+                <div class="simple-keyboard"></div>
+            </v-container>
+        </v-app>
+    </div>
+</body>
+
+<script>
+    Vue.use(Vuetify)
+    Vue.use(VueRouter)
+    Vue.use(Vuex)
+
+    class Keyboard {
+        constructor(rootElementId = 'app') {
+            this.rootElement = document.getElementById(rootElementId);
+            this.currentInput = null;
+            this.keyBindings = [];
+            this.initialize();
+        }
+
+        initialize() {
+            this.rootElement.addEventListener('click', (event) => {
+                const target = event.target;
+                if (target.classList.contains('key')) {
+                    this.handleKeyPress(target.getAttribute('data-key'));
+                } else if (target.tagName.toLowerCase() === 'input' || target.tagName.toLowerCase() === 'textarea') {
+                    this.currentInput = target;
+                }
+            });
+        }
+
+        handleKeyPress(key) {
+            if (!this.currentInput) return;
+            const currentValue = this.currentInput.value;
+            const selectionStart = this.currentInput.selectionStart;
+            const selectionEnd = this.currentInput.selectionEnd;
+
+            if (key === 'Backspace') {
+                if (selectionStart === selectionEnd && selectionStart > 0) {
+                    this.currentInput.value = currentValue.slice(0, selectionStart - 1) + currentValue.slice(selectionEnd);
+                    this.setCaretPosition(selectionStart - 1);
+                } else {
+                    this.currentInput.value = currentValue.slice(0, selectionStart) + currentValue.slice(selectionEnd);
+                    this.setCaretPosition(selectionStart);
+                }
+            } else {
+                this.currentInput.value = currentValue.slice(0, selectionStart) + key + currentValue.slice(selectionEnd);
+                this.setCaretPosition(selectionStart + 1);
+            }
+
+            this.currentInput.focus();
+        }
+
+        setCaretPosition(pos) {
+            this.currentInput.setSelectionRange(pos, pos);
+        }
+
+        preventEvents(event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        sanitizeInput(input, type, clearTrailingComma = false) {
+            if (input && type !== null && type === 'number') {
+                const sanitizedValue = this.getSanitizedInput(input.value, type, clearTrailingComma);
+                if (sanitizedValue !== input.value) {
+                    input.value = sanitizedValue;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        getSanitizedInput(value, type, clearTrailingComma) {
+            let sanitizedValue = value.replace(/[^\d\-\+\.\,]/g, '');
+            sanitizedValue = sanitizedValue.replace(',', '.');
+
+            if (clearTrailingComma && sanitizedValue[sanitizedValue.length - 1] === '.') {
+                sanitizedValue = sanitizedValue.substring(0, sanitizedValue.length - 1);
+            }
+
+            return sanitizedValue;
+        }
+    }
+
+    const keyboard = new Keyboard();
+
+    const router = VueRouter.createRouter({
+        history: VueRouter.createWebHistory(),
+        routes: []
+    })
+
+    const store = Vuex.createStore({
+        state() {
+            return {}
+        },
+        mutations: {},
+        actions: {}
+    })
+
+    new Vue({
+        el: "#app",
+        vuetify: new Vuetify(),
+        store,
+        router,
+        data: {
+            message: "Hello there"
+        },
+        mounted() {
+            let Keyboard = window.SimpleKeyboard.default
+
+            this.initializeKeyboard = () => {
+                this.keyboard = new Keyboard({
+                    onChange: input => this.onChange(input),
+                    onKeyPress: button => this.onKeyPress(button),
+                    layout: {
+                        default: [
+                            "q w e r t y u i o p {square-left} {arrowright}",
+                            "a s d f g h j k l {semicolon-key1} {square-right} {cursor-left}",
+                            "{shift-test-icon} z x c v b n m {bksp} {cursor-right}",
+                            "{num-keys-switch} {space} . {keyboard-close-outline-test-icon}"
+                        ],
+                        "shift-test-icon": [
+                            "Q W E R T Y U I O P {square-left} {arrowright}",
+                            "A S D F G H J K L {semicolon-key1} \" {cursor-left}",
+                            "{shift-test-icon} Z X C V B N M {bksp} {cursor-right}",
+                            "{num-keys-switch} {space} . {keyboard-close-outline-test-icon}"
+                        ],
+                        "numkeys": [
+                            "1 2 3 4 5 6 7 8 9 0 {arrowright}",
+                            "_ \\ | ~ < > $ # ¥ ● {cursor-left}",
+                            "{hashtag-plus-equals-icon} . ,  ? ! ' {bksp} {cursor-right}",
+                            "{char-keys-switch} {space} . {keyboard-close-outline-test-icon}"
+                        ],
+                        "numkeyssecondstate": [
+                            "[ ] { } # % ^ * + = {arrowright}",
+                            "_ \\ | ~ < > $ # ¥ ● {cursor-left}",
+                            "{hashtag-plus-equals-icon} . , ? ! ' {bksp} {cursor-right}",
+                            "{char-keys-switch} {space} . {keyboard-close-outline-test-icon}"
+                        ]
+                    },
+                    display: {
+                        "{shift}": "Shift",
+                        "{space}": "<i style='font-size:40px;' class='mdi mdi-keyboard-space'></i>",
+                        "{backspace}": "Backspace",
+                        "{square-left}": "<span style='align-items:center;justify-content:center;position:relative;align-self:center;'>]</span>",
+                        "{square-right}": "<span style='align-items:center;justify-content:center;position:relative;align-self:center;'>[</span>",
+                        "{arrowright}": "<i style='font-size:30px;' class='mdi mdi-arrow-collapse-right'></i>",
+                        "{cursor-left}": "<i style='font-size:30px' class='mdi mdi-arrow-left'></i>",
+                        "{cursor-right}": "<i style='font-size:30px' class='mdi mdi-arrow-right'></i>",
+                        "{shift-test-icon}": "<i style='font-size:30px;' class='mdi mdi-apple-keyboard-shift'></i>",
+                        "{bksp}": "<i style='font-size:30px;' class='mdi mdi-backspace'></i>",
+                        "{num-keys-switch}": "<i style='font-size:30px;' class='mdi mdi-numeric'></i>",
+                        "{keyboard-close-outline-test-icon}": "<i style='font-size:30px;' class='mdi mdi-close-circle'></i>",
+                        "{semicolon-key1}": "<p>;</p>",
+                        "{keyboard-close}": "<i>hello</i>",
+                        "{char-keys-switch}": "CharkeysSwitch",
+                        "{hashtag-plus-equals-icon}": "HashtagPlusEqualsIcon"
+                    }
+                })
+
+                document.querySelector(".input").addEventListener("input", event => {
+                    this.keyboard.setInput(event.target.value)
+                })
+
+                this.arrowLeft = new ArrowLeft()
+                this.arrowRight = new ArrowRight()
+                this.clear = new Clear()
+                this.enter = new Enter(this.keyboard)
+            }
+
+            this.destroyKeyboard = () => {
+                if (this.keyboard) {
+                    this.keyboard.destroy()
+                    this.keyboard = null
+                }
+            }
+
+            document.querySelector(".input").addEventListener("focus", this.initializeKeyboard)
+            document.querySelector(".input").addEventListener("blur", this.destroyKeyboard)
+        },
+        methods: {
+            onChange(input) {
+                document.querySelector(".input").value = input
+                console.log("Input changed: ", input)
+            },
+            onKeyPress(button) {
+                console.log("Button pressed: ", button)
+                const input = document.querySelector(".input")
+
+                if (button === "{shift-test-icon}") {
+                    this.handleShift()
+                }
+                else if (button === "{arrowright}") {
+                    this.arrowRight.trigger(this.keyboard, input)
+                }
+                else if (button === "{arrowleft}") {
+                    this.arrowLeft.trigger(this.keyboard, input)
+                }
+                else if (button === "{clear}") {
+                    this.clear.trigger(this.keyboard, input)
+                }
+                else if (button === "{keyboard-close-outline-test-icon}") {
+                    this.enter.trigger(this.keyboard, input)
+                }
+                else if (button === "{char-keys-switch}") {
+                    this.handleShift2()
+                }
+            },
+            handleShift() {
+                let currentLayout = this.keyboard.options.layoutName
+                let newLayout = currentLayout === "default" ? "shift-test-icon" : "default"
+
+                this.keyboard.setOptions({
+                    layoutName: newLayout
+                })
+            },
+            handleShift2() {
+                let currentLayout = this.keyboard.options.layoutName
+                let newLayout = currentLayout === "default" ? "numkeys" : "default"
+
+                this.keyboard.setOptions({
+                    layoutName: newLayout
+                })
+            }
+        }
+    })
+</script>
+
+<style>
+    @import url(https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.css);
+
+    .simple-keyboard {
+        z-index: 10000;
+        max-width: 1345px;
+        position: fixed;
+        min-height: 250px;
+        bottom: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+        align-self: center;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        pointer-events: all;
+        border-radius: 5px;
+        background: #323228;
+        min-height: 455px;
+    }
+
+    .simple-keyboard .mdi {
+        font-size: 18px;
+    }
+
+    .simple-keyboard-full.simple-keyboard.hg-theme-default.hg-layout-default.nuslit-keyboard {
+        height: 140px;
+    }
+
+    .hg-button.hg-standardBtn {
+        box-sizing: border-box;
+        border: 1px solid black;
+        width: 100px;
+        min-width: 100px;
+        max-width: 100px;
+        background: #5b5b53;
+        height: 100px;
+        padding: 0px;
+        font-size: 35px;
+        margin: 4px;
+        margin-left: 7px;
+        font-weight: 500;
+    }
+
+    .hg-button.hg-functionBtn.hg-button-shift-test-icon {
+        box-sizing: border-box;
+        border: 1px solid black;
+        background: #5b5b53;
+        height: 100px;
+        padding: 0px;
+        font-size: 35px;
+        margin: 4px;
+        font-weight: 500;
+        width: 212px;
+        min-width: 212px;
+        max-width: 212px;
+        margin-right: 5px;
+    }
+
+    .hg-button.hg-functionBtn.hg-button-bksp {
+        background: #5b5b53;
+        height: 100px;
+        padding: 0px;
+        font-size: 35px;
+        margin: 4px;
+        font-weight: 500;
+        width: 212px;
+        min-width: 212px;
+        max-width: 212px;
+        margin-right: 5px;
+    }
+
+    .hg-button.hg-functionBtn.hg-button-square-left {
+        background: #5b5b53;
+        height: 100px;
+        padding: 0px;
+        font-size: 35px;
+        margin: 4px;
+        font-weight: 500;
+        width: 100px;
+        height: 100px;
+        max-width: 100px;
+    }
+
+    .hg-button.hg-functionBtn.hg-button-square-right {
+        background: #5b5b53;
+        height: 100px;
+        padding: 0px;
+        font-size: 35px;
+        margin: 4px;
+        font-weight: 500;
+        width: 100px;
+        height: 100px;
+        max-width: 100px;
+    }
+
+    .hg-button.hg-functionBtn.hg-button-semicolon-key1 {
+        background: #5b5b53;
+        height: 100px;
+        padding: 0px;
+        font-size: 35px;
+        margin: 4px;
+        font-weight: 500;
+        width: 100px;
+        height: 100px;
+        max-width: 100px;
+    }
+
+    .hg-button.hg-functionBtn.hg-button-arrowright {
+        background: #5b5b53;
+        height: 100px;
+        padding: 0px;
+        font-size: 35px;
+        margin: 4px;
+        font-weight: 500;
+        width: 100px;
+        height: 100px;
+        max-width: 100px;
+    }
+
+    .hg-button.hg-functionBtn.hg-button-cursor-left {
+        background: #5b5b53;
+        height: 100px;
+        padding: 0px;
+        font-size: 35px;
+        margin: 4px;
+        font-weight: 500;
+        width: 100px;
+        height: 100px;
+        max-width: 100px;
+    }
+
+    .hg-button.hg-functionBtn.hg-button-cursor-right {
+        background: #5b5b53;
+        height: 100px;
+        padding: 0px;
+        font-size: 35px;
+        margin: 4px;
+        font-weight: 500;
+        width: 100px;
+        height: 100px;
+        max-width: 100px;
+    }
+
+    .hg-button.hg-functionBtn.hg-button-num-keys-switch {
+        background: #5b5b53;
+        height: 100px;
+        padding: 0px;
+        font-size: 35px;
+        margin: 4px;
+        font-weight: 500;
+        width: 100px;
+        height: 100px;
+        max-width: 100px;
+    }
+
+    .hg-button.hg-functionBtn.hg-button-space {
+        background: #5b5b53;
+        height: 100px;
+        padding: 0px;
+        font-size: 35px;
+        margin: 4px;
+        font-weight: 500;
+        height: 100px;
+        width: 840px;
+        min-width: 840px;
+        max-width: 840px;
+    }
+
+    .hg-button.hg-functionBtn.hg-button-keyboard-close-outline-test-icon {
+        background: #5b5b53;
+        height: 100px;
+        padding: 0px;
+        font-size: 35px;
+        margin: 4px;
+        font-weight: 500;
+        width: 100px;
+        height: 100px;
+        max-width: 100px;
+    }
+</style>
+</html>

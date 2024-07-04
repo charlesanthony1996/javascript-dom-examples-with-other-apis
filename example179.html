@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Custom keyboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div id="rootApp">
+            <input type="text" id="textInput" placeholder="Click to type">
+            <div clas="keyboard">
+                <div class="key" data-key="1">1</div>
+                <div class="key" data-key="1">2</div>
+                <div class="key" data-key="1">3</div>
+                <div class="key" data-key="1">4</div>
+                <div class="key" data-key="Backspace">←</div>
+            </div>
+
+        </div>
+
+        
+    </body>
+    <script>
+        class Keyboard {
+            constructor(rootElementId='rootApp') {
+                this.rootElement = document.getElementById(rootElementId)
+                this.currentInput = null
+                this.keyBindings = []
+                this.initialize()
+
+            }
+
+            initialize() {
+                this.rootElement.addEventListener("click", (event) => {
+                    const target = event.target
+                    if (target.classList.contains("key")) {
+                        this.handleKeyPress(target.getAttribute("data-key"))
+                    } else if(target.tagName.toLowerCase() === "input" || target.tagName.toLowerCase() === "textarea") {
+                        this.currentInput = target
+                    }
+                })
+            }
+
+            
+        }
+
+    </script>
+    <style>
+
+    </style>
+</html>
