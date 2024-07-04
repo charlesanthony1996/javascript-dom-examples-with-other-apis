@@ -26,6 +26,11 @@
 <div id="app">
     <v-app>
         <v-container>
+            <!-- <v-text-field
+            label="Text"
+            class="input"
+            >
+            </v-text-field> -->
             <br>
             <input 
             class="input" 
@@ -164,8 +169,8 @@
                         "{keyboard-close-outline-test-icon}": "<i style='font-size:30px;' class='mdi mdi-close-circle'></i>",
                         "{semicolon-key1}": "<p>;</p>",
                         "{keyboard-close}": "<i>hello</i>",
-                        "{char-keys-switch}": "CharKeysSwitch",
-                        "{hashtag-plus-equals-icon}": "HashtagPlusEqualsIcon"
+                        "{char-keys-switch}": "<i style='font-size:30px;' class='mdi mdi-alphabetical'></i>",
+                        "{hashtag-plus-equals-icon}": "<i style='font-size:30px;' class='mdi mdi-account'></i>"
                     }
                 })
 
@@ -213,6 +218,7 @@
                 })
             }
 
+            // document.querySelector(".input input").addEventListener("focus", initializeKeyboard)
             document.querySelector(".input").addEventListener("focus", initializeKeyboard)
 
             // Add event listener to close keyboard when clicking outside of it
@@ -412,6 +418,32 @@
             width: 100px;
             height: 100px;
             max-width: 100px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-hashtag-plus-equals-icon {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            width: 212px;
+            height: 100px;
+            max-width: 212px;
+            min-width: 212px;
+        }
+
+        .hg-button.hg-functionBtn.hg-button-char-keys-switch {
+            background: #5b5b53;
+            height: 100px;
+            padding: 0px;
+            font-size: 35px;
+            margin: 4px;
+            font-weight: 500;
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+            min-width: 100px;
         }
 </style>
 </html>
