@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Convert Module Example</title>
+</head>
+<body>
+
+</body>
+<!-- <script type="module">
+
+    
+    // Only import the module once
+    import convert from "https://cdn.jsdelivr.net/npm/convert@5/dist/index.js";
+
+    // Example usage of the convert module
+    // const result = convert(/* some conversion task */);
+    // console.log(result);
+
+    // const example = convert()
+
+
+</script> -->
+
+<script type="module">
+    // import convert from "https://cdn.skypack.dev/convert@5";
+    // import convert from "https://esm.run/convert@5";
+    import convert from "https://cdn.jsdelivr.net/npm/convert@5";
+    // import convert from "https://unpkg.com/convert@5";
+
+    const duration = convert(36, "h").to("best");
+
+    console.log(duration)
+
+
+</script>
+</html>
