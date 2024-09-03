@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+    <!--    vue router-->
+    <script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
+    <!-- vuex cdn -->
+    <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+    <script src="https://unpkg.com/vuex@4"></script>
+
+</head>
+
+<body>
+<div id="app">
+    <v-app>
+        <v-container>
+            <!-- our custom keyboard-scrollview component -->
+             <v-text-field label="input 1"></v-text-field>
+             <v-text-field label="input 1"></v-text-field>
+             <v-text-field label="input 1"></v-text-field>
+             <v-text-field label="input 1"></v-text-field>
+             <v-btn @click="toggleKeyboard">Toggle Keyboard</v-btn>
+        </v-container>
+    </v-app>
+
+</div>
+</body>
+
+<script>
+    const { createApp, ref, computed, reactive, watch, watchEffect, onMounted } = Vue
+    const { createVuetify } = Vuetify
+
+    const vuetify = createVuetify()
+
+    // define the keyboard scrollview component
+    const keyboardScrollview = defineComponent({
+        template: 
+        `
+        <div ref="outer" class="outerClass">
+            <div ref="inner" class="scroll-y">
+                <slot></slot>
+            </div>
+        </div>
+        `,
+        setup() {
+            const outer = ref(null)
+            const inner = ref(null)
+            const keyboardVisible = ref(false)
+
+            const toggleKeyboard = () => {
+                keyboardVisible.value = !keyboardVisible.value
+                 if (keyboardVisible.value && inner.value) {
+                    inner.value.scrollTop = inner.value.scrollHeight
+                 } else if (inner.value) {
+                    inner.value.scrollTop = 0
+                 }
+            }
+
+            onMounted(() => {
+
+            })
+
+            return {
+                outer,
+                inner,
+                toggleKeyboard
+            }
+        }
+    })
+
+
+    // router setup
+    const router = VueRouter.createRouter({
+        history: VueRouter.createWebHistory(),
+        routes: [
+
+        ]
+    })
+
+
+    const app = createApp({
+        components: {
+            keyboardScrollview
+        },
+        setup() {
+            return {  }
+        }
+    }).use(vuetify).use(router).mount('#app')
+</script>
+
+
+
+<style>
+    .outerClass {
+        height: 300px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .scroll-y {
+        height: 100%;
+        overflow-y: auto;
+    }
+</style>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Color Button Component</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+        <script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
+        <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+    </head>
+
+    <body>
+        <div id="app">
+            <v-app>
+                <v-main>
+                    <div style="display:flex;align-items:center;justify-content:center;height:100vh;">
+                        <color-button color-id="1" default-text="Select Color" @addColor="onAddColor"></color-button>
+                    </div>
+                </v-main>
+            </v-app>
+        </div>
+    </body>
+
+    <script>
+        const { createApp, ref, computed } = Vue
+        const { createVuetify } = Vuetify
+
+        const vuetify = createVuetify()
+
+        const useColorStore = () => {
+            const colorArray = ref([
+                { id: 1, name: { en: "Red"}, hex: "#FF0000" },
+                { id: 2, name: { en: "Green"}, hex: "#00FF00" },
+                { id: 3, name: { en: "Blue"}, hex: "#0000FF" }
+            ])
+            return { colorArray }
+        }
+
+        const ColorButton = {
+            props: {
+                colorId: String,
+                defaultText: String
+            },
+            setup(props, {emit}) {
+                const colorStore = useColorStore()
+
+                const color = computed(() => {
+                    return colorStore.colorArray.value.find(color => color.id === props.colorId) || { name: { en: 'Unknown'}, hex: '#FFFFFF'}
+                })
+
+                function addColor() {
+                    emit('addColor')
+                }
+
+                return { color, addColor }
+            },
+            template: 
+            `
+            <v-btn @click='addColor' style="align-self:center;justify-content:center;align-items:center;">
+                <img :style="{width: '38px', height: '38px', backgroundColor: color.hex}">
+                <div>
+                    {{ color.name.en ? color.name.en : defaultText }}
+                </div>
+            </v-btn>
+            `
+        }
+
+        const app = createApp({
+            components: { ColorButton },
+            setup() {
+                function onAddColor() {
+                    alert('color added')
+                }
+                return { onAddColor }
+            }
+        })
+
+        app.use(vuetify).mount('#app')
+    </script>
+
+    <style>
+
+
+    </style>
+</html>

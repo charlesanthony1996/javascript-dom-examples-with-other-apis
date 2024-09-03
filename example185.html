@@ -24,13 +24,24 @@
 <script type="module">
     // import convert from "https://cdn.skypack.dev/convert@5";
     // import convert from "https://esm.run/convert@5";
-    import convert from "https://cdn.jsdelivr.net/npm/convert@5";
+    import convert from "https://cdn.jsdelivr.net/npm/convert@5"
     // import convert from "https://unpkg.com/convert@5";
 
-    const duration = convert(36, "h").to("best");
+    const duration = convert(36, "h").to("best")
 
     console.log(duration)
 
+    const bestLength = convert(1273432, "mm").to("best")
+
+    console.log(bestLength.quantity)
+
+    "duration is " + duration
+
+    console.log(convert(3.5, "km").to("best"))
+
+    console.log(convert(3.5, "km").to("best", "metric"))
+
+    console.log(convert(3.5, "km").to("best", "imperial"))
 
 </script>
 </html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+    <!-- vue router -->
+    <script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
+    <!-- vuex cdn -->
+    <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+    <script src="https://unpkg.com/vuex@4"></script>
+</head>
+
+<body>
+<div id="app">
+    <br><br>
+    <v-row style="display: flex; justify-content: center; align-items: center;">
+        <v-col cols="4" style="display: flex; justify-content: center;">
+            <v-btn @click="null" style="display: flex; justify-content: center; align-items: center;">
+                <v-col style="display: flex; align-items: center;">
+                    <!-- <v-row style="position: relative; display: flex; align-items: center;"> -->
+                        <img
+                        :style="{'width': '36px', 'height':'36px', backgroundColor: 'red', position: 'relative', left: '-16px'}"
+                        >
+                        <span v-html="formattedName"></span>
+                    <!-- </v-row> -->
+
+                    <!-- <v-row
+                    class=""
+                    style="font-size: 10px; letter-spacing: 1px; display: flex; align-items: center; position: relative; left: -47%;">
+                    <span v-html="formattedHex"></span>
+                    </v-row> -->
+
+                </v-col>
+            </v-btn>
+        </v-col>
+        <v-spacer></v-spacer>
+    </v-row>
+    <router-view></router-view>
+</div>
+
+<script>
+    const { createApp, ref, computed } = Vue
+    const { createVuetify } = Vuetify
+
+    const vuetify = createVuetify()
+
+    // router setup
+    const router = VueRouter.createRouter({
+        history: VueRouter.createWebHistory(),
+        routes: []
+    })
+
+    const app = createApp({
+        setup() {
+            const colorCode = ref("RAL 7001")
+            const colorName = ref("Beige")
+            const hexCode = ref("#FFFFFF")
+
+            const splitName = computed(() => colorName.value.length > 7)
+            const formattedName = computed(() => {
+                if (splitName) {
+                    return `${colorCode} | <br><span style="font-size:7px;position:relative;top:-5px;">${colorName}</span>`
+                } else {
+                    return `${colorCode} | ${colorName}`
+                }
+            })
+
+            const formattedHex = computed(() => {
+                return `${hexCode.value}`
+            })
+
+            return { colorCode, colorName, hexCode, splitName, formattedName, formattedHex }
+        }
+    }).use(vuetify).use(router).mount('#app')
+</script>
+
+<style>
+</style>
+</html>

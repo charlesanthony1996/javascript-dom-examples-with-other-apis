@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+
+    <body>
+        <input type="text" id="input" placeholder="Type here.../">
+        <button id="insertButton">Insert ]</button>
+        
+    </body>
+    
+    <script>
+        class Keyboard {
+            constructor() {
+                this.instance = this
+            }
+
+            setInput(value) {
+                this.inputValue = value
+            }
+
+            getInput() {
+                return this.inputValue
+            }
+        }
+
+        class SquareLeft {
+            trigger(keyboard, input) {
+                const start = input.selectionStart
+                const end = input.selectionEnd
+
+                if(start !== null && end !== null) {
+                    const value = input.value
+                    input.value = value.substring(0, start) + ']' + value.substring(end)
+
+                    input.selectionStart = input.selectionEnd = start + 1
+
+                    keyboard.instance.setInput(input.value)
+
+                    input.dispatchEvent(new Event('input', { bubbles: true }))
+                }
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const inputElement = document.getElementById("input")
+            const insertButton = document.getElementById("insertButton")
+            const keyboard = new Keyboard()
+            const squareLeft = new SquareLeft()
+
+            insertButton.addEventListener("click", () => {
+                squareLeft.trigger(keyboard, inputElement)
+            })
+        })
+
+    </script>
+
+    <style>
+        input {
+            width: 300px;
+            padding: 10px;
+            font-size: 30px;
+        }
+
+    </style>
+</html>
