@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>CodeMirror 5 JSON Editor with Linting</title>
+  <!-- Include CodeMirror CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/codemirror.min.css">
+  <!-- Include Lint CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/addon/lint/lint.min.css">
+</head>
+<body>
+  <!-- Container for the editor -->
+  <textarea id="editor"></textarea>
+
+  <!-- Include CodeMirror Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/codemirror.min.js"></script>
+  <!-- Include JSON mode -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/mode/javascript/javascript.min.js"></script>
+  <!-- Include Linting addons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/addon/lint/lint.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/addon/lint/json-lint.min.js"></script>
+  <!-- Include jsonlint library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsonlint/1.6.0/jsonlint.min.js"></script>
+  <!-- Your custom script -->
+  <script>
+    var editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
+      mode: { name: "javascript", json: true },
+      lineNumbers: true,
+      gutters: ["CodeMirror-lint-markers"],
+      lint: true
+    });
+
+    // Example JSON with an error
+    editor.setValue('{\n  "name": "John",\n  "age": 30,\n}');
+  </script>
+</body>
+</html>

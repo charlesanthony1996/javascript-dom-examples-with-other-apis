@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+    <!--    vue router-->
+    <script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
+    <!-- vuex cdn -->
+    <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+    <script src="https://unpkg.com/vuex@4"></script>
+
+</head>
+
+<body>
+<div id="app">
+    <v-btn class="no-hover-button" style="position:relative;left:30px;right:30px;">Click me</v-btn>
+    <router-view></router-view>
+
+</div>
+</body>
+
+<script>
+    const { createApp, ref, computed, reactive, watch, watchEffect, onMounted } = Vue
+    const { createVuetify } = Vuetify
+
+    const vuetify = createVuetify()
+
+
+    // router setup
+    const router = VueRouter.createRouter({
+        history: VueRouter.createWebHistory(),
+        routes: [
+
+        ]
+    })
+
+
+    const app = createApp({
+        setup() {
+
+            return {  }
+
+        }
+    }).use(vuetify).use(router).mount('#app')
+
+
+
+</script>
+
+
+
+<style scoped lang="css">
+
+    .no-hover-button:hover {
+        background-color: white !important;
+        box-shadow: none !important;
+    }
+
+    .no-hover-button:focus {
+        background-color: white !important;
+        box-shadow: none !important;
+    }
+</style>
+</html>

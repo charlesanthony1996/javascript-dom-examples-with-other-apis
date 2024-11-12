@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Triple click</title>
+    </head>
+
+    <body>
+        <input 
+        type="text"
+        id="textInput"
+        value="This is a piece of text">
+        <div id="info">Waiting for input..</div>
+        
+    </body>
+
+    <script>
+        const input = document.getElementById("textInput")
+        const info = document.getElementById("info")
+
+        let clickCount = 0
+        let touchCount = 0
+        let timer
+
+        input.addEventListener("click", () => {
+            clickCount++
+            clearTimeout(timer)
+
+            if (clickCount === 3) {
+                info.textContent = "Triple click detected"
+                input.select()
+                clickCount = 0
+            }
+            timer = setTimeout(() => {
+                clickCount = 0
+            }, 400);
+        })
+
+        input.addEventListener("touchstart",(e) => {
+            touchCount++
+            clearTimeout(timer)
+
+        if (touchCount === 3) {
+            info.textContent = "Triple tap detected"
+            input.select()
+            touchCount = 0
+        }
+
+        timer = setTimeout(() => {
+            touchCount = 0
+        }, 400)
+    })
+    </script>
+
+    <style scoped lang="css">
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+    </style>
+</html>
