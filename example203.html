@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vuetify Sheet with Back/Apply</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  
+  <!-- Vuetify 3 -->
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+
+  <!-- Material Icons -->
+  <link 
+    rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.4.47/css/materialdesignicons.min.css"
+    integrity="sha512-/k658G6UsCvbkGRB3vPXpsPHgWeduJwiWGPCGS14IQw3xpr63AEMdA8nMYG2gmYkXitQxDTn6iiK/2fD4T87qA==" 
+    crossorigin="anonymous" 
+    referrerpolicy="no-referrer" 
+  />
+</head>
+
+<body>
+<div id="app">
+  <!-- The select is always visible; we give it a ref="filterSelect" -->
+  <v-select
+    prepend-inner-icon="mdi-filter"
+    :items="items"
+    v-model="selectedValue"
+    v-model:menu="menuOpen"
+    variant="outlined"
+    label="Filters"
+    placeholder="Filters"
+    style="max-width:300px; margin-left:30px; margin-top:20px;"
+    @change="onSelectChanged"
+  ></v-select>
+
+  <!-- The sheet appears below the select if the user picks "1" -->
+  <v-sheet
+    v-if="selectedValue === '1'"
+    elevation="2"
+    class="ma-3 pa-4"
+    style="max-width: 300px; margin-left:30px; position:relative; top:-20px; left:20px;"
+  >
+    <v-row>
+      <v-btn icon="mdi-arrow-left" @click="goBack" size="30"></v-btn>
+      <span style="position:relative; left:20px; top:5px;">Choose Filter</span>
+    </v-row>
+    <br>
+
+    <v-radio-group v-model="radioValue">
+      <v-radio label="Online" value="Online"></v-radio>
+      <v-radio label="Offline" value="Offline"></v-radio>
+    </v-radio-group>
+
+    <v-row class="mt-3" justify="space-between">
+      <!-- Apply button to confirm selection -->
+      <v-btn
+        color="primary"
+        @click="applyFilter"
+        width="200px"
+        justify="center"
+        align="center"
+      >
+        Apply
+      </v-btn>
+    </v-row>
+  </v-sheet>
+</div>
+
+<script>
+  const { createApp, ref, nextTick } = Vue
+  const { createVuetify } = Vuetify
+
+  const vuetify = createVuetify()
+
+  const app = createApp({
+    setup() {
+      const items = ref(['1', '2', '3', '4', '5'])
+      const selectedValue = ref('')
+      const radioValue = ref('Online')
+
+      // A reference to the <v-select> so we can open it programmatically
+      const menuOpen = ref(false)
+
+      const onSelectChanged = (value) => {
+        console.log("User selected:", value)
+        // If the user selects "1", v-if shows the sheet.
+      }
+
+      const goBack = () => {
+        // Revert selection so the sheet hides
+        selectedValue.value = ''
+        menuOpen.value = true
+      }
+
+      const applyFilter = () => {
+        alert(`Filter applied: ${radioValue.value}`)
+        // Reset selection so the sheet hides
+        selectedValue.value = ''
+
+        // Optionally open the menu again if you want
+        menuOpen.value = false
+      }
+
+      return {
+        items,
+        selectedValue,
+        radioValue,
+        onSelectChanged,
+        goBack,
+        applyFilter,
+        menuOpen
+      }
+    }
+  })
+
+  app.use(vuetify)
+  app.mount('#app')
+</script>
+</body>
+</html>

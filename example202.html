@@ -36,7 +36,12 @@
                 restrictions: Object,
                 globalKeyboard: Boolean
             },
-            emits: ['update:modelValue', 'errors']
+            emits: ['update:modelValue', 'errors'],
+            setup(props, { emit}) {
+                const internalValue = ref(props.modelValue)
+                const focused = ref(false)
+                
+            }
 
         }
 
