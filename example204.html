@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css" rel="stylesheet">
+    <!--    vue router-->
+    <script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
+    <!-- vuex cdn -->
+    <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+    <script src="https://unpkg.com/vuex@4"></script>
+
+</head>
+
+<body>
+<div id="app">
+    <router-view></router-view>
+
+</div>
+</body>
+
+<script>
+    const { createApp, ref, computed, reactive, watch, watchEffect, onMounted } = Vue
+    const { createVuetify } = Vuetify
+    const vuetify = createVuetify()
+
+    const childComponent = {
+        name: 'ChildComponent',
+        template: `
+        <div>
+            <button @click="emitIncrement">Click to increment</button>
+        </div>
+        `,
+        emit: ['increment'],
+        setup(props, { emit }) {
+            const emitIncrement = () => {
+                emit('increment', 1)
+            }
+            return {
+                emitIncrement
+            }
+        }
+    }
+
+    const parentComponent = {
+        name: 'ParentComponent',
+        template: `
+        <div>
+            <h2>Parent Component</h2>
+            <p>Count: {{ count }}</p>
+            <child-component @increment="handleIncrement"></child-component>
+        </div>
+        `,
+        component: {
+            ChildComponent
+        },
+        setup() {
+            const count = ref(0)
+
+            const handleIncrement = (val) => {
+                count.value += val
+            }
+            return {
+                count, handleIncrement
+            }
+        }
+    }
+
+
+    // router setup
+    const router = VueRouter.createRouter({
+        history: VueRouter.createWebHistory(),
+        routes: [
+            { path: '/', component: ParentComponent }
+        ]
+    })
+
+
+    const app = createApp({
+        setup() {
+            return {}
+
+        }
+    }).use(vuetify).use(router).mount('#app')
+</script>
+
+
+
+<style>
+
+
+</style>
+</html>
