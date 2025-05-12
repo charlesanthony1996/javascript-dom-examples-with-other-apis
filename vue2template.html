@@ -2,17 +2,89 @@
 <html>
     <head>
         <title></title>
-        <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+
+        <!-- <script defer src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/vue@2"></script> -->
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     </head>
 
     <body>
-        
+        <div id="app">
+            <v-app>
+            <v-main>
+                <v-container>
+                <template>
+  <v-card
+    height="400"
+    width="256"
+    class="mx-auto"
+  >
+    <v-navigation-drawer permanent>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="text-h6">
+            Application
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            subtext
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
 
+      <v-divider></v-divider>
+
+      <v-list
+        dense
+        nav
+      >
+        <v-list-item
+          v-for="item in items"
+          :key="item.title"
+          link
+        >
+          <v-btn>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-btn>
+
+          <!-- <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content> -->
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+  </v-card>
+</template>
+                </v-container>
+            </v-main>
+            </v-app>
+        </div>
     </body>
-
+    
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    
     <script>
-
+        
+        new Vue({
+            el: '#app',
+            vuetify: new Vuetify(),
+            data () {
+      return {
+        items: [
+          { title: 'Dashboard', icon: 'mdi-view-dashboard' },
+          { title: 'Photos', icon: 'mdi-image' },
+          { title: 'About', icon: 'mdi-help-box' },
+        ],
+        right: null,
+      }
+    },
+        })
     </script>
 
     <style>
